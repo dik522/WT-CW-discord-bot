@@ -1,0 +1,98 @@
+{
+    "BotInicialization": {
+        "dbConnectSuccess": "Připojeno k databázi.",
+        "dbConnectError": "Chyba při připojování k databázi: ",
+        "LanguageLoadSuccess": "Jazykový dataset načten.",
+        "LanguageLoadError": "Chyba při načítání jazykového datasetu: ",
+        "SeasonLoadSuccess": "Data o sezóně načteny.",
+        "SeasonLoadError": "Chyba při načítání dat sezóny: ",
+        "SeasonLoadNotExists": "Data o sezóně neexistují, musíte je zadat pomocí příkazů.",
+        "Finished": "Startovací sekvence bota dokončena, bot je online!"
+    },
+    "CWResults": {
+        "EditorAdded": "Byl jsi zaevidován jako editor výsledků.",
+        "MathError": "ERROR matika: nevychází počty hráčů!",
+        "Entry":{
+            "SuccessEditor": "Zapisuvači výsledků jsou: ",
+            "Success": "Zápis proveden."
+        },
+        "Edit": {
+            "NonEditor": "Nelze upravit zápis, když jsi žádný nezadal a nejsi editor.",
+            "Success": "Zápis je upravován."
+        },
+        "Delete": {
+            "NonEditor": "Nelze smazat zápis, když jsi žádný nezadal a nejsi editor.",
+            "Success": "Zápis byl smazán."
+        }
+    },
+    "CWSeason":{
+        "BR":{
+            "SaveSuccess": "Data o br sezony byla uložena.",
+            "SaveError": "Soubor sezona.json nebyl uložen při změně uložených dat o br: "
+        },
+        "Dates":{
+            "SaveSuccess": "Data o datumu sezony byla uložena.",
+            "SaveError": "Soubor sezona.json nebyl uložen při změně uložených dat o datech: "
+        }
+    },
+    "Configuration": {
+        "WrongPassword": "Nebylo zadáno správné heslo!!!",
+        "ChangeAttempt": "Došlo k pokusu o změnu konfigurace uživatelem: ",
+        "Unpriviliged": "Nemáš dostatečné oprávnění k úpravě tohoto nastavení.",
+        "OFChangeAttempt": "Proběhl pokus o přepnutí funkce uživatelem (1), heslem patřícím (2): ",
+        "AdminChannnelChangeAttempt": "Proběhl pokus o změnu oznamovacího kanálu uživatelem (1), heslem patřícím (2): ",
+        "consoleWrongClanAttempt": "Proběhl pokus o změnu oznamovacího kanálu uživatelem (1), heslem patřícím (2): ",
+        "WrongClanAttempt": "Došlo o pokus o změnu úpravu kanálů, k nimž uživatel nemá přístup uživatelem (1), heslem patřícím (2): ",
+        "SuccesConsole": "Konfigurace změněna uživatelem: ",
+        "Succes": "Konfigurace úspěšně změněna.",
+        "ChangeError": "Error během změny konfigurace: ",
+        "WrongChoise": "Nebyla zvolena správná kombinace položek. Je třeba zvolit **zapnutí_vypnutí funkce** s **přepnutí funkce** nebo **nastavení kanálů** s **ID kanálu**.",
+        "Error": "Došlo k chybě v kódu aplikace, kontaktujte prosím Dik522.",
+        "ErrorConsole": "Změna konfigurace selhala, error: "
+    },
+    "Profile":{
+        "Created": "Profil nového člena vytvořen.",
+        "Error": "Běhěm vytváření profilu člena se vyskytl problém: "
+    },
+    "Misc":{
+        "Results": "Výsledky",
+        "Planes": "Letadla",
+        "Helicopters": "Helikoptéry",
+        "AA": "AA",
+        "Comments": "Komentáře",
+        "Squadron": "Svaz",
+        "Player": "Hráč",
+        "PointsChange": "změna bodů",
+        "PointsDifference": "rozdíl bodů",
+        "PointsActual": "aktuální body",
+        "PointsLimit": "splněný limit",
+        "Reprezentative": "reprezentativní",
+        "Result": "výsledek",
+        "CWPoints": "CW body",
+        "Activity": "aktivita",
+        "Role": "role",
+        "Arrival": "datum příchodu"
+    },
+    "memberCheck":{
+        "Owner": " vlastnící účet ",
+        "Squadron": " ve svazu ",
+        "RoleMissing": " nemá roli ",
+        "NotFound": " nebyl nalezen ve svazu.",
+        "CheckProfile": "Zkontrolujte správnost dat v profilu ",
+        "DscNotFound": "nemá udaný discord účet na tomto serveru!"
+    },
+    "CWresultsHeader": "Zapisující: ",
+    "scrapeProccesing": "Zpracovávám data!",
+    "SquadronSearchFound": "Výsledky svazu: ",
+    "SquadronSearchNotFound": "Svaz nenalezen",
+    "StatisticError": "Během zpracování dat členů komunity nastala chyba: ",
+    "CWPointsError": "Během zpracování aktivních hráčů dneška nastala chyba: ",
+    "CWPointsTable": "Tabulka dnes aktivních hráčů svazu: ",
+    "CWPointsEmpty": "Dnes nebyly hrány CW ve svazu ",
+    "SquadronPoints": "Celkový počet CW bodů je ",
+    "SquadronPointsError": "Během zpracování celkových bodů svazu se naskytla chyba: ",
+    "brRangeTable": "Tabulka aktivních hráčů během tohoto br svazu ",
+    "brRangeError": "Došlo k chybě během zpracovávání aktivních hráčů tototo br období v CW: ",
+    "brRangeEmpty": "V tomto br období (CW) nebyly v aktivní žádní hráči, svaz: ",
+    "SquadronSearch": "Tabulka nalezených výsledků bitev proti svazu: "
+}

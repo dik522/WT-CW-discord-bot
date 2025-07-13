@@ -1,0 +1,98 @@
+{
+    "BotInicialization": {
+        "dbConnectSuccess": "Successful connection to database.",
+        "dbConnectError": "Error while connecting to database: ",
+        "LanguageLoadSuccess": "Language set loaded.",
+        "LanguageLoadError": "Error while loading language set: ",
+        "SeasonLoadSuccess": "Season data loaded.",
+        "SeasonLoadError": "Error while loading season data: ",
+        "SeasonLoadNotExists": "Season data does not exist. You need to input them.",
+        "Finished": "Bot inicialization finished - Bot is online!"
+    },
+    "CWResults": {
+        "EditorAdded": "You have been added as editor of CW results.",
+        "MathError": "Sum of players does not match 8",
+        "Entry":{
+            "Success": "Entry of CW into database Successful.",
+            "SuccessEditor": "Editors of these results are: "
+        },
+        "Edit": {
+            "NonEditor": "You cannot change CW result as you are not a editor for any results message!",
+            "Success": "CW entry edited successfully."
+        },
+        "Delete": {
+            "NonEditor": "You cannot delete CW entry as you are not a editor for any results message!",
+            "Success": "CW entry deleted successfully."
+        }
+    },
+    "CWSeason":{
+        "BR":{
+            "SaveSuccess": "Season BR saved successfully.",
+            "SaveError": "Error while saving season BR: "
+        },
+        "Dates":{
+            "SaveSuccess": "Season dates saved successfully.",
+            "SaveError": "Error while saving season dates: "
+        }
+    },
+    "Configuration": {
+        "WrongPassword": "Wrong password",
+        "ChangeAttempt": "There has been attempt to change configuraton by user: ",
+        "Unpriviliged": "You don't have enough priviliges to change this configuration",
+        "OFChangeAttempt": "There was an attempt to switch function by user (1), password is connected to user (2): ",
+        "AdminChannnelChangeAttempt": "There was an attempt to change admin channel by user(1), password is connected to user (2): ",
+        "consoleWrongClanAttempt": "There was an attempt to change clan channel by user (1), password is connected to user (2): ",
+        "WrongClanAttempt": "There was an attempt to change clan channel by by user who is member of different clan(1), password is connected to user (2): ",
+        "SuccessConsole": "Configuration changed successfully by: ",
+        "Success": "Configuration changed successfully",
+        "ChangeError": "Error while changing configuration: ",
+        "WrongChoise": "You have choosen wrong options. You need to choose function On/Off with function or channel send type and channel ID",
+        "Error": "Error occured while changing configuration of this bot, please contact developer",
+        "ErrorConsole": "Configuration failed, error: "
+    },
+    "Profile":{
+        "Created": "Member profile created.",
+        "Error": "Error while creating member profile: "
+    },
+    "Misc":{
+        "Results": "results",
+        "Planes": "planes",
+        "Helicopters": "helicopters",
+        "AA": "AA",
+        "Comments": "comments",
+        "Squadron": "squadron",
+        "Player": "player",
+        "PointsChange": "points change",
+        "PointsDifference": "points difference",
+        "PointsActual": "actual points",
+        "PointsLimit": "accomplished limit",
+        "Reprezentative": "reprezentative",
+        "Result": "result",
+        "CWPoints": "CW points",
+        "Activity": "activity",
+        "Role": "role",
+        "Arrival": "Date of arrival"
+    },
+    "MemberCheck":{
+        "Owner": " who owns WT account ",
+        "Squadron": " in squadron ",
+        "RoleMissing": " doesn't have role ",
+        "NotFound": " hasn't been found in squadron.",
+        "CheckProfile": "Check correctness of profile details of ",
+        "DscNotFound": "doesn't have linked discord account on this server!"
+    },
+    "CWresultsHeader": "Result loggers are: ",
+    "scrapeProccesing": "Scraping process started",
+    "squadronSearchFound": "Results of squadron: ",
+    "squadronSearchNotFound": "Squadron not found",
+    "statisticError": "Error happened while processing statistics: ",
+    "CWPointsError": "Error has occured while processing CW points of profile: ",
+    "CWPointsTable": "Table of today's active players of squadron: ",
+    "CWPointsEmpty": "There have been no change in CW points this day in squadron ",
+    "squadronPoints": "Total of squadron points is ",
+    "squadronPointsError": "Error has occured while processing squadron points: ",
+    "brRangeError": "Error has occured while processing br range: ",
+    "brRangeTable": "Table of active players during this br range of clan ",
+    "brRangeEmpty": "There have been no active players in this br range in clan ",
+    "SquadronSearch": "CW results found for: "
+}
