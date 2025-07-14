@@ -118,7 +118,7 @@ async function DayActivity(configuration, lang) {
                 if(table.toString().length > 2000){
                     finishedTable = '```\n' + table.toString() + '\n ```';
                     table = new AsciiTable(lang.CWpointsTable + configuration.firstClan.name);
-                    table.setHeading(configuration.Misc.PointsChange, configuration.Misc.Player, configuration.Misc.PointsDifference, configuration.Misc.PointsActual,configuration.Misc.PointsLimit);
+                    table.setHeading(lang.Misc.PointsChange, lang.Misc.Player, lang.Misc.PointsDifference, lang.Misc.PointsActual,lang.Misc.PointsLimit);
                     client.channels.fetch(configuration.firstClan.activityChannel)
                         .then(channel => channel.send(finishedTable))
                         .catch(console.error);
@@ -150,7 +150,7 @@ async function DayActivity(configuration, lang) {
                 if(table.toString().length > 2000){
                     finishedTable = '```\n' + table.toString() + '\n ```';
                     table = new AsciiTable(lang.CWpointsTable + configuration.secondClan.name);
-                    table.setHeading(configuration.Misc.PointsChange, configuration.Misc.Player, configuration.Misc.PointsDifference, configuration.Misc.PointsActual,configuration.Misc.PointsLimit);
+                    table.setHeading(lang.Misc.PointsChange, lang.Misc.Player, lang.Misc.PointsDifference, lang.Misc.PointsActual,lang.Misc.PointsLimit);
                     client.channels.fetch(configuration.secondClan.activityChannel)
                         .then(channel => channel.send(finishedTable))
                         .catch(console.error);
@@ -182,7 +182,7 @@ async function DayActivity(configuration, lang) {
                 if(table.toString().length > 2000){
                     finishedTable = '```\n' + table.toString() + '\n ```';
                     table = new AsciiTable(lang.CWpointsTable + configuration.thirdClan.name);
-                    table.setHeading(configuration.Misc.PointsChange, configuration.Misc.Player, configuration.Misc.PointsDifference, configuration.Misc.PointsActual,configuration.Misc.PointsLimit);
+                    table.setHeading(lang.Misc.PointsChange, lang.Misc.Player, lang.Misc.PointsDifference, lang.Misc.PointsActual,lang.Misc.PointsLimit);
                     client.channels.fetch(configuration.thirdClan.activityChannel)
                         .then(channel => channel.send(finishedTable))
                         .catch(console.error);
@@ -214,7 +214,7 @@ async function DayActivity(configuration, lang) {
                 if(table.toString().length > 2000){
                     finishedTable = '```\n' + table.toString() + '\n ```';
                     table = new AsciiTable(lang.CWpointsTable + configuration.fourthClan.name);
-                    table.setHeading(configuration.Misc.PointsChange, configuration.Misc.Player, configuration.Misc.PointsDifference, configuration.Misc.PointsActual,configuration.Misc.PointsLimit);
+                    table.setHeading(lang.Misc.PointsChange, lang.Misc.Player, lang.Misc.PointsDifference, lang.Misc.PointsActual,lang.Misc.PointsLimit);
                     client.channels.fetch(configuration.fourthClan.activityChannel)
                         .then(channel => channel.send(finishedTable))
                         .catch(console.error);
