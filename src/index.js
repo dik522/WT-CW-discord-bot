@@ -125,7 +125,7 @@ async function BotInicialization() {
         async () => squadronPoints(configuration.secondClan, language),
         async () => squadronPoints(configuration.thirdClan, language),
         async () => squadronPoints(configuration.fourthClan, language),
-        async () => brRangeTable(configuration, language),
+        async () => brRangeTable(season, configuration, language),
         async () => MemberCheck(process.env.GUILD_ID, configuration, language),
         reset()
     ]);
