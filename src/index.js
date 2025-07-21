@@ -127,8 +127,10 @@ async function BotInicialization() {
         async () => squadronPoints(configuration.fourthClan, language),
         async () => brRangeTable(season, configuration, language),
         async () => MemberCheck(process.env.GUILD_ID, configuration, language),
-        reset()
+        () => reset(),
+        () => console.log("---------------------------------------", actualDate())
     ]);
+    console.log("-------------------", actualDate())
 }
 //general functions
 
@@ -141,8 +143,8 @@ async function BotInicialization() {
  */
 function timer(hour, minutes, seconds, callbacks) {
     const now = new Date();
-    const plannedTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hour, minutes, seconds);
-    const timeDifference = plannedTime - now;
+    let plannedTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hour, minutes, seconds);
+    let timeDifference = plannedTime - now;
 
     if (timeDifference <= 0) {
         plannedTime.setDate(plannedTime.getDate() + 1);
@@ -152,8 +154,6 @@ function timer(hour, minutes, seconds, callbacks) {
         for (const cb of callbacks) {
             if (typeof cb === 'function') {
                 await cb();
-            }else{
-                cb();
             }
         }
         timer(hour, minutes, seconds, callbacks);
