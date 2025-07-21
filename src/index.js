@@ -757,6 +757,7 @@ client.on("messageCreate", (message) => {
         membersPoints(actualbr, configuration.thirdClan, actualDate(),configuration, language)
     }else if(message.content ==="!dennibody"){
         DayActivity(configuration, language)
+        console.log(language.CWpointsTable)
     }else if(message.content === "!hlavicka:A"){
         squadronPoints(configuration.firstClan, language)     
     }else if(message.content === "!hlavicka:B"){

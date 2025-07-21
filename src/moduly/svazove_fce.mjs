@@ -44,25 +44,20 @@ async function membersPoints(br, clan_config, date, configuration, lang) {
             }
 
             for (const element of structuredArray) {
-                    if(element.records != undefined){
-                        if(element.records.at(-1).CWpoints >= clan_config.standardLimit && element.records.at(-1).role == "Private"){
-                            klient.db(configuration.DBNames.Community.DB).collection(configuration.DBNames.Community.Collection).updateOne({nick_WT:element.member}, {
-                                $push:{records: {CWpoints: element.CWpoints, activity: element.activity, role: element.role, date: date, br: br}},
-                                $set:{acomplishedLimit: true}
-                            })
-                        }else if(element.records.at(-1).CWpoints >= clan_config.sergeantLimit){
-                            klient.db(configuration.DBNames.Community.DB).collection(configuration.DBNames.Community.Collection).updateOne({nick_WT:element.member}, {
-                                $push:{records: {CWpoints: element.CWpoints, activity: element.activity, role: element.role, date: date, br: br}},
-                                $set:{acomplishedLimit: true}
-                            })
-                        }else{
-                            klient.db(configuration.DBNames.Community.DB).collection(configuration.DBNames.Community.Collection).updateOne({nick_WT:element.member}, {
-                                $push:{records: {CWpoints: element.CWpoints, activity: element.activity, role: element.role, date: date, br: br}}})
-                        }
-                    }else{
-                        klient.db(configuration.DBNames.Community.DB).collection(configuration.DBNames.Community.Collection).updateOne({nick_WT:element.member}, {
-                            $push:{records: {CWpoints: element.CWpoints, activity: element.activity, role: element.role, date: date, br: br}}})
-                    }
+                if(element.CWpoints >= clan_config.standardLimit && element.role == "Private"){
+                    klient.db(configuration.DBNames.Community.DB).collection(configuration.DBNames.Community.Collection).updateOne({nick_WT:element.member}, {
+                        $push:{records: {CWpoints: element.CWpoints, activity: element.activity, role: element.role, date: date, br: br}},
+                        $set:{acomplishedLimit: true}
+                    })
+                }else if(element.CWpoints >= clan_config.sergeantLimit){
+                    klient.db(configuration.DBNames.Community.DB).collection(configuration.DBNames.Community.Collection).updateOne({nick_WT:element.member}, {
+                        $push:{records: {CWpoints: element.CWpoints, activity: element.activity, role: element.role, date: date, br: br}},
+                        $set:{acomplishedLimit: true}
+                    })
+                }else{
+                    klient.db(configuration.DBNames.Community.DB).collection(configuration.DBNames.Community.Collection).updateOne({nick_WT:element.member}, {
+                        $push:{records: {CWpoints: element.CWpoints, activity: element.activity, role: element.role, date: date, br: br}}})
+                }
             }
         } catch (error) {
             console.error(lang.statisticError, error);
@@ -94,7 +89,7 @@ async function DayActivity(configuration, lang) {
                     }
                     let achieved
                     if(profile.acomplishedLimit){achieved = "✓"}else{achieved = "✘"}
-                    structuredArray.push([pointsChange, profile.nick_WT, profile.records.at(-2).CWpoints - profile.records.at(-1).CWpoints, profile.records.at(-1).CWpoints, achieved, profile.clan])
+                    structuredArray.push([pointsChange, profile.nick_WT, profile.records.at(-1).CWpoints - profile.records.at(-2).CWpoints, profile.records.at(-1).CWpoints, achieved, profile.clan])
                 }                
             }
         } catch (error) {
