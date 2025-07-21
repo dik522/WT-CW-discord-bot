@@ -127,7 +127,7 @@ async function BotInicialization() {
         async () => squadronPoints(configuration.fourthClan, language),
         async () => brRangeTable(season, configuration, language),
         async () => MemberCheck(process.env.GUILD_ID, configuration, language),
-        reset()
+        () => reset()
     ]);
 }
 //general functions
@@ -152,8 +152,6 @@ function timer(hour, minutes, seconds, callbacks) {
         for (const cb of callbacks) {
             if (typeof cb === 'function') {
                 await cb();
-            }else{
-                cb();
             }
         }
         timer(hour, minutes, seconds, callbacks);
