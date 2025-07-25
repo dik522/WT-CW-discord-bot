@@ -101,35 +101,33 @@ async function DayActivity(configuration, lang) {
     let members3 = structuredArray.filter(profile => profile[5] === configuration.thirdClan.name)
     let members4 = structuredArray.filter(profile => profile[5] === configuration.fourthClan.name)
     
-    //Table for firt clan
+    //Table for first clan
     if(configuration.firstClan.used){
         if(configuration.firstClan.activityOF){
             let q = 0;
             let finishedTable
-            let table = new AsciiTable(lang.CWpointsTable + configuration.firstClan.name);
+            let table = new AsciiTable(lang.CWPointsTable + configuration.firstClan.name);
             table.setHeading(lang.Misc.PointsChange, lang.Misc.Player, lang.Misc.PointsDifference, lang.Misc.PointsActual,lang.Misc.PointsLimit);
             while(q<members1.length){
                 table.addRow(members1[q][0], members1[q][1], members1[q][2], members1[q][3], members1[q][4]);
-                if(table.toString().length > 2000){
+                if(table.toString().length > 1800){
                     finishedTable = '```\n' + table.toString() + '\n ```';
-                    table = new AsciiTable(lang.CWpointsTable + configuration.firstClan.name);
+                    table = new AsciiTable(lang.CWPointsTable + configuration.firstClan.name);
                     table.setHeading(lang.Misc.PointsChange, lang.Misc.Player, lang.Misc.PointsDifference, lang.Misc.PointsActual,lang.Misc.PointsLimit);
-                    client.channels.fetch(configuration.firstClan.activityChannel)
-                        .then(channel => channel.send(finishedTable))
-                        .catch(console.error);
+                    const channel = await client.channels.fetch(configuration.firstClan.activityChannel)
+                        await channel.send(finishedTable)
+                    console.log(finishedTable);//khblskgbrůksrb.sdkjbd.skb
                     finishedTable ="";
                 }
                 q = q+1;
             }
             finishedTable = '```\n' + table.toString() + '\n ```';            
             if(q > 0){
-                client.channels.fetch(configuration.firstClan.activityChannel)
-                    .then(channel => channel.send(finishedTable))
-                    .catch(console.error);
+                const channel = await client.channels.fetch(configuration.firstClan.activityChannel)
+                    await channel.send(finishedTable)
             }else{
-                client.channels.fetch(configuration.firstClan.activityChannel)
-                    .then(channel => channel.send(lang.CWPointsEmpty + configuration.firstClan.name))
-                    .catch(console.error);
+                const channel = await client.channels.fetch(configuration.firstClan.activityChannel)
+                    await channel.send(lang.CWPointsEmpty + configuration.firstClan.name)
             }
         }
     }
@@ -138,30 +136,27 @@ async function DayActivity(configuration, lang) {
         if(configuration.secondClan.activityOF){
             let q = 0;
             let finishedTable
-            let table = new AsciiTable(lang.CWpointsTable + configuration.secondClan.name);
+            let table = new AsciiTable(lang.CWPointsTable + configuration.secondClan.name);
             table.setHeading(lang.Misc.PointsChange, lang.Misc.Player, lang.Misc.PointsDifference, lang.Misc.PointsActual,lang.Misc.PointsLimit);
             while(q<members2.length){
                 table.addRow(members2[q][0], members2[q][1], members2[q][2], members2[q][3], members2[q][4]);
-                if(table.toString().length > 2000){
+                if(table.toString().length > 1800){
                     finishedTable = '```\n' + table.toString() + '\n ```';
-                    table = new AsciiTable(lang.CWpointsTable + configuration.secondClan.name);
+                    table = new AsciiTable(lang.CWPointsTable + configuration.secondClan.name);
                     table.setHeading(lang.Misc.PointsChange, lang.Misc.Player, lang.Misc.PointsDifference, lang.Misc.PointsActual,lang.Misc.PointsLimit);
-                    client.channels.fetch(configuration.secondClan.activityChannel)
-                        .then(channel => channel.send(finishedTable))
-                        .catch(console.error);
+                    const channel = await client.channels.fetch(configuration.secondClan.activityChannel);
+                    await channel.send(finishedTable);
                     finishedTable ="";
                 }
                 q = q+1;
             }
             finishedTable = '```\n' + table.toString() + '\n ```';            
             if(q > 0){
-                client.channels.fetch(configuration.secondClan.activityChannel)
-                    .then(channel => channel.send(finishedTable))
-                    .catch(console.error);
+                const channel = await client.channels.fetch(configuration.secondClan.activityChannel)
+                    await channel.send(finishedTable);
             }else{
-                client.channels.fetch(configuration.secondClan.activityChannel)
-                    .then(channel => channel.send(lang.CWPointsEmpty + configuration.secondClan.name))
-                    .catch(console.error);
+                const channel = await client.channels.fetch(configuration.secondClan.activityChannel);
+                    await channel.send(lang.CWPointsEmpty + configuration.secondClan.name);
             }
         }
     }
@@ -170,30 +165,27 @@ async function DayActivity(configuration, lang) {
         if(configuration.thirdClan.activityOF){
             let q = 0;
             let finishedTable
-            let table = new AsciiTable(lang.CWpointsTable + configuration.thirdClan.name);
+            let table = new AsciiTable(lang.CWPointsTable + configuration.thirdClan.name);
             table.setHeading(lang.Misc.PointsChange, lang.Misc.Player, lang.Misc.PointsDifference, lang.Misc.PointsActual,lang.Misc.PointsLimit);
             while(q<members3.length){
                 table.addRow(members3[q][0], members3[q][1], members3[q][2], members3[q][3], members3[q][4]);
-                if(table.toString().length > 2000){
+                if(table.toString().length > 1800){
                     finishedTable = '```\n' + table.toString() + '\n ```';
-                    table = new AsciiTable(lang.CWpointsTable + configuration.thirdClan.name);
+                    table = new AsciiTable(lang.CWPointsTable + configuration.thirdClan.name);
                     table.setHeading(lang.Misc.PointsChange, lang.Misc.Player, lang.Misc.PointsDifference, lang.Misc.PointsActual,lang.Misc.PointsLimit);
-                    client.channels.fetch(configuration.thirdClan.activityChannel)
-                        .then(channel => channel.send(finishedTable))
-                        .catch(console.error);
+                    const channel = await client.channels.fetch(configuration.thirdClan.activityChannel);
+                    await channel.send(finishedTable);
                     finishedTable ="";
                 }
                 q = q+1;
             }
             finishedTable = '```\n' + table.toString() + '\n ```';            
             if(q > 0){
-                client.channels.fetch(configuration.thirdClan.activityChannel)
-                    .then(channel => channel.send(finishedTable))
-                    .catch(console.error);
+                const channel = await client.channels.fetch(configuration.thirdClan.activityChannel);
+                await channel.send(finishedTable);
             }else{
-                client.channels.fetch(configuration.thirdClan.activityChannel)
-                    .then(channel => channel.send(lang.CWPointsEmpty + configuration.thirdClan.name))
-                    .catch(console.error);
+                const channel = await client.channels.fetch(configuration.thirdClan.activityChannel);
+                await channel.send(lang.CWPointsEmpty + configuration.thirdClan.name);
             }
         }
     }
@@ -202,30 +194,27 @@ async function DayActivity(configuration, lang) {
         if(configuration.fourthClan.activityOF){
             let q = 0;
             let finishedTable
-            let table = new AsciiTable(lang.CWpointsTable + configuration.fourthClan.name);
+            let table = new AsciiTable(lang.CWPointsTable + configuration.fourthClan.name);
             table.setHeading(lang.Misc.PointsChange, lang.Misc.Player, lang.Misc.PointsDifference, lang.Misc.PointsActual,lang.Misc.PointsLimit);
             while(q<members4.length){
                 table.addRow(members4[q][0], members4[q][1], members4[q][2], members4[q][3], members4[q][4]);
-                if(table.toString().length > 2000){
+                if(table.toString().length > 1800){
                     finishedTable = '```\n' + table.toString() + '\n ```';
-                    table = new AsciiTable(lang.CWpointsTable + configuration.fourthClan.name);
+                    table = new AsciiTable(lang.CWPointsTable + configuration.fourthClan.name);
                     table.setHeading(lang.Misc.PointsChange, lang.Misc.Player, lang.Misc.PointsDifference, lang.Misc.PointsActual,lang.Misc.PointsLimit);
-                    client.channels.fetch(configuration.fourthClan.activityChannel)
-                        .then(channel => channel.send(finishedTable))
-                        .catch(console.error);
+                    const channel = await client.channels.fetch(configuration.fourthClan.activityChannel);
+                    await channel.send(finishedTable);
                     finishedTable ="";
                 }
                 q = q+1;
             }
             finishedTable = '```\n' + table.toString() + '\n ```';            
             if(q > 0){
-                client.channels.fetch(configuration.fourthClan.activityChannel)
-                    .then(channel => channel.send(finishedTable))
-                    .catch(console.error);
+               const channel = await client.channels.fetch(configuration.fourthClan.activityChannel);
+               await channel.send(finishedTable);
             }else{
-                client.channels.fetch(configuration.fourthClan.activityChannel)
-                    .then(channel => channel.send(lang.CWPointsEmpty + configuration.fourthClan.name))
-                    .catch(console.error);
+                const channel = await client.channels.fetch(configuration.fourthClan.activityChannel);
+                await channel.send(lang.CWPointsEmpty + configuration.fourthClan.name);
             }
         }
     }
@@ -253,7 +242,7 @@ async function squadronPoints(configuration, lang) {
 
                 const kanal = configuration.headerChannel;
                 const channel = await client.channels.fetch(kanal);
-                const message = lang.SquadronPoints +svazObecne[0];
+                const message = lang.SquadronPoints + svazObecne[0];
                 await channel.send(message);
             } catch (error) {
                 console.error(lang.SquadronPointsError, error);
@@ -300,7 +289,7 @@ async function ProfileIniciation(interactionWTNick, interactionDscID, interactio
  * @returns 
  */
 async function brRangeTable(season, configuration, lang) {
-    let profiles = await klient.db(configuration.DBNames.Community.DB).collection(configuration.DBNames.Community.Collection).find({ aktualneVeSvazu: true }).toArray();
+    let profiles = await klient.db(configuration.DBNames.Community.DB).collection(configuration.DBNames.Community.Collection).find({ inClan: true }).toArray();
     let structuredArray = [];
     let achieved
     let todayDate =actualDate();
@@ -308,24 +297,24 @@ async function brRangeTable(season, configuration, lang) {
         if(range.interval[1] == todayDate){
             for (const profile of profiles) {
                 try {
-                    if(profile.zaznamy.length < 7){
+                    if(profile.records.length < 7){
                         throw new Error("Profile has less than 7 zaznamy in 'zaznamy'");
                     }
                     let i= -7;
-                    while(profile.zaznamy.at(i).datum != range.interval[0]){
+                    while(profile.records.at(i).date != range.interval[0]){
                         i+=1;
                     }
                     let pointsChange
-                    if(profile.zaznamy.at(-1).CWbody < profile.zaznamy.at(i).CWbody){
+                    if(profile.records.at(-1).CWbody < profile.records.at(i).CWbody){
                         pointsChange = "↓"
                     }else{
                         pointsChange = "↑"
                     }
                     if(profile.acomplishedLimit){achieved = "✓"}else{achieved = "✘"}
-                    structuredArray.push([pointsChange, profile.nick_WT, profile.zaznamy.at(i).CWbody - profile.zaznamy.at(-1).CWbody, profile.zaznamy.at(-1).CWbody, achieved, profile.svaz])
+                    structuredArray.push([pointsChange, profile.nick_WT, profile.records.at(-1).CWbody - profile.records.at(i).CWbody, profile.records.at(-1).CWbody, achieved, profile.svaz])
                 } catch (error) {
                     if(Error == "Profile has less than 7 zaznamy in 'zaznamy'"){
-                        structuredArray.push(["↑", profile.nick_WT, profile.zaznamy.at(-1).CWbody, profile.zaznamy.at(-1).CWbody, achieved, profile.svaz])
+                        structuredArray.push(["↑", profile.nick_WT, profile.records.at(-1).CWbody, profile.records.at(-1).CWbody, achieved, profile.svaz])
                     }else{
                         console.error(lang.brRangeError, error, "i: ", i);
                     }
@@ -345,28 +334,26 @@ async function brRangeTable(season, configuration, lang) {
                 if(configuration.firstClan.brInfoOF){
                     let q = 0;
                     let finishedTable
-                    let table = new AsciiTable(lang.brRangeTable + configuration.firstClan.name);
+                    let table = new AsciiTable(lang.brRangeTable, configuration.firstClan.name);
                     table.setHeading(lang.Misc.PointsChange,lang.Misc.Player, lang.Misc.PointsDifference, lang.Misc.PointsActual, lang.Misc.PointsLimit);
                     while(q<members1.length){
                         table.addRow(members1[q][0], members1[q][1], members1[q][2], members1[q][3], members1[q][4]);
                         if(table.toString().length > 2000){
                             finishedTable = '```\n' + table.toString() + '\n ```';
-                            table = new AsciiTable(lang.brRangeTable + configuration.firstClan.name);
+                            table = new AsciiTable(lang.brRangeTable, configuration.firstClan.name);
                             table.setHeading(lang.Misc.PointsChange,lang.Misc.Player, lang.Misc.PointsDifference, lang.Misc.PointsActual, lang.Misc.PointsLimit);
-                            client.channels.fetch(configuration.firstClan.brInfoChannel)
-                                .then(channel => channel.send(finishedTable))
-                                .catch(console.error);
+                            const channel = await client.channels.fetch(configuration.firstClan.brInfoChannel);
+                            await channel.send(finishedTable);
                             finishedTable ="";
                         }
                         q = q+1;
                     }
                     finishedTable = '```\n' + table.toString() + '\n ```';            
                     if(q > 0){
-                        client.channels.fetch(configuration.firstClan.brInfoChannel)
-                            .then(channel => channel.send(finishedTable))
-                            .catch(console.error);
+                        const channel = await client.channels.fetch(configuration.firstClan.brInfoChannel);
+                        await channel.send(finishedTable);
                     }else{
-                        console.log(lang.brRangeEmpty + configuration.firstClan.name);
+                        console.log(lang.brRangeEmpty, configuration.firstClan.name);
                     }
                 }
             }
@@ -375,27 +362,25 @@ async function brRangeTable(season, configuration, lang) {
                 if(configuration.secondClan.brInfoOF){
                     let q = 0;
                     let finishedTable = ""
-                    let table = new AsciiTable(lang.brRangeTable + configuration.secondClan.name);
+                    let table = new AsciiTable(lang.brRangeTable, configuration.secondClan.name);
                     table.setHeading(lang.Misc.PointsChange,lang.Misc.Player, lang.Misc.PointsDifference, lang.Misc.PointsActual, lang.Misc.PointsLimit);
                     while(q<members2.length){
                         table.addRow(members2[q][0], members2[q][1], members2[q][2], members2[q][3], members2[q][4]);
                         console.log(members2[q][0], members2[q][1], members2[q][2], members2[q][3], members2[q][4])
                         if(table.toString().length > 2000){
                             finishedTable = '```\n' + table.toString() + '\n ```';
-                            table = new AsciiTable(lang.brRangeTable + configuration.secondClan.name);
+                            table = new AsciiTable(lang.brRangeTable, configuration.secondClan.name);
                             table.setHeading(lang.Misc.PointsChange,lang.Misc.Player, lang.Misc.PointsDifference, lang.Misc.PointsActual, lang.Misc.PointsLimit);
-                            client.channels.fetch(configuration.secondClan.brInfoChannel)
-                                .then(channel => channel.send(finishedTable))
-                                .catch(console.error);
+                            const channel = await client.channels.fetch(configuration.secondClan.brInfoChannel);
+                            await channel.send(finishedTable);
                             finishedTable ="";
                         }
                         q = q+1;
                     }
                     finishedTable = '```\n' + table.toString() + '\n ```';            
                     if(q > 0){
-                        client.channels.fetch(configuration.secondClan.brInfoChannel)
-                            .then(channel => channel.send(finishedTable))
-                            .catch(console.error);
+                        const channel = await client.channels.fetch(configuration.secondClan.brInfoChannel);
+                        await channel.send(finishedTable);
                     }else{
                         console.log(lang.brRangeEmpty, configuration.secondClan.name);
                     }
@@ -406,28 +391,26 @@ async function brRangeTable(season, configuration, lang) {
                 if(configuration.thirdClan.brInfoOF){
                     let q = 0;
                     let finishedTable = ""
-                    let table = new AsciiTable(lang.brRangeTable + configuration.thirdClan.name);
+                    let table = new AsciiTable(lang.brRangeTable, configuration.thirdClan.name);
                     table.setHeading(lang.Misc.PointsChange,lang.Misc.Player, lang.Misc.PointsDifference, lang.Misc.PointsActual, lang.Misc.PointsLimit);
                     while(q<members3.length){
                         table.addRow(members3[q][0], members3[q][1], members3[q][2], members3[q][3], members3[q][4]);
                         if(table.toString().length > 2000){
                             finishedTable = '```\n' + table.toString() + '\n ```';
-                            table = new AsciiTable(lang.brRangeTable + configuration.thirdClan.name);
+                            table = new AsciiTable(lang.brRangeTable, configuration.thirdClan.name);
                             table.setHeading(lang.Misc.PointsChange,lang.Misc.Player, lang.Misc.PointsDifference, lang.Misc.PointsActual, lang.Misc.PointsLimit);
-                            client.channels.fetch(configuration.thirdClan.brInfoChannel)
-                                .then(channel => channel.send(finishedTable))
-                                .catch(console.error);
+                            const channel = await client.channels.fetch(configuration.thirdClan.brInfoChannel);
+                            await channel.send(finishedTable);
                             finishedTable ="";
                         }
                         q = q+1;
                     }
                     finishedTable = '```\n' + table.toString() + '\n ```';
                     if(q > 0){
-                        client.channels.fetch(configuration.thirdClan.brInfoChannel)
-                            .then(channel => channel.send(finishedTable))
-                            .catch(console.error);
+                        const channel = await client.channels.fetch(configuration.thirdClan.brInfoChannel);
+                        await channel.send(finishedTable);
                     }else{
-                        console.log(lang.brRangeEmpty);
+                        console.log(lang.brRangeEmpty, configuration.thirdClan.name);
                     }
                 }
             }
@@ -436,28 +419,26 @@ async function brRangeTable(season, configuration, lang) {
                 if(configuration.fourthClan.brInfoOF){
                     let q = 0;
                     let finishedTable = ""
-                    let table = new AsciiTable(lang.brRangeTable + configuration.fourthClan.name);
+                    let table = new AsciiTable(lang.brRangeTable, configuration.fourthClan.name);
                     table.setHeading(lang.Misc.PointsChange,lang.Misc.Player, lang.Misc.PointsDifference, lang.Misc.PointsActual, lang.Misc.PointsLimit);
                     while(q<members4.length){
                         table.addRow(members4[q][0], members4[q][1], members4[q][2], members4[q][3], members4[q][4]);
                         if(table.toString().length > 2000){
                             finishedTable = '```\n' + table.toString() + '\n ```';
-                            table = new AsciiTable(lang.brRangeTable + configuration.fourthClan.name);
+                            table = new AsciiTable(lang.brRangeTable, configuration.fourthClan.name);
                             table.setHeading(lang.Misc.PointsChange,lang.Misc.Player, lang.Misc.PointsDifference, lang.Misc.PointsActual, lang.Misc.PointsLimit);
-                            client.channels.fetch(configuration.fourthClan.brInfoChannel)
-                                .then(channel => channel.send(finishedTable))
-                                .catch(console.error);
+                            const channel = await client.channels.fetch(configuration.fourthClan.brInfoChannel);
+                            await channel.send(finishedTable);
                             finishedTable ="";
                         }
                         q = q+1;
                     }
                     finishedTable = '```\n' + table.toString() + '\n ```';
                     if(q > 0){
-                        client.channels.fetch(configuration.fourthClan.brInfoChannel)
-                            .then(channel => channel.send(finishedTable))
-                            .catch(console.error);
+                        const channel = await client.channels.fetch(configuration.fourthClan.brInfoChannel);
+                            await channel.send(finishedTable);
                     }else{
-                        console.log(lang.brRangeEmpty);
+                        console.log(lang.brRangeEmpty, configuration.fourthClan.name);
                     }
                 }
             }
@@ -479,80 +460,68 @@ async function MemberCheck(guildID, configuration, lang) {
     for (const profile of profiles) {
         try {
             if (profile.IDDiscord != 404 || profile.ignoreAbsence != true) {
+                console.log("Člen: ", profile.nick_WT)
+                if(profile.clan ==configuration.firstClan.name){console.log("svaz sedí")}else{console.log("svaz nesedí")};
                 //404 for completelly shared accounts
                 //ignoreAbsence for secondary accounts
                 const member = await guild.members.fetch(profile.IDDiscord);
                 switch (profile.clan) {
                     case configuration.firstClan.name:
+                        console.log("------------------");
+                        if(!member.roles.cache.has(configuration.firstClan.RoleID)){console.log("nemá roli")}else{console.log("má roli")};
                         if(!member.roles.cache.has(configuration.firstClan.RoleID)){
-                            klient.channels.fetch(configuration.administrationChannel)
-                                .then(channel => {
-                                    channel.send(`:warning:\n<@${profile.IDDiscord}>${lang.MemberCheck.Owner}${profile.nick_WT}${lang.MemberCheck.Squadron}${profile.clan}${lang.MemberCheck.RoleMissing}<@&${configuration.firstClan.RoleID}>`)
-                                })
+                            console.log("Role missing")
+                            const channel = await client.channels.fetch(configuration.administrationChannel);
+                            await channel.send(`:warning:\n<@${profile.IDDiscord}>${lang.memberCheck.Owner}${profile.nick_WT}${lang.memberCheck.Squadron}${profile.clan}${lang.memberCheck.RoleMissing}<@&${configuration.firstClan.RoleID}>`);
                         }
-                        if(!profile.records.at(-1).datum == actualDate()){
-                            klient.channels.fetch(configuration.administrationChannel)
-                                .then(channel => {
-                                    channel.send(`:warning: \n<@${profile.IDDiscord}>${lang.MemberCheck.Owner}${profile.nick_WT}${lang.MemberCheck.Squadron}${profile.clan}${lang.MemberCheck.NotFound}`)
-                                })
+                        console.log("datum záznamu: ", profile.records.at(-1).date);
+                        if(!profile.records.at(-1).date == actualDate()){console.log("datum není aktuální")}else{console.log("datum je aktuální")};
+                        if(!profile.records.at(-1).date == actualDate()){
+                            console.log("Člověk chybí ve svazu")
+                            const channel = await client.channels.fetch(configuration.administrationChannel);
+                            await channel.send(`:warning: \n<@${profile.IDDiscord}>${lang.memberCheck.Owner}${profile.nick_WT}${lang.memberCheck.Squadron}${profile.clan}${lang.memberCheck.NotFound}`);
                         }
                         break;
                     case configuration.secondClan.name:
                         if(!member.roles.cache.has(configuration.secondClan.RoleID)){
-                            klient.channels.fetch(configuration.administrationChannel)
-                                .then(channel => {
-                                    channel.send(`:warning:\n<@${profile.IDDiscord}>${lang.MemberCheck.Owner}${profile.nick_WT}${lang.MemberCheck.Squadron}${profile.clan}${lang.MemberCheck.RoleMissing}<@&${configuration.secondClan.RoleID}>`)
-                                })
+                            const channel = await client.channels.fetch(configuration.administrationChannel);
+                            await channel.send(`:warning:\n<@${profile.IDDiscord}>${lang.memberCheck.Owner}${profile.nick_WT}${lang.memberCheck.Squadron}${profile.clan}${lang.memberCheck.RoleMissing}<@&${configuration.secondClan.RoleID}>`);
                         }
-                        if(!profile.records.at(-1).datum == actualDate()){
-                            klient.channels.fetch(configuration.administrationChannel)
-                                .then(channel => {
-                                    channel.send(`:warning: \n<@${profile.IDDiscord}>${lang.MemberCheck.Owner}${profile.nick_WT}${lang.MemberCheck.Squadron}${profile.clan}${lang.MemberCheck.NotFound}`)
-                                })
+                        if(!profile.records.at(-1).date == actualDate()){
+                            const channel = await client.channels.fetch(configuration.administrationChannel);
+                            await channel.send(`:warning: \n<@${profile.IDDiscord}>${lang.memberCheck.Owner}${profile.nick_WT}${lang.memberCheck.Squadron}${profile.clan}${lang.memberCheck.NotFound}`);
                         }
                         break;
                     case configuration.thirdClan.name:
                         if(!member.roles.cache.has(configuration.thirdClan.RoleID)){
-                            klient.channels.fetch(configuration.administrationChannel)
-                                .then(channel => {
-                                    channel.send(`:warning:\n<@${profile.IDDiscord}>${lang.MemberCheck.Owner}${profile.nick_WT}${lang.MemberCheck.Squadron}${profile.clan}${lang.MemberCheck.RoleMissing}<@&${configuration.thirdClan.RoleID}>`)
-                                })
+                            const channel = await client.channels.fetch(configuration.administrationChannel);
+                            await channel.send(`:warning:\n<@${profile.IDDiscord}>${lang.memberCheck.Owner}${profile.nick_WT}${lang.memberCheck.Squadron}${profile.clan}${lang.memberCheck.RoleMissing}<@&${configuration.thirdClan.RoleID}>`);
                         }
-                        if(!profile.records.at(-1).datum == actualDate()){
-                            klient.channels.fetch(configuration.administrationChannel)
-                                .then(channel => {
-                                    channel.send(`:warning: \n<@${profile.IDDiscord}>${lang.MemberCheck.Owner}${profile.nick_WT}${lang.MemberCheck.Squadron}${profile.clan}${lang.MemberCheck.NotFound}`)
-                            })   
+                        if(!profile.records.at(-1).date == actualDate()){
+                            const channel = await client.channels.fetch(configuration.administrationChannel);
+                            await channel.send(`:warning: \n<@${profile.IDDiscord}>${lang.memberCheck.Owner}${profile.nick_WT}${lang.memberCheck.Squadron}${profile.clan}${lang.memberCheck.NotFound}`);
                         }
                         break;
                     case configuration.fourthClan.name:
                         if(!member.roles.cache.has(configuration.fourthClan.RoleID)){
-                            klient.channels.fetch(configuration.administrationChannel)
-                                .then(channel => {
-                                    channel.send(`:warning:\n<@${profile.IDDiscord}>${lang.MemberCheck.Owner}${profile.nick_WT}${lang.MemberCheck.Squadron}${profile.clan}${lang.MemberCheck.RoleMissing}<@&${configuration.fourthClan.RoleID}>`)
-                            })
+                            const channel = await client.channels.fetch(configuration.administrationChannel);
+                            await channel.send(`:warning:\n<@${profile.IDDiscord}>${lang.memberCheck.Owner}${profile.nick_WT}${lang.memberCheck.Squadron}${profile.clan}${lang.memberCheck.RoleMissing}<@&${configuration.fourthClan.RoleID}>`);
                         }
-                        if(!profile.records.at(-1).datum == actualDate()){
-                            klient.channels.fetch(configuration.administrationChannel)
-                                .then(channel => {
-                                    channel.send(`:warning: \n<@${profile.IDDiscord}>${lang.MemberCheck.Owner}${profile.nick_WT}${lang.MemberCheck.Squadron}${profile.clan}${lang.MemberCheck.NotFound}`)
-                            })   
+                        if(!profile.records.at(-1).date == actualDate()){
+                            const channel = await client.channels.fetch(configuration.administrationChannel);
+                            await channel.send(`:warning: \n<@${profile.IDDiscord}>${lang.memberCheck.Owner}${profile.nick_WT}${lang.memberCheck.Squadron}${profile.clan}${lang.memberCheck.NotFound}`);
                         }
                         break;
                     default:
-                    klient.channels.fetch(configuration.administrationChannel)
-                        .then(channel => {
-                            channel.send(`:warning: \n${lang.MemberCheck.CheckProfile}<@${profile.IDDiscord}>${lang.MemberCheck.Owner}${profile.nick_WT}${lang.MemberCheck.Squadron}${profile.clan}`)
-                        })
-                    break;
+                        const channel = await client.channels.fetch(configuration.administrationChannel);
+                        await channel.send(`:warning: \n${lang.memberCheck.CheckProfile}<@${profile.IDDiscord}>${lang.memberCheck.Owner}${profile.nick_WT}${lang.memberCheck.Squadron}${profile.clan}`);
+                        break;
                 }
             }
         } catch (error) {
-            if (error.code === 10007){
-                klient.channels.fetch(configuration.administrationChannel)
-                    .then(channel => {
-                        channel.send(`:bangbang: \n${profile.nick_WT}${lang.MemberCheck.Squadron}${profile.clan}${lang.MemberCheck.DscNotFound}`)
-                    })
+            if (error.code === 10007 || error.code === 10013) {
+                const channel = await client.channels.fetch(configuration.administrationChannel);
+                await channel.send(`:bangbang: \n${profile.nick_WT}${lang.memberCheck.Squadron}${profile.clan}${lang.memberCheck.DscNotFound}`);
             }
         }
     }
