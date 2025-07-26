@@ -459,7 +459,7 @@ async function MemberCheck(guildID, configuration, lang) {
 
     for (const profile of profiles) {
         try {
-            if (profile.IDDiscord != 404 || profile.ignoreAbsence != true) {
+            if (profile.IDDiscord != 404 && profile.ignoreAbsence != true) {
                 console.log("Člen: ", profile.nick_WT)
                 if(profile.clan ==configuration.firstClan.name){console.log("svaz sedí")}else{console.log("svaz nesedí")};
                 //404 for completelly shared accounts
