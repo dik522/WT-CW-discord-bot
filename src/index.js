@@ -1,7 +1,7 @@
 import { EventEmitter } from 'node:events';
 import dotenv from "dotenv";
 dotenv.config();
-import { Client, IntentsBitField, Integration, MessageType, MessageManager, EmbedBuilder} from 'discord.js';
+import { Client, IntentsBitField, Integration, MessageType, MessageManager, EmbedBuilder, MessageFlags} from 'discord.js';
 import axios from 'axios';
 import cheerio from 'cheerio';
 import {MongoClient} from 'mongodb';
@@ -199,10 +199,10 @@ client.on('interactionCreate', (interaction) => {
         fs.writeFile('season.json', json, 'utf8', function (err) {
             if (err) {
                 console.log(language.CWSeason.BR.SaveError, err);
-                interaction.reply({content:language.CWSeason.BR.SaveError, ephemeral:true})
+                interaction.reply({content:language.CWSeason.BR.SaveError, flags: MessageFlags.Ephemeral})
             } else {
                 console.log(language.CWSeason.BR.SaveSuccess, json);
-                interaction.reply({content:language.CWSeason.BR.SaveSuccess, ephemeral:true})
+                interaction.reply({content:language.CWSeason.BR.SaveSuccess, flags: MessageFlags.Ephemeral})
             }
         })
     }
@@ -239,10 +239,10 @@ client.on('interactionCreate', (interaction) => {
         fs.writeFile('season.json', json, 'utf8', function (err) {
             if (err) {
                 console.log(language.CWSeason.Dates.SaveError, err);
-                interaction.reply({content:language.CWSeason.Dates.SaveError, ephemeral:true})
+                interaction.reply({content:language.CWSeason.Dates.SaveError, flags: MessageFlags.Ephemeral})
             } else {
                 console.log(language.CWSeason.Dates.SaveSuccess, json);
-                interaction.reply({content:language.CWSeason.Dates.SaveSuccess, ephemeral:true})
+                interaction.reply({content:language.CWSeason.Dates.SaveSuccess, flags: MessageFlags.Ephemeral})
             }
         })
     }
@@ -468,19 +468,19 @@ client.on("interactionCreate", async (interaction)=>{
                     fs.writeFile("configuration.json", json, "utf8", function (err){
                         if (err){
                             console.log(language.Configuration.ChangeError, err);
-                            interaction.reply({content:language.Configuration.Error, ephemeral:true})
+                            interaction.reply({content:language.Configuration.Error, flags: MessageFlags.Ephemeral})
                         }else{
                             console.log(language.Configuration.SuccessConsole, interaction.user.username, configuration);
-                            interaction.reply({content:language.Configuration.Success, ephemeral:true})
+                            interaction.reply({content:language.Configuration.Success, flags: MessageFlags.Ephemeral})
                         }
                     })
                 }else{
-                    interaction.reply({content:language.Configuration.WrongChoise, ephemeral:true})
+                    interaction.reply({content:language.Configuration.WrongChoise, flags: MessageFlags.Ephemeral})
                 }
             }
         }
     }catch (error){
-        interaction.reply({content:language.Configuration.ChangeError, ephemeral:true})
+        interaction.reply({content:language.Configuration.ChangeError, flags: MessageFlags.Ephemeral})
         console.error(language.Configuration.ErrorConsole, error);
     }
 })
@@ -522,7 +522,7 @@ client.on("interactionCreate", (interaction)=>{
                     relations.push({memb: member, channel: logger.channel, IDZprava: logger.IDZprava, index: logger.index})
                 })
         })
-    interaction.reply({content:language.CWResults.EditorAdded, ephemeral:true})
+    interaction.reply({content:language.CWResults.EditorAdded, flags: MessageFlags.Ephemeral})
 }})
 
 
@@ -640,9 +640,9 @@ client.on("interactionCreate", (interaction) =>{
         let editor = relations.find(editor => editor.editor === interaction.user.username)
         if(editor == undefined){
         
-            interaction.reply({content:language.CWResults.Edit.NonEditor, ephemeral:true})
+            interaction.reply({content:language.CWResults.Edit.NonEditor, flags: MessageFlags.Ephemeral})
         }
-        interaction.reply({content:language.CWResults.Edit.Success, ephemeral:true})
+        interaction.reply({content:language.CWResults.Edit.Success, flags: MessageFlags.Ephemeral})
         client.channels.fetch(editor.channel) 
             .then(channel =>{
                 channel.messages.fetch(editor.messageID)
@@ -697,7 +697,7 @@ client.on("interactionCreate", (interaction) =>{
     if(interaction.commandName ==="cw_delete"){
         let editor = relations.find(editor => editor.editor === interaction.user.username)
         if(pravelogger == undefined){
-            interaction.reply({content:language.CWResults.Delete.NonEditor, ephemeral:true})
+            interaction.reply({content:language.CWResults.Delete.NonEditor, flags: MessageFlags.Ephemeral})
         }
         client.channels.fetch(editor.channel)
             .then(channel =>{
@@ -718,7 +718,7 @@ client.on("interactionCreate", (interaction) =>{
                         obsah4.trim()
                         let bordel
                         if (obsah4==true){bordel = await klient.db(configuration.DBNames.CW.DB).collection(configuration.DBNames.CW.Collection).deleteOne(IDDb[editor.index].pop())}
-                        interaction.reply({content:language.CWResults.Delete.Success, ephemeral:true})
+                        interaction.reply({content:language.CWResults.Delete.Success, flags: MessageFlags.Ephemeral})
                 })
             })
     }
