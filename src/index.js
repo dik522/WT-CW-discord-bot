@@ -749,26 +749,3 @@ client.on("interactionCreate", (interaction) =>{
 })
 
 BotInicialization();
-//              testovací sekce
-client.on("messageCreate", (message) => {
-    if (message.content === "!bodysvazu:A") {
-        membersPoints(actualbr, configuration.firstClan, actualDate(),configuration, language)
-    }else if(message.content === "!bodysvazu:B") {
-        membersPoints(actualbr, configuration.secondClan, actualDate(),configuration, language)
-    }else if(message.content === "!bodysvazu:C") {
-        membersPoints(actualbr, configuration.thirdClan, actualDate(),configuration, language)
-    }else if(message.content ==="!dennibody"){
-        DayActivity(configuration, language)
-        console.log(language.CWpointsTable)
-    }else if(message.content === "!hlavicka:A"){
-        squadronPoints(configuration.firstClan, language)     
-    }else if(message.content === "!hlavicka:B"){
-        squadronPoints(configuration.secondClan, language)
-    }else if(message.content === "!hlavicka:C"){
-        squadronPoints(configuration.thirdClan, language)
-    }else if(message.content === "!brbody"){
-        brRangeTable(season, configuration, language)
-    }else if(message.content === "!clenikontrola"){
-        MemberCheck(process.env.GUILD_ID, configuration, language)
-    }
-});
