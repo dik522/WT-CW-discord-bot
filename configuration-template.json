@@ -20,7 +20,8 @@
         "scrapeOF":false,
         "scrapeChannel":"",
         "activityOF":false,
-        "activityChannel":""
+        "activityChannel":"",
+        "seasonEndChannel":""
     },
     "secondClan":{
         "name":"",
@@ -38,7 +39,8 @@
         "scrapeOF":false,
         "scrapeChannel":"",
         "aktivniOF":false,
-        "aktivniChannel":""
+        "aktivniChannel":"",
+        "seasonEndChannel":""
     },
     "thirdClan":{
         "name":"",
@@ -56,7 +58,8 @@
         "scrapeOF":false,
         "scrapeChannel":"",
         "aktivniOF":false,
-        "aktivniChannel":""
+        "aktivniChannel":"",
+        "seasonEndChannel":""
     },
     "fourthClan":{
         "name":"",
@@ -74,7 +77,8 @@
         "scrapeOF":false,
         "scrapeChannel":"",
         "aktivniOF":false,
-        "aktivniChannel":""
+        "aktivniChannel":"",
+        "seasonEndChannel":""
     },
     "DBNames":{
         "CW":{

@@ -1,5 +1,7 @@
 {
     "BotInicialization": {
+        "ConfigLoadSuccess": "Konfigurace bota načtena",
+        "ConfigLoadError": "Vyskytla se chyba v konfiguraci bota: ",
         "dbConnectSuccess": "Připojeno k databázi.",
         "dbConnectError": "Chyba při připojování k databázi: ",
         "LanguageLoadSuccess": "Jazykový dataset načten.",
@@ -52,7 +54,16 @@
     },
     "Profile":{
         "Created": "Profil nového člena vytvořen.",
-        "Error": "Běhěm vytváření profilu člena se vyskytl problém: "
+        "Error": "Běhěm vytváření profilu člena se vyskytl problém: ",
+        "EditModalTitle": "Změna údajů v profilu",
+        "EditModalNickWT": "nick ve WT",
+        "EditModalIDDsc": "ID Discord účtu",
+        "EditModalInClan": "Je člen ve svazu?",
+        "EditModalClan": "Svaz, v němž je člen",
+        "EditModalSecondary": "Je toto něčí druhotný účet?",
+        "EditModalSuccess": "Údaje byly úspěšně změněny",
+        "BtnForgiveLimit": "Nesplnění limitu omluveno",
+        "ForgivenLimitSuccess": "Úspěšně odpuštěna povinost splnit limit CW bodů pro tuto sezónu"
     },
     "Misc":{
         "Results": "Výsledky",
@@ -71,7 +82,14 @@
         "CWPoints": "CW body",
         "Activity": "aktivita",
         "Role": "role",
-        "Arrival": "datum příchodu"
+        "Arrival": "datum příchodu",
+        "InClan": "ve svazu",
+        "secondaryAccount": "sekundární účet",
+        "Date": "Datum výsledků",
+        "ForgivenLim": "Prominuto splnění limitu CW bodů",
+        "ThisSeason": "Tato sezóna",
+        "PreviousSeason": "Předchozí sezóna",
+        "NoRecords": "nemá žádné záznamy"
     },
     "memberCheck":{
         "Owner": " vlastnící účet ",
@@ -81,11 +99,47 @@
         "CheckProfile": "Zkontrolujte správnost dat v profilu ",
         "DscNotFound": "nemá udaný discord účet na tomto serveru!"
     },
+    "Security":{
+        "UnkAtcSrc": "Neznámý druh zdroje útoku: ",
+        "UnavDscClient": "Nedostupný Discord klient (bota) pro provedení banu.",
+        "BanReasonNoSQLInj": "Narušení bezpečnosti použitím NoSQL injekce - úroveň nebezpečí ",
+        "NoBanPerm": "Botu chybí povolení banovat na severu: ",
+        "UserID": "Uživatel s ID ",
+        "UserAlreadyBanned": "je již zabanován na serveru: ",
+        "UserBanned": "je nově zabanován na serveru: ",
+        "ErrorBanning1": "Došlo k chybě při banování uživatele ",
+        "ErrorBanning2": "na serveru ",
+        "DscBanComplete": "Hromadné banování uživatele dokončeno, provedeno na ",
+        "Embed": {
+            "Title": "🚨 Automatický bezpečnostní ban",
+            "User": "👤 Zabanovaný uživatel",
+            "ThreatLev": "⚠️ Úroveň nebezpečí",
+            "Type": "🔍 Typ útoku",
+            "NoSQLInj": "Pokus o NoSQL injekci",
+            "Payload": "💀 Nebezpečný obsah",
+            "Footer": "Automatický bezpečnostní systém - bot zabanuje uživatele na všech serverech"
+        },
+        "ErrorAnnounceDscBan": "Vyskytla se chyba při ohlašování Discord banu: ",
+        "BannedIP": "Zabanována IP adresa: ",
+        "BannedInteraction": "🚫 Přístup odepřen. Tvůj účet byl označen pro nebezpečné chování vůči botu.",
+        "ErrorBannedInt": "Chyba během odpovídání zablokovanému uživateli: ",
+        "ErrorSavingDscBan": "Vyskytla se chyba během ukládání zablokovaných uživatelů: ",
+        "ErrorSavingDev": "Vyskytla se chyba během ukládání zablokovaných zařízení: ",
+        "ErrorLogingInc": "Vyskytla se chyba během logování bezpečnostního incidentu: ",
+        "UnbanUser": "byl odbanován ze svazu: ",
+        "ErrorUnbanUser": "nemohl být odbanován na serveru ",
+        "UnbanComplete": "Hromadné odbanování uživatele dokončeno, provedeno na ",
+        "UnbanError": "Vyskytla se chyba během odbanování uživatele: ",
+        "BannedDscIntCon": "🚫 Zablokována interakce blokovaného uživatele: "
+    },
     "CWresultsHeader": "Zapisující: ",
     "scrapeProccesing": "Zpracovávám data!",
     "SquadronSearchFound": "Výsledky svazu: ",
     "SquadronSearchNotFound": "Svaz nenalezen",
-    "StatisticError": "Během zpracování dat členů komunity nastala chyba: ",
+    "statisticError": "Během zpracování dat členů komunity nastala chyba: ",
+    "statisticDone": "Ukládání dat do hráčských profilů je dokončeno.",
+    "dayActivity": "Vypisování dnes aktivních hráčů je dokončeno",
+    "squadonPointsDone": "CW body z hlavičky odeslány: ",
     "CWPointsError": "Během zpracování aktivních hráčů dneška nastala chyba: ",
     "CWPointsTable": "Tabulka dnes aktivních hráčů svazu: ",
     "CWPointsEmpty": "Dnes nebyly hrány CW ve svazu ",
@@ -94,5 +148,16 @@
     "brRangeTable": "Tabulka aktivních hráčů během tohoto br svazu ",
     "brRangeError": "Došlo k chybě během zpracovávání aktivních hráčů tototo br období v CW: ",
     "brRangeEmpty": "V tomto br období (CW) nebyly v aktivní žádní hráči, svaz: ",
-    "SquadronSearch": "Tabulka nalezených výsledků bitev proti svazu: "
+    "brRangeDone": "Br Range funkce je dokončena.",
+    "SquadronSearch": "Tabulka nalezených výsledků bitev proti svazu: ",
+    "EmbedTitle":"Profil člena",
+    "EmbdedDescription": "Zde je výpis profilu člena",
+    "ProfileView": "Zobrazen profil člena",
+    "EditBtnLabel": "Uprav profil člena",
+    "SeasonEndTable": "Tabulka členů a jejich splnění limitu ve svazu  ",
+    "SeasonSummaryError": "Vyskytla se chyba ve funkci SeasonSummary: ",
+    "SeasonTableError": "Vyskytla se chyba při odesílání tabulku svazu",
+    "MissingMemberDB": "Ve svazu jsou členi, kteří nemají vytvořený profil:",
+    "MissingMemberError": "Vyskytla se chyba při kontrole členů, kteří nemají vytvořený profil: ",
+    "MissingMemberSuccess": " nemá v profilu žádné záznamy, proveďte kontrolu správnosti jména!"
 }

@@ -4,6 +4,30 @@ import { REST, Routes, ApplicationCommandOptionType} from 'discord.js';
 
 const commands = [
     {
+        name: "view_profile",
+        name_localizations: {"cs":"zobrazeni_profilu"},
+        description: "Returns data from specified member's profile",
+        description_localizations: {"cs": "Zobrazí data profilu specifikovaného uživatele"},
+        options: [
+            {
+                name: "password",
+                name_localizations: {"cs": "heslo"},
+                description: "personal password of leadership members",
+                description_localizations: {"cs": "pro vložení osobního hesla členů vedení"},
+                type: ApplicationCommandOptionType.String,
+                required: true,
+                min_length: 6,
+                max_length: 14
+            },{
+                name: "member",
+                name_localizations: {"cs": "clen"},
+                description: "member whose profile shall be shown",
+                description_localizations: {"cs": "člen jehož profil má být zobrazen"},
+                type: ApplicationCommandOptionType.String,
+                required: true,
+            }
+        ]
+    },{
         name: "init_profile",
         name_localizations:{"cs":"iniciaceprofilu"},
         description: "Initialise profile of new member",
@@ -14,27 +38,35 @@ const commands = [
                 description: "WT nickname of new member",
                 description_localizations:{"cs": "WT nick nového clena"},
                 type: ApplicationCommandOptionType.String,
-                required: true
+                required: true,
+                min_length: 3,
+                max_length: 20
             },{
                 name: "discordid",
                 description: "Discord ID of new member",
                 description_localizations:{"cs": "ID discord účtu nového člena"},
                 type: ApplicationCommandOptionType.String,
-                required: true
+                required: true,
+                min_length: 17,
+                max_length: 19
             },{
                 name: "squadron",
                 name_localizations:{"cs":"svaz"},
                 description: "Squadron of new member",
                 description_localizations: {"cs":"Zkratka svazu, do něhož byl přijat"},
                 type:ApplicationCommandOptionType.String,
-                required: true
+                required: true,
+                min_length: 1,
+                max_length: 5
             },{
                 name: "comments",
                 name_localizations:{"cs":"poznamky"},
                 description: "Comments of new member",
                 description_localizations:{"cs": "poznámky k členovi"},
                 type:ApplicationCommandOptionType.String,
-                required: true
+                required: true,
+                min_length: 1,
+                max_length: 100
             }
         ]
     },
@@ -72,6 +104,8 @@ const commands = [
                 description_localizations: {"cs":"název klanu, proti kterému se hrálo"},
                 type: ApplicationCommandOptionType.String,
                 required: true,
+                min_length: 1,
+                max_length: 5
             },
             {
                 name: "planes",
@@ -132,6 +166,8 @@ const commands = [
                 description_localizations: {"cs":"Místo pro poznámky (specifické stroje atd.)"},
                 type: ApplicationCommandOptionType.String,
                 required: false,
+                min_length: 0,
+                max_length: 100
             }
         ]
     },
@@ -174,6 +210,8 @@ const commands = [
                 description_localizations: {"cs":"název klanu, proti kterému se hrálo"},
                 type: ApplicationCommandOptionType.String,
                 required: true,
+                min_length: 1,
+                max_length: 5
             },
             {
                 name: "planes",
@@ -234,6 +272,8 @@ const commands = [
                 description_localizations: {"cs":"Místo pro poznámky (specifické stroje atd.)"},
                 type: ApplicationCommandOptionType.String,
                 required: false,
+                min_length: 0,
+                max_length: 100
             }
         ]
     },
@@ -433,7 +473,9 @@ const commands = [
                 description:"input ID of channel where should specified function post",
                 description_localizations:{"cs":"pro zadání ID kanálu k odesílání"},
                 type: ApplicationCommandOptionType.String,
-                required: false
+                required: false,
+                min_length: 17,
+                max_length: 19
             }
         ]
     },{
@@ -449,6 +491,8 @@ const commands = [
                 description_localizations:{"cs": "datum kdy zacala nová sezóny"},
                 type: ApplicationCommandOptionType.String,
                 required: true,
+                min_length: 10,
+                max_length: 10
             },{
                 name: "date1",
                 name_localizations:{"cs":"datum1"},
@@ -456,6 +500,8 @@ const commands = [
                 description_localizations: {"cs":"datum kdy končí nejvyšší br"},
                 type: ApplicationCommandOptionType.String,
                 required: true,
+                min_length: 10,
+                max_length: 10
             },{
                 name: "date2",
                 name_localizations: {"cs": "datum2"},
@@ -463,6 +509,8 @@ const commands = [
                 description_localizations: {"cs":"datum kdy končí další br"},
                 type: ApplicationCommandOptionType.String,
                 required: true,
+                min_length: 10,
+                max_length: 10
             },{
                 name: "date3",
                 name_localizations: {"cs": "datum3"},
@@ -470,6 +518,8 @@ const commands = [
                 description_localizations: {"cs":"datum kdy končí 3. br"},
                 type: ApplicationCommandOptionType.String,
                 required: true,
+                min_length: 10,
+                max_length: 10
             },{
                 name: "date4",
                 name_localizations:{"cs":"datum4"},
@@ -477,6 +527,8 @@ const commands = [
                 description_localizations: {"cs":"datum kdy končí 4. br sezony"},
                 type: ApplicationCommandOptionType.String,
                 required: true,
+                min_length: 10,
+                max_length: 10
             },{
                 name: "date5",
                 name_localizations: {"cs":"datum5"},
@@ -484,6 +536,8 @@ const commands = [
                 description_localizations: {"cs":"datum kdy končí 5. br sezony"},
                 type: ApplicationCommandOptionType.String,
                 required: true,
+                min_length: 10,
+                max_length: 10
             },{
                 name: "date6",
                 name_localizations: {"cs":"datum6"},
@@ -491,6 +545,8 @@ const commands = [
                 description_localizations: {"cs":"datum kdy končí 6. br sezony"},
                 type: ApplicationCommandOptionType.String,
                 required: true,
+                min_length: 10,
+                max_length: 10
             },{
                 name: "date7",
                 name_localizations: {"cs":"datum7"},
@@ -498,6 +554,8 @@ const commands = [
                 description_localizations: {"cs":"datum kdy končí 7. br sezony"},
                 type: ApplicationCommandOptionType.String,
                 required: true,
+                min_length: 10,
+                max_length: 10
             },{
                 name: "date8",
                 name_localizations: {"cs":"datum8"},
@@ -505,6 +563,8 @@ const commands = [
                 description_localizations: {"cs":"datum kdy končí 8. br sezony"},
                 type: ApplicationCommandOptionType.String,
                 required: true,
+                min_length: 10,
+                max_length: 10
             },{
                 name: "season_end",
                 name_localizations: {"cs":"konec_sezony"},
@@ -512,6 +572,8 @@ const commands = [
                 description_localizations: {"cs":"datum kdy končí 9. br sezony"},
                 type: ApplicationCommandOptionType.String,
                 required: true,
+                min_length: 10,
+                max_length: 10
             }
         ]
     },{
@@ -525,7 +587,9 @@ const commands = [
                 type: ApplicationCommandOptionType.String,
                 required: true,
                 description:"input name of user to became his logger",
-                description_localizations:{"cs":"Zadejte jméno uživatele, jehož výsledky chcete upravovat"}
+                description_localizations:{"cs":"Zadejte jméno uživatele, jehož výsledky chcete upravovat"},
+                min_length: 1,
+                max_length: 20
             }
         ]
     },{
@@ -541,6 +605,22 @@ const commands = [
                 description_localizations: {"cs":"název svazu"},
                 type: ApplicationCommandOptionType.String,
                 required: true,
+                min_length: 1,
+                max_length: 5
+            }
+        ]
+    },{
+        name:"unban_member",
+        description: "Unban a member using WTCW bot",
+        description_localizations: {"cs":"Zrušit banování člena pomocí WTCW bota"},
+        options:[
+            {
+                name: "user_id",
+                name_localizations: {"cs":"uzivatel_id"},
+                description: "ID of the user to unban",
+                description_localizations: {"cs":"ID uživatele, jemuž chcete zrušit ban"},
+                type: ApplicationCommandOptionType.String,
+                required: true
             }
         ]
     }

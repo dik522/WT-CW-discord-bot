@@ -2,9 +2,9 @@
 
 #environment setup
 npm init -y
-npm install ascii-table@0.0.9 axios@1.7.7 cheerio@1.0.0-rc.12 discord.js@14.21.0 diagnostics_channel@1.1.0 dotenv@16.4.5 express@4.19.2 mongodb@6.8.0
+npm install ascii-table@0.0.9 axios@1.11.0 cheerio@1.1.2 discord.js@14.21.0 diagnostics_channel@1.1.0 dotenv@17.2.1 express@4.19.2 mongodb@6.18.0
 jq \
-  --arg ver "1.0.1" \
+  --arg ver "1.1.0" \
   --arg type "module" \
   --arg main "src/index.js" \
   --arg description "WT-CW Discord Bot" \
@@ -82,6 +82,7 @@ create_clan_json() {
     [[ $SCRAPE_OF == "true" ]] && read -p "Channel ID to where send 'scrape': " SCRAPE_CHAN
     read -p "Allow to send daily table of active players? (true/false): " ACTIVITY_OF
     [[ $ACTIVITY_OF == "true" ]] && read -p "Channel ID to where send daily activity table: " ACTIVITY_CHAN
+    read -p "Channel ID to where send end of season table: " SEASON_END_CHAN
 
     cat <<EOF
     "name":"$NAME",
@@ -99,7 +100,8 @@ create_clan_json() {
     "scrapeOF":$SCRAPE_OF,
     "scrapeChannel":"${SCRAPE_CHAN:-}",
     "activityOF":$ACTIVITY_OF,
-    "activityChannel":"${ACTIVITY_CHAN:-}"
+    "activityChannel":"${ACTIVITY_CHAN:-}",
+    "seasonEndChannel":"${SEASON_END_CHAN:-}"
 EOF
   else
     cat <<EOF
@@ -118,7 +120,8 @@ EOF
     "scrapeOF":false,
     "scrapeChannel":"",
     "activityOF":false,
-    "activityChannel":""
+    "activityChannel":"",
+    "seasonEndChannel":""
 EOF
   fi
 }

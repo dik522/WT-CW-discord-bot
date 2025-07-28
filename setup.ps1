@@ -1,9 +1,9 @@
 # Environment setup for WT-CW Discord Bot
 npm init -y
-npm install ascii-table@0.0.9 axios@1.7.7 cheerio@1.0.0-rc.12 discord.js@14.21.0 diagnostics_channel@1.1.0 dotenv@16.4.5 express@4.19.2 mongodb@6.8.0
+npm install ascii-table@0.0.9 axios@1.11.0 cheerio@1.1.2 discord.js@14.21.0 diagnostics_channel@1.1.0 dotenv@17.2.1 express@4.19.2 mongodb@6.18.0
 $json = Get-Content package.json | ConvertFrom-Json
 $json.type = "module"
-$json.version = "1.0.1"
+$json.version = "1.1.0"
 $json.main = "src/index.js"
 $json.author = "Dik522"
 $json | ConvertTo-Json -Depth 10 | Set-Content package.json
@@ -73,6 +73,7 @@ function Get-ClanConfig {
         $scrapeChan = if ($scrapeOF -eq "true") { Read-Host "Channel ID to where send 'scrape'" } else { "" }
         $activityOF = Read-Host "Allow to send daily table of active players? (true/false)"
         $activityChan = if ($activityOF -eq "true") { Read-Host "Channel ID to where send daily activity table" } else { "" }
+        $seasonEndChan = Read-Host "Channel ID to where send end of season table "
 
         @{
             name = $name
@@ -91,6 +92,7 @@ function Get-ClanConfig {
             scrapeChannel = $scrapeChan
             activityOF = [bool]::Parse($activityOF)
             activityChannel = $activityChan
+            seasonEndChannel = $seasonEndChan
         }
     } else {
         @{
@@ -110,6 +112,7 @@ function Get-ClanConfig {
             scrapeChannel = ""
             activityOF = $false
             activityChannel = ""
+            seasonEndChannel = ""
         }
     }
 }

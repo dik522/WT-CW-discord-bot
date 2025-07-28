@@ -1,5 +1,7 @@
 {
     "BotInicialization": {
+        "ConfigLoadSuccess": "Bot configuration loaded",
+        "ConfigLoadError": "Error had occured while loading configuration: ",
         "dbConnectSuccess": "Successful connection to database.",
         "dbConnectError": "Error while connecting to database: ",
         "LanguageLoadSuccess": "Language set loaded.",
@@ -52,7 +54,17 @@
     },
     "Profile":{
         "Created": "Member profile created.",
-        "Error": "Error while creating member profile: "
+        "Error": "Error while creating member profile: ",
+        "EditModalTitle": "Editation of member's profile",
+        "EditModalNickWT": "nick in WT",
+        "EditModalIDDsc": "ID of discord account",
+        "EditModalInClan": "Is the member in squadron",
+        "EditModalClan": "Squadron in which the member is",
+        "EditModalSecondary": "Is this WT account secondary account of someone?",
+        "EditModalSuccess": "Profile edited successfully",
+        "BtnForgiveLimit": "Forgive points limit",
+        "ForgivenLim": "Forgiven CW points limit",
+        "ForgivenLimitSuccess": "Successfully forgiven CW points limit for this CW season"
     },
     "Misc":{
         "Results": "results",
@@ -71,7 +83,13 @@
         "CWPoints": "CW points",
         "Activity": "activity",
         "Role": "role",
-        "Arrival": "Date of arrival"
+        "Arrival": "Date of arrival",
+        "InClan":"in clan",
+        "secondaryAccount": "secondary account",
+        "Date": "Date of records",
+        "ThisSeason": "This season",
+        "PreviousSeason": "Previous season",
+        "NoRecords": "don't have any records"
     },
     "MemberCheck":{
         "Owner": " who owns WT account ",
@@ -81,11 +99,47 @@
         "CheckProfile": "Check correctness of profile details of ",
         "DscNotFound": "doesn't have linked discord account on this server!"
     },
+    "Security":{
+        "UnkAtcSrc": "Unknown attack source type:",
+        "UnavDscClient": "Discord client not available for banning",
+        "BanReasonNoSQLInj": "Security violation using NoSQL injection - Threat level ",
+        "NoBanPerm": "No ban permission in guild: ",
+        "UserID": "User with ID ",
+        "UserAlreadyBanned": "is already banned on server: ",
+        "UserBanned": "is newly banned on server: ",
+        "ErrorBanning1": "Error occurred while banning user ",
+        "ErrorBanning2": "on server ",
+        "DscBanComplete": "Mass banning of user completed, executed on servers: ",
+        "Embed": {
+            "Title": "🚨 Automatic security ban",
+            "User": "👤 Banned user",
+            "ThreatLev": "⚠️ Threat level",
+            "Type": "🔍 Type of attack",
+            "NoSQLInj": "Attempted NoSQL injection",
+            "Payload": "💀 Dangerous content",
+            "Footer": "Automatic security system - bot bans user on all servers where it is present"
+        },
+        "ErrorAnnounceDscBan": "An error occurred while announcing Discord ban: ",
+            "BannedIP": "Banned IP address: ",
+            "BannedInteraction": "🚫 Access denied. Your account has been flagged for dangerous behavior towards the bot.",
+            "ErrorBannedInt": "Error occurred while responding to banned user: ",
+            "ErrorSavingDscBan": "An error occurred while saving banned users: ",
+            "ErrorSavingDev": "An error occurred while saving banned devices: ",
+            "ErrorLogingInc": "An error occurred while logging security incident: ",
+            "UnbanUser": "had been unbanned on server ",
+            "ErrorUnbanUser": "could not be unbanned on server ",
+            "UnbanComplete": "Mass unban of user completed, executed on ",
+            "UnbanError": "An error occurred while unbanning user: ",
+            "BannedDscIntCon": "🚫 Blocked interaction of banned user: "
+    },
     "CWresultsHeader": "Result loggers are: ",
     "scrapeProccesing": "Scraping process started",
     "squadronSearchFound": "Results of squadron: ",
     "squadronSearchNotFound": "Squadron not found",
     "statisticError": "Error happened while processing statistics: ",
+    "statisticDone": "Saving data to members profiles is done.",
+    "dayActivity": "Write down of today's active players is done",
+    "squadonPointsDone": "Sending total of squadron points is done: ",
     "CWPointsError": "Error has occured while processing CW points of profile: ",
     "CWPointsTable": "Table of today's active players of squadron: ",
     "CWPointsEmpty": "There have been no change in CW points this day in squadron ",
@@ -94,5 +148,16 @@
     "brRangeError": "Error has occured while processing br range: ",
     "brRangeTable": "Table of active players during this br range of clan ",
     "brRangeEmpty": "There have been no active players in this br range in clan ",
-    "SquadronSearch": "CW results found for: "
+    "brRangeDone": "BR range function is done.",
+    "SquadronSearch": "CW results found for: ",
+    "EmbedTitle": "Member's profile",
+    "EmbdedDescription": "Here is content of members profile",
+    "ProfileView": "Member's profile viewed",
+    "EditBtnLabel": "Edit member's profile",
+    "SeasonEndTable": "Table of members and their acomplishment of limit in clan ",
+    "SeasonSummaryError": "Error had occured in SeasonSummary function: ",
+    "SeasonTableError": "Error had occured while sending season table of squadron",
+    "MissingMemberDB": "There are members in clan who don't have created profile:",
+    "MissingMemberError": "Error had eccured while checking for members without profile in DB: ",
+    "MissingRecords": " has no records in profile, please check the correctness of the WT nick!"
 }
