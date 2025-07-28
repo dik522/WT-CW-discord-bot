@@ -279,7 +279,7 @@ client.on('messageCreate',(messages)=> {
             channel.send(language.scrapeProccesing)
         .catch(console.error);
         });
-        axios(url)
+        axios.get(url)
             .then(async response => {
                 const html = response.data;
                 const $ = cheerio.load(html);

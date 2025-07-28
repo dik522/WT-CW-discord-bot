@@ -316,7 +316,7 @@ async function brRangeTable(season, configuration, lang) {
                     if(Error == "Profile has less than 7 zaznamy in 'zaznamy'"){
                         structuredArray.push(["↑", profile.nick_WT, profile.records.at(-1).CWbody, profile.records.at(-1).CWbody, achieved, profile.svaz])
                     }else{
-                        console.error(lang.brRangeError, error, "i: ", i);
+                        console.error(lang.brRangeError, error);
                     }
                 }
             }
