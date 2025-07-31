@@ -4,6 +4,28 @@ import { REST, Routes, ApplicationCommandOptionType} from 'discord.js';
 
 const commands = [
     {
+        name: "view_profile",
+        name_localizations: {"cs":"zobrazeni_profilu"},
+        description: "Returns data from specified member's profile",
+        description_localizations: {"cs": "Zobrazí data profilu specifikovaného uživatele"},
+        options: [
+            {
+                name: "password",
+                name_localizations: {"cs": "heslo"},
+                description: "personal password of leadership members",
+                description_localizations: {"cs": "pro vložení osobního hesla členů vedení"},
+                type: ApplicationCommandOptionType.String,
+                required: true
+            },{
+                name: "member",
+                name_localizations: {"cs": "clen"},
+                description: "member whose profile shall be shown",
+                description_localizations: {"cs": "člen jehož profil má být zobrazen"},
+                type: ApplicationCommandOptionType.String,
+                required: true
+            }
+        ]
+    },{
         name: "init_profile",
         name_localizations:{"cs":"iniciaceprofilu"},
         description: "Initialise profile of new member",

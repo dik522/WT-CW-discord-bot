@@ -1,5 +1,7 @@
 {
     "BotInicialization": {
+        "ConfigLoadSuccess": "Konfigurace bota načtena",
+        "ConfigLoadError": "Vyskytla se chyba v konfiguraci bota: ",
         "dbConnectSuccess": "Připojeno k databázi.",
         "dbConnectError": "Chyba při připojování k databázi: ",
         "LanguageLoadSuccess": "Jazykový dataset načten.",
@@ -52,7 +54,14 @@
     },
     "Profile":{
         "Created": "Profil nového člena vytvořen.",
-        "Error": "Běhěm vytváření profilu člena se vyskytl problém: "
+        "Error": "Běhěm vytváření profilu člena se vyskytl problém: ",
+        "EditModalTitle": "Změna údajů v profilu",
+        "EditModalNickWT": "nick ve WT",
+        "EditModalIDDsc": "ID Discord účtu",
+        "EditModalInClan": "Je člen ve svazu?",
+        "EditModalClan": "Svaz, v němž je člen",
+        "EditModalSecondary": "Je toto něčí druhotný účet?",
+        "EditModalSuccess": "Údaje byly úspěšně změněny"
     },
     "Misc":{
         "Results": "Výsledky",
@@ -71,7 +80,10 @@
         "CWPoints": "CW body",
         "Activity": "aktivita",
         "Role": "role",
-        "Arrival": "datum příchodu"
+        "Arrival": "datum příchodu",
+        "InClan": "ve svazu",
+        "secondaryAccount": "sekundární účet",
+        "Date": "Datum výsledků"
     },
     "memberCheck":{
         "Owner": " vlastnící účet ",
@@ -85,7 +97,10 @@
     "scrapeProccesing": "Zpracovávám data!",
     "SquadronSearchFound": "Výsledky svazu: ",
     "SquadronSearchNotFound": "Svaz nenalezen",
-    "StatisticError": "Během zpracování dat členů komunity nastala chyba: ",
+    "statisticError": "Během zpracování dat členů komunity nastala chyba: ",
+    "statisticDone": "Ukládání dat do hráčských profilů je dokončeno.",
+    "dayActivity": "Vypisování dnes aktivních hráčů je dokončeno",
+    "squadonPointsDone": "CW body z hlavičky odeslány: ",
     "CWPointsError": "Během zpracování aktivních hráčů dneška nastala chyba: ",
     "CWPointsTable": "Tabulka dnes aktivních hráčů svazu: ",
     "CWPointsEmpty": "Dnes nebyly hrány CW ve svazu ",
@@ -94,5 +109,10 @@
     "brRangeTable": "Tabulka aktivních hráčů během tohoto br svazu ",
     "brRangeError": "Došlo k chybě během zpracovávání aktivních hráčů tototo br období v CW: ",
     "brRangeEmpty": "V tomto br období (CW) nebyly v aktivní žádní hráči, svaz: ",
-    "SquadronSearch": "Tabulka nalezených výsledků bitev proti svazu: "
+    "brRangeDone": "Br Range funkce je dokončena.",
+    "SquadronSearch": "Tabulka nalezených výsledků bitev proti svazu: ",
+    "EmbedTitle":"Profil člena",
+    "EmbdedDescription": "Zde je výpis profilu člena",
+    "ProfileView": "Zobrazen profil člena",
+    "EditBtnLabel": "Uprav profil člena"
 }

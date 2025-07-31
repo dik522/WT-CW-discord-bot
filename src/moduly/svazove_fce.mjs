@@ -59,6 +59,7 @@ async function membersPoints(br, clan_config, date, configuration, lang) {
                         $push:{records: {CWpoints: element.CWpoints, activity: element.activity, role: element.role, date: date, br: br}}})
                 }
             }
+            console.log(lang.statisticDone)
         } catch (error) {
             console.error(lang.statisticError, error);
         }
@@ -218,6 +219,7 @@ async function DayActivity(configuration, lang) {
             }
         }
     }
+    console.log(lang.dayActivity)
 }
 
 /**Fetches and sends squadron points
@@ -244,6 +246,7 @@ async function squadronPoints(configuration, lang) {
                 const channel = await client.channels.fetch(kanal);
                 const message = lang.SquadronPoints + svazObecne[0];
                 await channel.send(message);
+                console.log(lang.squadonPointsDone, configuration.name)
             } catch (error) {
                 console.error(lang.SquadronPointsError, error);
             }
@@ -442,6 +445,7 @@ async function brRangeTable(season, configuration, lang) {
                     }
                 }
             }
+            console.log(brRangeDone)
             break
         }
     }

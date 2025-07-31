@@ -1,7 +1,7 @@
 import { EventEmitter } from 'node:events';
 import dotenv from "dotenv";
 dotenv.config();
-import { Client, IntentsBitField, Integration, MessageType, MessageManager, EmbedBuilder, MessageFlags} from 'discord.js';
+import { Client, IntentsBitField, Integration, MessageType, MessageManager, EmbedBuilder, MessageFlags, ModalBuilder} from 'discord.js';
 import axios from 'axios';
 import cheerio from 'cheerio';
 import {MongoClient} from 'mongodb';
@@ -42,8 +42,9 @@ async function loadConfig() {
         const json = await fsPromise.readFile("configuration.json", "utf8");
         configuration = JSON.parse(json);
         passwords = configuration.administrators
+        console.log(language.BotInicialization.ConfigLoadSuccess)
     } catch (err) {
-        console.log("Error while loading data from __configuration.json__", err);
+        console.log(language.BotInicialization.ConfigLoadError, err);
     }
 }
 /**Loads language dataset specified in configuration
@@ -53,8 +54,9 @@ async function loadLanguage(){
     try{
         const json = await fsPromise.readFile("languages/"+ configuration.language +".json", "utf8");
         language = JSON.parse(json);
+        console.log(language.BotInicialization.LanguageLoadSuccess)
     }catch(err){
-        console.log("Error while loading language dataset: ", err);
+        console.log(LanguageLoadError, err);
     }
 }
 /**
@@ -106,6 +108,7 @@ async function DBConnection() {
     }
 }
 async function BotInicialization() {
+    console.log("-------------------", actualDate())
     await loadConfig();
     await loadLanguage();
     await client.login(process.env.TOKEN);
@@ -130,7 +133,6 @@ async function BotInicialization() {
         () => reset(),
         () => console.log("---------------------------------------", actualDate())
     ]);
-    console.log("-------------------", actualDate())
 }
 //general functions
 
@@ -721,6 +723,136 @@ client.on("interactionCreate", (interaction) =>{
                         interaction.reply({content:language.CWResults.Delete.Success, flags: MessageFlags.Ephemeral})
                 })
             })
+    }
+})
+/**Showing members profile
+ * 
+*/
+client.on("interactionCreate", (interaction) =>{
+    if(!interaction.isChatInputCommand())return;
+    if(interaction.commandName === "view_profile"){
+        const password = interaction.options.get("password").value;
+        const member = interaction.options.get("member").value;
+        async()=>{
+            try{
+                let result = await klient.db(configuration.DBNames.Community.DB).collection(configuration.DBNames.Community.Collection).find({nick_WT: member});
+                let passwordRight = await passwordCheck(password, passwords);
+                if(!passwordRight.success) return
+                let zprava = new EmbedBuilder()
+                    .setTitle(language.EmbedTitle)
+                    .setDescription(language.EmbdedDescription)
+                    .setColor("08e79f")
+                    .addFields(
+                        {name: language.Misc.Player, value: result.nick_WT},
+                        {name: "Discord", value: result.IDDiscord},
+                        {name: language.Misc.Arrival, value: result.joinDate},
+                        {name: language.Misc.Squadron, value: result.clan},
+                        {name: language.Misc.InClan, value: result.inClan},
+                        {name: language.Misc.PointsLimit, value: result.acomplishedLimit},
+                        {name: language.Misc.Comments, value: result.comments},
+                        {name: language.Misc.secondaryAccount, value: result.ignoreAbsence},
+                        {name: language.Misc.CWPoints, value: result.records.at(-1).CWpoints, inline: true},
+                        {name: language.Misc.Activity, value: result.records.at(-1).activity, inline: true},
+                        {name: language.Misc.Date, value: result.records.at(-1).date, inline: true}
+                    )
+                let EditBtn = new ButtonBuilder()
+                    .setLabel(language.EditBtnLabel)
+                    .setStyle(ButtonStyle.Primary)
+                    .setCustomId("EditMembersProfile")
+                const buttonRow = new ActionRowBuilder().addComponents(EditBtn);
+            
+                const reply = await interaction.reply({embeds: [zprava], components: [buttonRow], flags: MessageFlags.Ephemeral})
+                console.log(language.ProfileView)
+
+                const collector = reply.createMessageCommponentCollector({
+                    componentType: ComponentType.Button,
+                    time: 120_000
+                });
+
+                collector.on("collect", async (interaction) =>{
+                    if(interaction.customId === "EditMemberProfile"){
+                        const modal = new ModalBuilder({
+                            customId: "EditProfileModal",
+                            title: language.Profile.EditModalTitle,
+                        })
+                        const nick_WT_Modal = new TextInputBuilder({
+                            customId: "nick_WT_Modal",
+                            label: language.Profile.EditModalNickWT,
+                            style:TextInputStyle.Short,
+                            require: false,
+                            placeHolder: result.nick_WT
+                        })
+                        const IDDiscord_Modal = new TextInputBuilder({
+                            customId: "IDDiscord_Modal",
+                            label: language.Profile.EditModalIDDsc,
+                            style: TextInputStyle.Short,
+                            require: false,
+                            placeHolder: result.IDDiscord
+                        })
+                        const inClan_Modal = new TextInputBuilder({
+                            customId: "inClan_Modal",
+                            label: language.Profile.EditModalInClan,
+                            style: TextInputStyle.Short,
+                            require: false,
+                            placeHolder: result.inClan
+                        })
+                        const clan_Modal = new TextInputBuilder({
+                            customId: "clan_Modal",
+                            label: language.Profile.EditModalClan,
+                            style: TextInputStyle.Short,
+                            require: false,
+                            placeHolder: result.clan
+                        })
+                        const secondaryAccount_Modal = new TextInputBuilder({
+                            customId: "secondaryAccount_Modal",
+                            label: language.Profile.EditModalSecondary,
+                            style: TextInputStyle.Short, //Paragraph
+                            require: false,
+                            placeHolder: result.ignoreAbsence
+                        })
+
+                        const nick_WT_Row = new ActionRowBuilder().addComponents(nick_WT_Modal);
+                        const IDDiscord_Row = new ActionRowBuilder().addComponents(IDDiscord_Modal);
+                        const inClan_Row = new ActionRowBuilder().addComponents(inClan_Modal);
+                        const clan_Row = new ActionRowBuilder().addComponents(clan_Modal);
+                        const secondaryAccount_Row = new ActionRowBuilder().addComponents(secondaryAccount_Modal);
+
+                        modal.addComponents(nick_WT_Row, IDDiscord_Row, inClan_Row, clan_Row, secondaryAccount_Row);
+                        await interaction.showModal(modal);
+
+                        const filter = (interaction) => interaction.customId === "EditProfileModal"
+                        interaction
+                            .awaitModalSubmit({filter, time: 30_000})
+                            .then((modalInteraction)=> {
+                                const nick_WT_Response = modalInteraction.fields.getTextInputValue("nick_WT_Modal");
+                                if(!nick_WT_Response) nick_WT_Response = result.nick_WT;
+                                const IDDiscord_Response = modalInteraction.fields.getTextInputValue("IDDiscord_Modal");
+                                if(!IDDiscord_Response) IDDiscord_Response = result.IDDiscord;
+                                const inClan_Response = modalInteraction.fields.getTextInputValue("inClan_Modal");
+                                if(!inClan_Response) inClan_Response = result.inClan;
+                                const clan_Response = modalInteraction.fields.getTextInputValue("clan_Response");
+                                if(!clan_Response) clan_Response = result.clan
+                                const secondaryAccount_Response = modalInteraction.fields.getTextInputValue("secondaryAccount_Modal");
+                                if(!secondaryAccount_Response) secondaryAccount_Response = result.ignoreAbsence
+
+                                klient.db(configuration.DBNames.Community.DB).collections(configuration.DBNames.Community.Collection).updateOne({nick_WT: result.nick_WT},{
+                                    $set:{nick_WT: nick_WT_Response, IDDiscord: IDDiscord_Response, inClan: inClan_Response, clan: clan_Response, ignoreAbsence: secondaryAccount_Response}
+                                })
+                                modalInteraction.reply({content: language.Profile.EditModalSuccess, flags: MessageFlags.Ephemeral})
+                            })
+                    }
+                })
+                collector.on("end", ()=>{
+                    EditBtn.setDisabled(true);
+
+                    reply.edit({
+                        components:[buttonRow]
+                    })
+                })
+            }catch(error){
+                console.error();
+            }
+        }
     }
 })
 /**Searches for results of another squadron againts which was already played
