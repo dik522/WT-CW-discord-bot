@@ -61,7 +61,9 @@
         "EditModalInClan": "Is the member in squadron",
         "EditModalClan": "Squadron in which the member is",
         "EditModalSecondary": "Is this WT account secondary account of someone?",
-        "EditModalSuccess": "Profile edited successfully"
+        "EditModalSuccess": "Profile edited successfully",
+        "BtnForgiveLimit": "Forgive points limit",
+        "ForgivenLim": "Forgiven CW points limit"
     },
     "Misc":{
         "Results": "results",

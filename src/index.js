@@ -64,7 +64,7 @@ async function loadLanguage(){
  * @param {object} configuration - configuration object
  * @param {object} language - language dataset
  */
-async function loadSeason(configuration, language) {
+async function loadSeason(configuration, language) { 
     try {
         const json = await fsPromise.readFile("season.json", "utf8");
         season = JSON.parse(json);
@@ -735,9 +735,11 @@ client.on("interactionCreate", (interaction) =>{
         const member = interaction.options.get("member").value;
         async()=>{
             try{
-                let result = await klient.db(configuration.DBNames.Community.DB).collection(configuration.DBNames.Community.Collection).find({nick_WT: member});
                 let passwordRight = await passwordCheck(password, passwords);
                 if(!passwordRight.success) return
+                let result = await klient.db(configuration.DBNames.Community.DB).collection(configuration.DBNames.Community.Collection).find({nick_WT: member});
+                let ForgivenLim;
+                if(typeof(result.forgiveLimit) == undefined){ForgivenLim = "false"}else{ForgiveLimit = result.forgiveLimit};
                 let zprava = new EmbedBuilder()
                     .setTitle(language.EmbedTitle)
                     .setDescription(language.EmbdedDescription)
@@ -750,6 +752,7 @@ client.on("interactionCreate", (interaction) =>{
                         {name: language.Misc.InClan, value: result.inClan},
                         {name: language.Misc.PointsLimit, value: result.acomplishedLimit},
                         {name: language.Misc.Comments, value: result.comments},
+                        {name: language.Misc.ForgivenLim, value: ForgivenLim},
                         {name: language.Misc.secondaryAccount, value: result.ignoreAbsence},
                         {name: language.Misc.CWPoints, value: result.records.at(-1).CWpoints, inline: true},
                         {name: language.Misc.Activity, value: result.records.at(-1).activity, inline: true},
@@ -759,7 +762,11 @@ client.on("interactionCreate", (interaction) =>{
                     .setLabel(language.EditBtnLabel)
                     .setStyle(ButtonStyle.Primary)
                     .setCustomId("EditMembersProfile")
-                const buttonRow = new ActionRowBuilder().addComponents(EditBtn);
+                let ForgiveLimit = new ButtonBuilder()
+                    .setLabel(language.Profile.BtnForgiveLimit)
+                    .setStyle(ButtonStyle.Secondary)
+                    .setCustomId("ForgiveLimit")
+                const buttonRow = new ActionRowBuilder().addComponents([EditBtn, ForgiveLimit]);
             
                 const reply = await interaction.reply({embeds: [zprava], components: [buttonRow], flags: MessageFlags.Ephemeral})
                 console.log(language.ProfileView)
@@ -840,6 +847,9 @@ client.on("interactionCreate", (interaction) =>{
                                 })
                                 modalInteraction.reply({content: language.Profile.EditModalSuccess, flags: MessageFlags.Ephemeral})
                             })
+                    }
+                    if(interaction.customId === "ForgiveLimit"){
+                        klient.db(configuration.DBNames.Community.DB).collections(configuration.DBNames.Community.Collection).updateOne({nick_WT: result.nick_WT},{$set:{forgiveLimit: true}})
                     }
                 })
                 collector.on("end", ()=>{

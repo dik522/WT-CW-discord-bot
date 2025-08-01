@@ -61,7 +61,8 @@
         "EditModalInClan": "Je člen ve svazu?",
         "EditModalClan": "Svaz, v němž je člen",
         "EditModalSecondary": "Je toto něčí druhotný účet?",
-        "EditModalSuccess": "Údaje byly úspěšně změněny"
+        "EditModalSuccess": "Údaje byly úspěšně změněny",
+        "BtnForgiveLimit": "Nesplnění limitu omluveno"
     },
     "Misc":{
         "Results": "Výsledky",
@@ -83,7 +84,8 @@
         "Arrival": "datum příchodu",
         "InClan": "ve svazu",
         "secondaryAccount": "sekundární účet",
-        "Date": "Datum výsledků"
+        "Date": "Datum výsledků",
+        "ForgivenLim": "Prominuto splnění limitu CW bodů"
     },
     "memberCheck":{
         "Owner": " vlastnící účet ",
