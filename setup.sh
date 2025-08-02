@@ -82,6 +82,7 @@ create_clan_json() {
     [[ $SCRAPE_OF == "true" ]] && read -p "Channel ID to where send 'scrape': " SCRAPE_CHAN
     read -p "Allow to send daily table of active players? (true/false): " ACTIVITY_OF
     [[ $ACTIVITY_OF == "true" ]] && read -p "Channel ID to where send daily activity table: " ACTIVITY_CHAN
+    read -p "Channel ID to where send end of season table: " SEASON_END_CHAN
 
     cat <<EOF
     "name":"$NAME",
@@ -99,7 +100,8 @@ create_clan_json() {
     "scrapeOF":$SCRAPE_OF,
     "scrapeChannel":"${SCRAPE_CHAN:-}",
     "activityOF":$ACTIVITY_OF,
-    "activityChannel":"${ACTIVITY_CHAN:-}"
+    "activityChannel":"${ACTIVITY_CHAN:-}",
+    "seasonEndChannel":"${SEASON_END_CHAN:-}"
 EOF
   else
     cat <<EOF
@@ -118,7 +120,8 @@ EOF
     "scrapeOF":false,
     "scrapeChannel":"",
     "activityOF":false,
-    "activityChannel":""
+    "activityChannel":"",
+    "seasonEndChannel":""
 EOF
   fi
 }

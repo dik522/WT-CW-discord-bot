@@ -737,7 +737,7 @@ client.on("interactionCreate", (interaction) =>{
             try{
                 let passwordRight = await passwordCheck(password, passwords);
                 if(!passwordRight.success) return
-                let result = await klient.db(configuration.DBNames.Community.DB).collection(configuration.DBNames.Community.Collection).find({nick_WT: member});
+                let result = await klient.db(configuration.DBNames.Community.DB).collection(configuration.DBNames.Community.Collection).find({nick_WT: member}).toArray();
                 let ForgivenLim;
                 if(typeof(result.forgiveLimit) == undefined){ForgivenLim = "false"}else{ForgiveLimit = result.forgiveLimit};
                 let zprava = new EmbedBuilder()
@@ -842,14 +842,14 @@ client.on("interactionCreate", (interaction) =>{
                                 const secondaryAccount_Response = modalInteraction.fields.getTextInputValue("secondaryAccount_Modal");
                                 if(!secondaryAccount_Response) secondaryAccount_Response = result.ignoreAbsence
 
-                                klient.db(configuration.DBNames.Community.DB).collections(configuration.DBNames.Community.Collection).updateOne({nick_WT: result.nick_WT},{
+                                klient.db(configuration.DBNames.Community.DB).collection(configuration.DBNames.Community.Collection).updateOne({nick_WT: result.nick_WT},{
                                     $set:{nick_WT: nick_WT_Response, IDDiscord: IDDiscord_Response, inClan: inClan_Response, clan: clan_Response, ignoreAbsence: secondaryAccount_Response}
                                 })
                                 modalInteraction.reply({content: language.Profile.EditModalSuccess, flags: MessageFlags.Ephemeral})
                             })
                     }
                     if(interaction.customId === "ForgiveLimit"){
-                        klient.db(configuration.DBNames.Community.DB).collections(configuration.DBNames.Community.Collection).updateOne({nick_WT: result.nick_WT},{$set:{forgiveLimit: true}})
+                        klient.db(configuration.DBNames.Community.DB).collection(configuration.DBNames.Community.Collection).updateOne({nick_WT: result.nick_WT},{$set:{forgiveLimit: true}})
                     }
                 })
                 collector.on("end", ()=>{

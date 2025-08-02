@@ -73,6 +73,7 @@ function Get-ClanConfig {
         $scrapeChan = if ($scrapeOF -eq "true") { Read-Host "Channel ID to where send 'scrape'" } else { "" }
         $activityOF = Read-Host "Allow to send daily table of active players? (true/false)"
         $activityChan = if ($activityOF -eq "true") { Read-Host "Channel ID to where send daily activity table" } else { "" }
+        $seasonEndChan = Read-Host "Channel ID to where send end of season table "
 
         @{
             name = $name
@@ -91,6 +92,7 @@ function Get-ClanConfig {
             scrapeChannel = $scrapeChan
             activityOF = [bool]::Parse($activityOF)
             activityChannel = $activityChan
+            seasonEndChannel = $seasonEndChan
         }
     } else {
         @{
@@ -110,6 +112,7 @@ function Get-ClanConfig {
             scrapeChannel = ""
             activityOF = $false
             activityChannel = ""
+            seasonEndChannel = ""
         }
     }
 }

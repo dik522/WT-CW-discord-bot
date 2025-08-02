@@ -85,7 +85,9 @@
         "InClan": "ve svazu",
         "secondaryAccount": "sekundární účet",
         "Date": "Datum výsledků",
-        "ForgivenLim": "Prominuto splnění limitu CW bodů"
+        "ForgivenLim": "Prominuto splnění limitu CW bodů",
+        "ThisSeason": "Tato sezóna",
+        "PreviousSeason": "Předchozí sezóna"
     },
     "memberCheck":{
         "Owner": " vlastnící účet ",
@@ -116,5 +118,6 @@
     "EmbedTitle":"Profil člena",
     "EmbdedDescription": "Zde je výpis profilu člena",
     "ProfileView": "Zobrazen profil člena",
-    "EditBtnLabel": "Uprav profil člena"
+    "EditBtnLabel": "Uprav profil člena",
+    "SeasonEndTable": "Tabulka členů a jejich splnění limitu ve svazu  "
 }

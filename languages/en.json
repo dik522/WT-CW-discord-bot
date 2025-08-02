@@ -85,7 +85,9 @@
         "Arrival": "Date of arrival",
         "InClan":"in clan",
         "secondaryAccount": "secondary account",
-        "Date": "Date of records"
+        "Date": "Date of records",
+        "ThisSeason": "This season",
+        "PreviousSeason": "Previous season"
     },
     "MemberCheck":{
         "Owner": " who owns WT account ",
@@ -116,5 +118,6 @@
     "EmbedTitle": "Member's profile",
     "EmbdedDescription": "Here is content of members profile",
     "ProfileView": "Member's profile viewed",
-    "EditBtnLabel": "Edit member's profile"
+    "EditBtnLabel": "Edit member's profile",
+    "SeasonEndTable": "Table of members and their acomplishment of limit in clan "
 }
