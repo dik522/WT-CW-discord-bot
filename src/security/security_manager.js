@@ -555,4 +555,4 @@ class SecurityManager {
     }
 }
 
-module.exports = EnhancedSecurityManager;
+export default EnhancedSecurityManager;
