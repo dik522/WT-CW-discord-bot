@@ -123,7 +123,8 @@ async function BotInicialization() {
         discordBanListPath: './security/banned_discord_users.json',
         discordClient: client,
         securityChannel: configuration.administrationChannel,
-        guildIds: [process.env.GUILD_ID]
+        guildIds: [process.env.GUILD_ID],
+        languageDataset: language.security
     });
     await loadSeason(configuration,language);
     await DBConnection();
