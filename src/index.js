@@ -37,7 +37,7 @@ let IDDb = [];
 let relations=[];
 let actualbr;
 let passwords = [];
-
+emitter.setMaxListeners(15);
 //functions to properly inicialise bot
 /**
  * Loads configuration
@@ -47,9 +47,9 @@ async function loadConfig() {
         const json = await fsPromise.readFile("configuration.json", "utf8");
         configuration = JSON.parse(json);
         passwords = configuration.administrators
-        console.log(language.BotInicialization.ConfigLoadSuccess)
+        console.log("Configuration loaded succesfully")
     } catch (err) {
-        console.log(language.BotInicialization.ConfigLoadError, err);
+        console.log("Configuration loading error: ", err);
     }
 }
 /**Loads language dataset specified in configuration
