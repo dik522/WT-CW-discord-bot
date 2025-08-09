@@ -555,4 +555,4 @@ class SecurityManager {
     }
 }
 
-export default EnhancedSecurityManager;
+export default SecurityManager;

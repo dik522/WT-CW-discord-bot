@@ -25,16 +25,16 @@ import {tomorowsDate, actualDate, todaysbr} from "./moduly/obecne_fce.mjs";
 import {DayActivity, squadronPoints, brRangeTable, membersPoints, MemberCheck, passwordCheck, clearenceChech, ProfileIniciation, SeasonSummary} from "./moduly/svazove_fce.mjs";
 import SecurityManager from "./security/security_manager.js";
 
-/*
+
 let SecurityManager = new SecurityManager({
     logPath: './security/security.log',
     banListPath: './security/banned_devices.json',
     discordBanListPath: './security/banned_discord_users.json',
     discordClient: client,
     securityChannel: configuration.administrationChannel,
-    guildIds: NEEDS TO BE PROVIDED ARRAY OF IDs
+    guildIds: [process.env.GUILD_ID]
 });
-*/
+
 
 //global variables
 let season = [];
