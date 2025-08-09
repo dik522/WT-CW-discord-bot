@@ -124,7 +124,7 @@ async function BotInicialization() {
         discordClient: client,
         securityChannel: configuration.administrationChannel,
         guildIds: [process.env.GUILD_ID],
-        languageDataset: language.security
+        languageDataset: language.Security
     });
     await loadSeason(configuration,language);
     await DBConnection();
