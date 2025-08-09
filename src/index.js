@@ -22,7 +22,19 @@ const client = new Client ({
 });
 export {client};
 import {tomorowsDate, actualDate, todaysbr} from "./moduly/obecne_fce.mjs";
-import {DayActivity, squadronPoints, brRangeTable, membersPoints, MemberCheck, passwordCheck, clearenceChech, ProfileIniciation} from "./moduly/svazove_fce.mjs";
+import {DayActivity, squadronPoints, brRangeTable, membersPoints, MemberCheck, passwordCheck, clearenceChech, ProfileIniciation, SeasonSummary} from "./moduly/svazove_fce.mjs";
+import SecurityManager from "./security/security_manager.js";
+
+/*
+let SecurityManager = new SecurityManager({
+    logPath: './security/security.log',
+    banListPath: './security/banned_devices.json',
+    discordBanListPath: './security/banned_discord_users.json',
+    discordClient: client,
+    securityChannel: configuration.administrationChannel,
+    guildIds: NEEDS TO BE PROVIDED ARRAY OF IDs
+});
+*/
 
 //global variables
 let season = [];
@@ -130,6 +142,7 @@ async function BotInicialization() {
         async () => squadronPoints(configuration.fourthClan, language),
         async () => brRangeTable(season, configuration, language),
         async () => MemberCheck(process.env.GUILD_ID, configuration, language),
+        async () => SeasonSummary (configuration, language),
         () => reset(),
         () => console.log("---------------------------------------", actualDate())
     ]);
@@ -173,18 +186,37 @@ let reset = function(){
  * Does store every br in current season
  * Provide the HIGHEST br of every br range in current season
  */
-client.on('interactionCreate', (interaction) => {
+client.on('interactionCreate', async (interaction) => {
     if (!interaction.isCommand()) return;
     if (interaction.commandName === 'season-br') {
-        const br1 = interaction.options.get("br1").value;
-        const br2 = interaction.options.get("br2").value;
-        const br3 = interaction.options.get("br3").value;
-        const br4 = interaction.options.get("br4").value;
-        const br5 = interaction.options.get("br5").value;
-        const br6 = interaction.options.get("br6").value;
-        const br7 = interaction.options.get("br7").value;
-        const br8 = interaction.options.get("br8").value;
-        const br9 = interaction.options.get("season_end").value;
+        const secure = await SecurityManager.checkDiscordSecurity(interaction);
+        if(!secure){
+            console.log(`${this.lang.BannedDscIntCon}${interaction.user.id}`);
+            return
+        }
+        const input = {
+            br1: interaction.options.get("br1").value,
+            br2: interaction.options.get("br2").value,
+            br3: interaction.options.get("br3").value,
+            br4: interaction.options.get("br4").value,
+            br5: interaction.options.get("br5").value,
+            br6: interaction.options.get("br6").value,
+            br7: interaction.options.get("br7").value,
+            br8: interaction.options.get("br8").value,
+            br9: interaction.options.get("season_end").value,
+            userId: interaction.user.id,
+            guildId: interaction.guild.id,
+        };
+        const sanitizedInput = await SecurityManager.sanitizeInput(input, {interaction: interaction});
+        const br1 = sanitizedInput.br1;
+        const br2 = sanitizedInput.br2;
+        const br3 = sanitizedInput.br3;
+        const br4 = sanitizedInput.br4;
+        const br5 = sanitizedInput.br5;
+        const br6 = sanitizedInput.br6;
+        const br7 = sanitizedInput.br7;
+        const br8 = sanitizedInput.br8;
+        const br9 = sanitizedInput.br9;
 
         season[0].value = br1;
         season[1].value = br2;
@@ -212,19 +244,39 @@ client.on('interactionCreate', (interaction) => {
 /**Storing season's dates
  * Does store dates in which br of CW in current season will be changed
  */
-client.on('interactionCreate', (interaction) => {
+client.on('interactionCreate', async (interaction) => {
     if (!interaction.isCommand()) return;
     if (interaction.commandName === 'season_dates') {
-        const season_start = interaction.options.get("season_start").value;
-        const date1 = interaction.options.get("date1").value;
-        const date2 = interaction.options.get("date2").value;
-        const date3 = interaction.options.get("date3").value;
-        const date4 = interaction.options.get("date4").value;
-        const date5 = interaction.options.get("date5").value;
-        const date6 = interaction.options.get("date6").value;
-        const date7 = interaction.options.get("date7").value;
-        const date8 = interaction.options.get("date8").value;
-        const season_end = interaction.options.get("season_end").value;
+        const secure = await SecurityManager.checkDiscordSecurity(interaction);
+        if(!secure){
+            console.log(`${this.lang.BannedDscIntCon}${interaction.user.id}`);
+            return
+        }
+        const input = {
+            season_start: interaction.options.get("season_start").value,
+            date1: interaction.options.get("date1").value,
+            date2: interaction.options.get("date2").value,
+            date3: interaction.options.get("date3").value,
+            date4: interaction.options.get("date4").value,
+            date5: interaction.options.get("date5").value,
+            date6: interaction.options.get("date6").value,
+            date7: interaction.options.get("date7").value,
+            date8: interaction.options.get("date8").value,
+            season_end: interaction.options.get("season_end").value,
+            userId: interaction.user.id,
+            guildId: interaction.guild.id
+        };
+        const sanitizedInput = await SecurityManager.sanitizeInput(input, {interaction: interaction});
+        const season_start = sanitizedInput.season_start;
+        const date1 = sanitizedInput.date1;
+        const date2 = sanitizedInput.date2;
+        const date3 = sanitizedInput.date3;
+        const date4 = sanitizedInput.date4;
+        const date5 = sanitizedInput.date5;
+        const date6 = sanitizedInput.date6;
+        const date7 = sanitizedInput.date7;
+        const date8 = sanitizedInput.date8;
+        const season_end = sanitizedInput.season_end;
 
         season[0].interval = [season_start, date1];
         season[1].interval = [date1, date2];
@@ -252,9 +304,10 @@ client.on('interactionCreate', (interaction) => {
 /**Scraping web for current information of given squadron
  * Scrapes web to get statistics of clan and sends them into given discord chat user by user
  */
-client.on('messageCreate',(messages)=> {
+client.on('messageCreate',async (messages)=> {
     if((messages.content === "scrape:1" && configuration.firstClan.used) || (messages.content ==="scrape:2" && configuration.secondClan.used) || (messages.content ==="scrape:3" && configuration.thirdClan.used) || (messages.content === "scrape:4" && configuration.fourthClan.used)){ {
-        let messageContent = messages.content.split(":");
+        const sanitizedMessage = await SecurityManager.sanitizeInput(messages.content, {messages: messages, author: messages.author});
+        let messageContent = sanitizedMessage.split(":");
         let channel;
         let url;
         let OF;
@@ -337,26 +390,42 @@ client.on("interactionCreate", async (interaction)=>{
     try{
         if (!interaction.isChatInputCommand()) return;
         if (interaction.commandName === "configuration_change"){
-            const functionOF = interaction.options.get("switch_function")?.value;
-            const OF = interaction.options.get("switch_on_off")?.value;
-            const channel = interaction.options.get("function_channel")?.value;
-            const ID = interaction.options.get("channel_id")?.value;
-            const password = interaction.options.get("password").value;
-            const svaz = interaction.options.get("clan").value;
-            let passwordRight = await passwordCheck(password, passwords);
-            if(!passwordRight.success){
-                interaction.reply({content:language.Configuration.WrongPassword,ephemeral: true})
-                client.channels.fetch(configuration.administrationChannel)
-                    .then(channel =>{
-                        channel.send(`${language.Configuration.ChangeAttempt} <@${interaction.user.id}>`)
-                    })
-            }else{
-                const user = passwordRight.user
-                if((functionOF && typeof(OF)!= "undefined")||(typeof(channel) == "string" &&ID )){
-                    if(typeof(functionOF)!="undefined"){
-                        if(svaz == "1"){
-                            console.log(passwordRight);
-                            const clearenceGivven = await clearenceChech(user, ["1", "high"])
+                const secure = await SecurityManager.checkDiscordSecurity(interaction);
+                if(!secure){
+                    console.log(`${this.lang.BannedDscIntCon}${interaction.user.id}`);
+                    return
+                }
+                const Input = {
+                    functionOF: interaction.options.get("switch_function")?.value,
+                    OF: interaction.options.get("switch_on_off")?.value,
+                    channel: interaction.options.get("function_channel")?.value,
+                    ID: interaction.options.get("channel_id")?.value,
+                    password: interaction.options.get("password").value,
+                    clan: interaction.options.get("clan").value,
+                    userId: interaction.user.id,
+                    guildId: interaction.guild.id,
+                };
+                const sanitizedInput = await SecurityManager.sanitizeInput(Input, {interaction: interaction});
+                const functionOF = sanitizedInput.functionOF;
+                const OF = sanitizedInput.OF;
+                const channel = sanitizedInput.channel;
+                const ID = sanitizedInput.ID;
+                const password = sanitizedInput.password;
+                const clan = sanitizedInput.clan;
+                let passwordRight = await passwordCheck(password, passwords);
+                if(!passwordRight.success){
+                    interaction.reply({content:language.Configuration.WrongPassword,ephemeral: true})
+                    client.channels.fetch(configuration.administrationChannel)
+                        .then(channel =>{
+                            channel.send(`${language.Configuration.ChangeAttempt} <@${interaction.user.id}>`)
+                        })
+                }else{
+                    const user = passwordRight.user
+                    if((functionOF && typeof(OF)!= "undefined")||(typeof(channel) == "string" &&ID )){
+                        if(typeof(functionOF)!="undefined"){
+                            if(svaz == "1"){
+                                console.log(passwordRight);
+                                const clearenceGivven = await clearenceChech(user, ["1", "high"])
                                 if(!clearenceGivven.success){
                                     interaction.reply({content:language.Configuration.Unprivileged, ephemeral: true});
                                     console.log(language.Configuration.consoleWrongClanAttempt, interaction.user.username, password);
@@ -367,8 +436,8 @@ client.on("interactionCreate", async (interaction)=>{
                                     return
                                 }
                                 configuration.firstClan[functionOF] = OF
-                        }else if (svaz == "2"){
-                            const clearenceGivven = await clearenceChech(user, ["2", "high"])
+                            }else if (svaz == "2"){
+                                const clearenceGivven = await clearenceChech(user, ["2", "high"])
                                 if(!clearenceGivven.success){
                                     interaction.reply({content:language.Configuration.Unprivileged, ephemeral: true});
                                     console.log(language.Configuration.consoleWrongClanAttempt, interaction.user.username, password);
@@ -379,8 +448,8 @@ client.on("interactionCreate", async (interaction)=>{
                                     return
                                 }
                                 configuration.secondClan[functionOF] = OF
-                        }else if (svaz == "3"){
-                            const clearenceGivven = await clearenceChech(user, ["3", "high"])
+                            }else if (svaz == "3"){
+                                const clearenceGivven = await clearenceChech(user, ["3", "high"])
                                 if(!clearenceGivven.success){
                                     interaction.reply({content:language.Configuration.Unprivileged, ephemeral: true});
                                     console.log(language.Configuration.consoleWrongClanAttempt, interaction.user.username, password);
@@ -391,8 +460,8 @@ client.on("interactionCreate", async (interaction)=>{
                                     return
                                 }
                                 configuration.thirdClan[functionOF] = OF
-                        }else{
-                            const clearenceGivven = await clearenceChech(user, ["4", "high"])
+                            }else{
+                                const clearenceGivven = await clearenceChech(user, ["4", "high"])
                                 if(!clearenceGivven.success){
                                     interaction.reply({content:language.Configuration.Unprivileged, ephemeral: true});
                                     console.log(language.Configuration.consoleWrongClanAttempt, interaction.user.username, password);
@@ -403,84 +472,84 @@ client.on("interactionCreate", async (interaction)=>{
                                     return
                                 }
                                 configuration.fourthClan[functionOF] = OF
-                        }
-                    }if(typeof(channel)!="undefined"){
-                        if(channel == "administrationChannel"){
-                            const clearenceGivven = await clearenceChech(user, ["developer"])
-                            if(clearenceGivven.success){
-                                configuration.administrationChannel = ID
+                            }
+                        }if(typeof(channel)!="undefined"){
+                            if(channel == "administrationChannel"){
+                                const clearenceGivven = await clearenceChech(user, ["developer"])
+                                if(clearenceGivven.success){
+                                    configuration.administrationChannel = ID
+                                }else{
+                                    interaction.reply({content:language.Configuration.Unprivileged, ephemeral: true})
+                                    console.log(language.Configuration.consoleAdminChannelChangeAttempt, interaction.user.username, user.holder);
+                                    return
+                                    }
                             }else{
-                                interaction.reply({content:language.Configuration.Unprivileged, ephemeral: true})
-                                console.log(language.Configuration.consoleAdminChannelChangeAttempt, interaction.user.username, user.holder);
-                                return
+                                if(svaz == "1"){
+                                    const clearenceGivven = await clearenceChech(user, ["1", "high"])
+                                    if(!clearenceGivven.success){
+                                        interaction.reply({content:language.Configuration.Unprivileged, ephemeral: true});
+                                        console.log(language.Configuration.consoleWrongClanAttempt, interaction.user.username, password);
+                                        client.channels.fetch(configuration.administrationChannel)
+                                            .then(channel =>{
+                                                channel.send(`${language.Configuration.consoleWrongClanAttempt} <@${interaction.user.id}>; ${user.holder}`)
+                                            })
+                                        return
+                                    }
+                                    configuration.firstClan[channel] = ID
+                                }else if(svaz == "2"){
+                                    const clearenceGivven = await clearenceChech(user, ["2", "high"])
+                                    if(!clearenceGivven.success){
+                                        interaction.reply({content:language.Configuration.Unprivileged, ephemeral: true});
+                                        console.log(language.Configuration.consoleWrongClanAttempt, interaction.user.username, password);
+                                        client.channels.fetch(configuration.administrationChannel)
+                                            .then(channel =>{
+                                                channel.send(`${language.Configuration.consoleWrongClanAttempt} <@${interaction.user.id}>; ${user.holder}`)
+                                            })
+                                        return
+                                    }
+                                    configuration.secondClan[channel] = ID
+                                }else if(svaz == "3"){
+                                    const clearenceGivven = await clearenceChech(user, ["3", "high"])
+                                    if(!clearenceGivven.success){
+                                        interaction.reply({content:language.Configuration.Unprivileged, ephemeral: true});
+                                        console.log(language.Configuration.consoleWrongClanAttempt, interaction.user.username, password);
+                                        client.channels.fetch(configuration.administrationChannel)
+                                            .then(channel =>{
+                                                channel.send(`${language.Configuration.consoleWrongClanAttempt} <@${interaction.user.id}>; ${user.holder}`)
+                                            })
+                                        return
+                                    }
+                                    configuration.thirdClan[channel] = ID
+                                }else{
+                                    const clearenceGivven = await clearenceChech(user, ["4", "high"])
+                                    if(!clearenceGivven.success){
+                                        interaction.reply({content:language.Configuration.Unprivileged, ephemeral: true});
+                                        console.log(language.Configuration.consoleWrongClanAttempt, interaction.user.username, password);
+                                        client.channels.fetch(configuration.administrationChannel)
+                                            .then(channel =>{
+                                                channel.send(`${language.Configuration.consoleWrongClanAttempt} <@${interaction.user.id}>; ${user.holder}`)
+                                            })
+                                        return
+                                    }
+                                    configuration.fourthClan[channel] = ID
                                 }
-                        }else{
-                            if(svaz == "1"){
-                                const clearenceGivven = await clearenceChech(user, ["1", "high"])
-                                if(!clearenceGivven.success){
-                                    interaction.reply({content:language.Configuration.Unprivileged, ephemeral: true});
-                                    console.log(language.Configuration.consoleWrongClanAttempt, interaction.user.username, password);
-                                    client.channels.fetch(configuration.administrationChannel)
-                                        .then(channel =>{
-                                            channel.send(`${language.Configuration.consoleWrongClanAttempt} <@${interaction.user.id}>; ${user.holder}`)
-                                        })
-                                    return
-                                }
-                                configuration.firstClan[channel] = ID
-                            }else if(svaz == "2"){
-                                const clearenceGivven = await clearenceChech(user, ["2", "high"])
-                                if(!clearenceGivven.success){
-                                    interaction.reply({content:language.Configuration.Unprivileged, ephemeral: true});
-                                    console.log(language.Configuration.consoleWrongClanAttempt, interaction.user.username, password);
-                                    client.channels.fetch(configuration.administrationChannel)
-                                        .then(channel =>{
-                                            channel.send(`${language.Configuration.consoleWrongClanAttempt} <@${interaction.user.id}>; ${user.holder}`)
-                                        })
-                                    return
-                                }
-                                configuration.secondClan[channel] = ID
-                            }else if(svaz == "3"){
-                                const clearenceGivven = await clearenceChech(user, ["3", "high"])
-                                if(!clearenceGivven.success){
-                                    interaction.reply({content:language.Configuration.Unprivileged, ephemeral: true});
-                                    console.log(language.Configuration.consoleWrongClanAttempt, interaction.user.username, password);
-                                    client.channels.fetch(configuration.administrationChannel)
-                                        .then(channel =>{
-                                            channel.send(`${language.Configuration.consoleWrongClanAttempt} <@${interaction.user.id}>; ${user.holder}`)
-                                        })
-                                    return
-                                }
-                                configuration.thirdClan[channel] = ID
-                            }else{
-                                const clearenceGivven = await clearenceChech(user, ["4", "high"])
-                                if(!clearenceGivven.success){
-                                    interaction.reply({content:language.Configuration.Unprivileged, ephemeral: true});
-                                    console.log(language.Configuration.consoleWrongClanAttempt, interaction.user.username, password);
-                                    client.channels.fetch(configuration.administrationChannel)
-                                        .then(channel =>{
-                                            channel.send(`${language.Configuration.consoleWrongClanAttempt} <@${interaction.user.id}>; ${user.holder}`)
-                                        })
-                                    return
-                                }
-                                configuration.fourthClan[channel] = ID
                             }
                         }
+                        let json = JSON.stringify(configuration)
+                        fs.writeFile("configuration.json", json, "utf8", function (err){
+                            if (err){
+                                console.log(language.Configuration.ChangeError, err);
+                                interaction.reply({content:language.Configuration.Error, flags: MessageFlags.Ephemeral})
+                            }else{
+                                console.log(language.Configuration.SuccessConsole, interaction.user.username, configuration);
+                                interaction.reply({content:language.Configuration.Success, flags: MessageFlags.Ephemeral})
+                            }
+                        })
+                    }else{
+                        interaction.reply({content:language.Configuration.WrongChoise, flags: MessageFlags.Ephemeral})
                     }
-                    let json = JSON.stringify(configuration)
-                    fs.writeFile("configuration.json", json, "utf8", function (err){
-                        if (err){
-                            console.log(language.Configuration.ChangeError, err);
-                            interaction.reply({content:language.Configuration.Error, flags: MessageFlags.Ephemeral})
-                        }else{
-                            console.log(language.Configuration.SuccessConsole, interaction.user.username, configuration);
-                            interaction.reply({content:language.Configuration.Success, flags: MessageFlags.Ephemeral})
-                        }
-                    })
-                }else{
-                    interaction.reply({content:language.Configuration.WrongChoise, flags: MessageFlags.Ephemeral})
                 }
             }
-        }
     }catch (error){
         interaction.reply({content:language.Configuration.ChangeError, flags: MessageFlags.Ephemeral})
         console.error(language.Configuration.ErrorConsole, error);
@@ -489,42 +558,61 @@ client.on("interactionCreate", async (interaction)=>{
 /**Inicialization of member's profile
  * Does initialize DB profile of new clan member
  */
-client.on("interactionCreate", (interaction)=>{
+client.on("interactionCreate", async (interaction)=>{
     if(!interaction.isChatInputCommand()) return
     if(interaction.commandName === "init_profile"){
-        const WTNick = interaction.options.get("nickwt").value;
-        const IDDsc = interaction.options.get("discordid").value;
-        const squadron = interaction.options.get("squadron").value;
-        const comments = interaction.options.get("comments").value;
+        const secure = await SecurityManager.checkDiscordSecurity(interaction);
+        if(!secure){
+            console.log(`${this.lang.BannedDscIntCon}${interaction.user.id}`);
+            return
+        }
+        const Input = {
+            nickwt: interaction.options.get("nickwt").value,
+            discordid: interaction.options.get("discordid").value,
+            squadron: interaction.options.get("squadron").value,
+            comments: interaction.options.get("comments").value,
+            userId: interaction.user.id,
+            guildId: interaction.guild.id
+        }
+        const sanitizedInput = await SecurityManager.sanitizeInput(Input, {interaction: interaction});
+        const WTNick = sanitizedInput.nickwt;
+        const IDDsc = sanitizedInput.discordid;
+        const squadron = sanitizedInput.squadron;
+        const comments = sanitizedInput.comments;
         ProfileIniciation(WTNick, IDDsc, squadron, comments, actualDate(), language, configuration)
         interaction.reply({content:language.Profile.Created, ephemeral: true})
     }
 })
 //adding yourself as a logger
-client.on("interactionCreate", (interaction)=>{
+client.on("interactionCreate", async (interaction)=>{
     if (!interaction.isChatInputCommand()) return
     if (interaction.commandName === "evidence"){
-    const editor = interaction.options.get("user").value
-    const member = interaction.user.username;
-    const memberID = interaction.user.id;
-    let logger = relations.find(memb => memb.memb === editor)
-    client.channels.fetch(logger.channel)
-        .then(channel=>{
-            channel.messages.fetch(ID)
-                .then(message =>{
-                    let obsah = message.content;
-                    let poradnik = obsah.split(";")
-                    let prozatimni = poradnik.pop()
-                    poradnik.push(`<@${memberID}>`)
-                    let poradnik2 = poradnik.join(",")
-                    poradnik = [poradnik2]
-                    poradnik.push(prozatimni)
-                    obsah = poradnik.join(";")
-                    message.edit(obsah)
-                    relations.push({memb: member, channel: logger.channel, IDZprava: logger.IDZprava, index: logger.index})
-                })
-        })
-    interaction.reply({content:language.CWResults.EditorAdded, flags: MessageFlags.Ephemeral})
+        const secure = await SecurityManager.checkDiscordSecurity(interaction);
+        if(!secure){
+            console.log(`${this.lang.BannedDscIntCon}${interaction.user.id}`);
+            return
+        }
+        const editor = await SecurityManager.sanitizeInput(interaction.options.get("user").value, {interaction: interaction});
+        const member = interaction.user.username;
+        const memberID = interaction.user.id;
+        let logger = relations.find(memb => memb.memb === editor)
+        client.channels.fetch(logger.channel)
+            .then(channel=>{
+                channel.messages.fetch(ID)
+                    .then(message =>{
+                        let obsah = message.content;
+                        let poradnik = obsah.split(";")
+                        let prozatimni = poradnik.pop()
+                        poradnik.push(`<@${memberID}>`)
+                        let poradnik2 = poradnik.join(",")
+                        poradnik = [poradnik2]
+                        poradnik.push(prozatimni)
+                        obsah = poradnik.join(";")
+                        message.edit(obsah)
+                        relations.push({memb: member, channel: logger.channel, IDZprava: logger.IDZprava, index: logger.index})
+                    })
+            })
+        interaction.reply({content:language.CWResults.EditorAdded, flags: MessageFlags.Ephemeral})
 }})
 
 
@@ -532,17 +620,35 @@ client.on("interactionCreate", (interaction)=>{
 /**CW entry
  * Provides new entry of clan wars result
  */
-client.on("interactionCreate", (interaction) => {
+client.on("interactionCreate", async (interaction) => {
     if (!interaction.isChatInputCommand()) return;
     if (interaction.commandName === "cw_entry") {
-        const result = interaction.options.get("result").value;
-        const squadron = interaction.options.get("squadron").value;
-        const planes = interaction.options.get("planes").value;
-        const helicopters = interaction.options.get("helicopters").value;
-        const aa = interaction.options.get("aa").value;
-        const reprezentative = interaction.options.get("reprezentative").value;
-        const comments = interaction.options.get("comments")?.value;
-        const tanks = interaction.options.get("tanks").value;
+        const secure = await SecurityManager.checkDiscordSecurity(interaction);
+        if(!secure){
+            console.log(`${this.lang.BannedDscIntCon}${interaction.user.id}`);
+            return
+        }
+        const Input = {
+            result: interaction.options.get("result").value,
+            squadron: interaction.options.get("squadron").value,
+            planes: interaction.options.get("planes").value,
+            helicopters: interaction.options.get("helicopters").value,
+            aa: interaction.options.get("aa").value,
+            reprezentative: interaction.options.get("reprezentative").value,
+            comments: interaction.options.get("comments")?.value,
+            tanks: interaction.options.get("tanks").value,
+            userId: interaction.user.id,
+            guildId: interaction.guild.id
+        };
+        const sanitizedInput = await SecurityManager.sanitizeInput(Input, {interaction: interaction});
+        const result = sanitizedInput.result;
+        const squadron = sanitizedInput.squadron;
+        const planes = sanitizedInput.planes;
+        const helicopters = sanitizedInput.helicopters;
+        const aa = sanitizedInput.aa;
+        const reprezentative = sanitizedInput.reprezentative;
+        const comments = sanitizedInput.comments;
+        const tanks = sanitizedInput.tanks;
         let sum;
         sum = planes+helicopters;
         sum += aa;
@@ -620,17 +726,35 @@ client.on("interactionCreate", (interaction) => {
 /**Editing of CW entry
  * Edits last entry of clan wars result
  */
-client.on("interactionCreate", (interaction) =>{
+client.on("interactionCreate", async (interaction) =>{
     if (!interaction.isChatInputCommand()) return;
     if(interaction.commandName ==="cw_edit"){
-        const result = interaction.options.get("result").value;
-        const squadron = interaction.options.get("squadron").value;
-        const planes = interaction.options.get("planes").value;
-        const helicopters = interaction.options.get("helicopters").value;
-        const aa = interaction.options.get("aa").value;
-        const reprezentative = interaction.options.get("reprezentative").value;
-        const comments = interaction.options.get("comments")?.value;
-        const tanks = interaction.options.get("tanks").value;
+        const secure = await SecurityManager.checkDiscordSecurity(interaction);
+        if(!secure){
+            console.log(`${this.lang.BannedDscIntCon}${interaction.user.id}`);
+            return
+        }
+        const Input = {
+            result: interaction.options.get("result").value,
+            squadron: interaction.options.get("squadron").value,
+            planes: interaction.options.get("planes").value,
+            helicopters: interaction.options.get("helicopters").value,
+            aa: interaction.options.get("aa").value,
+            reprezentative: interaction.options.get("reprezentative").value,
+            comments: interaction.options.get("comments")?.value,
+            tanks: interaction.options.get("tanks").value,
+            userId: interaction.user.id,
+            guildId: interaction.guild.id
+        }
+        const sanitizedInput = await SecurityManager.sanitizeInput(Input, {interaction: interaction});
+        const result = sanitizedInput.result;
+        const squadron = sanitizedInput.squadron;
+        const planes = sanitizedInput.planes;
+        const helicopters = sanitizedInput.helicopters;
+        const aa = sanitizedInput.aa;
+        const reprezentative = sanitizedInput.reprezentative;
+        const comments = sanitizedInput.comments;
+        const tanks = sanitizedInput.tanks;
         let sum;
         sum = planes+helicopters;
         sum += aa;
@@ -694,9 +818,14 @@ client.on("interactionCreate", (interaction) =>{
 /**Deleting of CW entry
  * Deletes last entry of clan wars result
  */
-client.on("interactionCreate", (interaction) =>{
+client.on("interactionCreate", async (interaction) =>{
     if (!interaction.isChatInputCommand()) return;
     if(interaction.commandName ==="cw_delete"){
+        const secure = await SecurityManager.checkDiscordSecurity(interaction);
+        if(!secure){
+            console.log(`${this.lang.BannedDscIntCon}${interaction.user.id}`);
+            return
+        }
         let editor = relations.find(editor => editor.editor === interaction.user.username)
         if(pravelogger == undefined){
             interaction.reply({content:language.CWResults.Delete.NonEditor, flags: MessageFlags.Ephemeral})
@@ -728,151 +857,182 @@ client.on("interactionCreate", (interaction) =>{
 /**Showing members profile
  * 
 */
-client.on("interactionCreate", (interaction) =>{
+client.on("interactionCreate", async (interaction) =>{
     if(!interaction.isChatInputCommand())return;
     if(interaction.commandName === "view_profile"){
-        const password = interaction.options.get("password").value;
-        const member = interaction.options.get("member").value;
-        async()=>{
-            try{
-                let passwordRight = await passwordCheck(password, passwords);
-                if(!passwordRight.success) return
-                let result = await klient.db(configuration.DBNames.Community.DB).collection(configuration.DBNames.Community.Collection).find({nick_WT: member}).toArray();
-                let ForgivenLim;
-                if(typeof(result.forgiveLimit) == undefined){ForgivenLim = "false"}else{ForgiveLimit = result.forgiveLimit};
-                let zprava = new EmbedBuilder()
-                    .setTitle(language.EmbedTitle)
-                    .setDescription(language.EmbdedDescription)
-                    .setColor("08e79f")
-                    .addFields(
-                        {name: language.Misc.Player, value: result.nick_WT},
-                        {name: "Discord", value: result.IDDiscord},
-                        {name: language.Misc.Arrival, value: result.joinDate},
-                        {name: language.Misc.Squadron, value: result.clan},
-                        {name: language.Misc.InClan, value: result.inClan},
-                        {name: language.Misc.PointsLimit, value: result.acomplishedLimit},
-                        {name: language.Misc.Comments, value: result.comments},
-                        {name: language.Misc.ForgivenLim, value: ForgivenLim},
-                        {name: language.Misc.secondaryAccount, value: result.ignoreAbsence},
-                        {name: language.Misc.CWPoints, value: result.records.at(-1).CWpoints, inline: true},
-                        {name: language.Misc.Activity, value: result.records.at(-1).activity, inline: true},
-                        {name: language.Misc.Date, value: result.records.at(-1).date, inline: true}
-                    )
-                let EditBtn = new ButtonBuilder()
-                    .setLabel(language.EditBtnLabel)
-                    .setStyle(ButtonStyle.Primary)
-                    .setCustomId("EditMembersProfile")
-                let ForgiveLimit = new ButtonBuilder()
-                    .setLabel(language.Profile.BtnForgiveLimit)
-                    .setStyle(ButtonStyle.Secondary)
-                    .setCustomId("ForgiveLimit")
-                const buttonRow = new ActionRowBuilder().addComponents([EditBtn, ForgiveLimit]);
-            
-                const reply = await interaction.reply({embeds: [zprava], components: [buttonRow], flags: MessageFlags.Ephemeral})
-                console.log(language.ProfileView)
+        const secure = await SecurityManager.checkDiscordSecurity(interaction);
+        if(!secure){
+            console.log(`${this.lang.BannedDscIntCon}${interaction.user.id}`);
+            return
+        }
+        const Input = {
+            password: interaction.options.get("password").value,
+            member: interaction.options.get("member").value,
+            userId: interaction.user.id,
+            guildId: interaction.guild.id
+        }
+        const sanitizedInput = await SecurityManager.sanitizeInput(Input, {interaction: interaction});
+        const password = sanitizedInput.password;
+        const member = sanitizedInput.member;
+        try{
+            let passwordRight = await passwordCheck(password, passwords);
+            if(!passwordRight.success) return
+            let result = await klient.db(configuration.DBNames.Community.DB).collection(configuration.DBNames.Community.Collection).find({nick_WT: member}).toArray();
+            let ForgivenLim;
+            if(typeof(result.forgiveLimit) == undefined){ForgivenLim = "false"}else{ForgiveLimit = result.forgiveLimit};
+            let zprava = new EmbedBuilder()
+                .setTitle(language.EmbedTitle)
+                .setDescription(language.EmbdedDescription)
+                .setColor("08e79f")
+                .addFields(
+                    {name: language.Misc.Player, value: result.nick_WT},
+                    {name: "Discord", value: result.IDDiscord},
+                    {name: language.Misc.Arrival, value: result.joinDate},
+                    {name: language.Misc.Squadron, value: result.clan},
+                    {name: language.Misc.InClan, value: result.inClan},
+                    {name: language.Misc.PointsLimit, value: result.acomplishedLimit},
+                    {name: language.Misc.Comments, value: result.comments},
+                    {name: language.Misc.ForgivenLim, value: ForgivenLim},
+                    {name: language.Misc.secondaryAccount, value: result.ignoreAbsence},
+                    {name: language.Misc.CWPoints, value: result.records.at(-1).CWpoints, inline: true},
+                    {name: language.Misc.Activity, value: result.records.at(-1).activity, inline: true},
+                    {name: language.Misc.Date, value: result.records.at(-1).date, inline: true}
+                )
+            let EditBtn = new ButtonBuilder()
+                .setLabel(language.EditBtnLabel)
+                .setStyle(ButtonStyle.Primary)
+                .setCustomId("EditMembersProfile")
+            let ForgiveLimit = new ButtonBuilder()
+                .setLabel(language.Profile.BtnForgiveLimit)
+                .setStyle(ButtonStyle.Secondary)
+                .setCustomId("ForgiveLimit")
+            const buttonRow = new ActionRowBuilder().addComponents([EditBtn, ForgiveLimit]);
+        
+            const reply = await interaction.reply({embeds: [zprava], components: [buttonRow], flags: MessageFlags.Ephemeral})
+            console.log(language.ProfileView)
 
-                const collector = reply.createMessageCommponentCollector({
-                    componentType: ComponentType.Button,
-                    time: 120_000
-                });
+            const collector = reply.createMessageCommponentCollector({
+                componentType: ComponentType.Button,
+                time: 120_000
+            });
 
-                collector.on("collect", async (interaction) =>{
-                    if(interaction.customId === "EditMemberProfile"){
-                        const modal = new ModalBuilder({
-                            customId: "EditProfileModal",
-                            title: language.Profile.EditModalTitle,
-                        })
-                        const nick_WT_Modal = new TextInputBuilder({
-                            customId: "nick_WT_Modal",
-                            label: language.Profile.EditModalNickWT,
-                            style:TextInputStyle.Short,
-                            require: false,
-                            placeHolder: result.nick_WT
-                        })
-                        const IDDiscord_Modal = new TextInputBuilder({
-                            customId: "IDDiscord_Modal",
-                            label: language.Profile.EditModalIDDsc,
-                            style: TextInputStyle.Short,
-                            require: false,
-                            placeHolder: result.IDDiscord
-                        })
-                        const inClan_Modal = new TextInputBuilder({
-                            customId: "inClan_Modal",
-                            label: language.Profile.EditModalInClan,
-                            style: TextInputStyle.Short,
-                            require: false,
-                            placeHolder: result.inClan
-                        })
-                        const clan_Modal = new TextInputBuilder({
-                            customId: "clan_Modal",
-                            label: language.Profile.EditModalClan,
-                            style: TextInputStyle.Short,
-                            require: false,
-                            placeHolder: result.clan
-                        })
-                        const secondaryAccount_Modal = new TextInputBuilder({
-                            customId: "secondaryAccount_Modal",
-                            label: language.Profile.EditModalSecondary,
-                            style: TextInputStyle.Short, //Paragraph
-                            require: false,
-                            placeHolder: result.ignoreAbsence
-                        })
-
-                        const nick_WT_Row = new ActionRowBuilder().addComponents(nick_WT_Modal);
-                        const IDDiscord_Row = new ActionRowBuilder().addComponents(IDDiscord_Modal);
-                        const inClan_Row = new ActionRowBuilder().addComponents(inClan_Modal);
-                        const clan_Row = new ActionRowBuilder().addComponents(clan_Modal);
-                        const secondaryAccount_Row = new ActionRowBuilder().addComponents(secondaryAccount_Modal);
-
-                        modal.addComponents(nick_WT_Row, IDDiscord_Row, inClan_Row, clan_Row, secondaryAccount_Row);
-                        await interaction.showModal(modal);
-
-                        const filter = (interaction) => interaction.customId === "EditProfileModal"
-                        interaction
-                            .awaitModalSubmit({filter, time: 30_000})
-                            .then((modalInteraction)=> {
-                                const nick_WT_Response = modalInteraction.fields.getTextInputValue("nick_WT_Modal");
-                                if(!nick_WT_Response) nick_WT_Response = result.nick_WT;
-                                const IDDiscord_Response = modalInteraction.fields.getTextInputValue("IDDiscord_Modal");
-                                if(!IDDiscord_Response) IDDiscord_Response = result.IDDiscord;
-                                const inClan_Response = modalInteraction.fields.getTextInputValue("inClan_Modal");
-                                if(!inClan_Response) inClan_Response = result.inClan;
-                                const clan_Response = modalInteraction.fields.getTextInputValue("clan_Response");
-                                if(!clan_Response) clan_Response = result.clan
-                                const secondaryAccount_Response = modalInteraction.fields.getTextInputValue("secondaryAccount_Modal");
-                                if(!secondaryAccount_Response) secondaryAccount_Response = result.ignoreAbsence
-
-                                klient.db(configuration.DBNames.Community.DB).collection(configuration.DBNames.Community.Collection).updateOne({nick_WT: result.nick_WT},{
-                                    $set:{nick_WT: nick_WT_Response, IDDiscord: IDDiscord_Response, inClan: inClan_Response, clan: clan_Response, ignoreAbsence: secondaryAccount_Response}
-                                })
-                                modalInteraction.reply({content: language.Profile.EditModalSuccess, flags: MessageFlags.Ephemeral})
-                            })
-                    }
-                    if(interaction.customId === "ForgiveLimit"){
-                        klient.db(configuration.DBNames.Community.DB).collection(configuration.DBNames.Community.Collection).updateOne({nick_WT: result.nick_WT},{$set:{forgiveLimit: true}})
-                    }
-                })
-                collector.on("end", ()=>{
-                    EditBtn.setDisabled(true);
-
-                    reply.edit({
-                        components:[buttonRow]
+            collector.on("collect", async (interaction) =>{
+                if(interaction.customId === "EditMemberProfile"){
+                    const modal = new ModalBuilder({
+                        customId: "EditProfileModal",
+                        title: language.Profile.EditModalTitle,
                     })
+                    const nick_WT_Modal = new TextInputBuilder({
+                        customId: "nick_WT_Modal",
+                        label: language.Profile.EditModalNickWT,
+                        style:TextInputStyle.Short,
+                        require: false,
+                        placeHolder: result.nick_WT
+                    })
+                    const IDDiscord_Modal = new TextInputBuilder({
+                        customId: "IDDiscord_Modal",
+                        label: language.Profile.EditModalIDDsc,
+                        style: TextInputStyle.Short,
+                        require: false,
+                        placeHolder: result.IDDiscord
+                    })
+                    const inClan_Modal = new TextInputBuilder({
+                        customId: "inClan_Modal",
+                        label: language.Profile.EditModalInClan,
+                        style: TextInputStyle.Short,
+                        require: false,
+                        placeHolder: result.inClan
+                    })
+                    const clan_Modal = new TextInputBuilder({
+                        customId: "clan_Modal",
+                        label: language.Profile.EditModalClan,
+                        style: TextInputStyle.Short,
+                        require: false,
+                        placeHolder: result.clan
+                    })
+                    const secondaryAccount_Modal = new TextInputBuilder({
+                        customId: "secondaryAccount_Modal",
+                        label: language.Profile.EditModalSecondary,
+                        style: TextInputStyle.Short, //Paragraph
+                        require: false,
+                        placeHolder: result.ignoreAbsence
+                    })
+
+                    const nick_WT_Row = new ActionRowBuilder().addComponents(nick_WT_Modal);
+                    const IDDiscord_Row = new ActionRowBuilder().addComponents(IDDiscord_Modal);
+                    const inClan_Row = new ActionRowBuilder().addComponents(inClan_Modal);
+                    const clan_Row = new ActionRowBuilder().addComponents(clan_Modal);
+                    const secondaryAccount_Row = new ActionRowBuilder().addComponents(secondaryAccount_Modal);
+
+                    modal.addComponents(nick_WT_Row, IDDiscord_Row, inClan_Row, clan_Row, secondaryAccount_Row);
+                    await interaction.showModal(modal);
+
+                    const filter = (interaction) => interaction.customId === "EditProfileModal"
+                    interaction
+                        .awaitModalSubmit({filter, time: 30_000})
+                        .then((modalInteraction)=> {
+                            const nick_WT_Response = modalInteraction.fields.getTextInputValue("nick_WT_Modal");
+                            if(!nick_WT_Response) nick_WT_Response = result.nick_WT;
+                            const IDDiscord_Response = modalInteraction.fields.getTextInputValue("IDDiscord_Modal");
+                            if(!IDDiscord_Response) IDDiscord_Response = result.IDDiscord;
+                            const inClan_Response = modalInteraction.fields.getTextInputValue("inClan_Modal");
+                            if(!inClan_Response) inClan_Response = result.inClan;
+                            const clan_Response = modalInteraction.fields.getTextInputValue("clan_Response");
+                            if(!clan_Response) clan_Response = result.clan
+                            const secondaryAccount_Response = modalInteraction.fields.getTextInputValue("secondaryAccount_Modal");
+                            if(!secondaryAccount_Response) secondaryAccount_Response = result.ignoreAbsence
+
+                            const Input = {
+                                nick_WT: nick_WT_Response,
+                                IDDiscord: IDDiscord_Response,
+                                inClan: inClan_Response,
+                                clan: clan_Response,
+                                secondaryAccount: secondaryAccount_Response,
+                                userId: interaction.user.id,
+                                guildId: interaction.guild.id
+                            }
+                            const sanitizedInput = SecurityManager.sanitizeInput(Input, {interaction: modalInteraction});
+
+                            klient.db(configuration.DBNames.Community.DB).collection(configuration.DBNames.Community.Collection).updateOne({nick_WT: result.nick_WT},{
+                                $set:{nick_WT: sanitizedInput.nick_WT, IDDiscord: sanitizedInput.IDDiscord, inClan: sanitizedInput.inClan, clan: sanitizedInput.clan, secondaryAccount: sanitizedInput.secondaryAccount}
+                            })
+                            modalInteraction.reply({content: language.Profile.EditModalSuccess, flags: MessageFlags.Ephemeral})
+                        })
+                }
+                if(interaction.customId === "ForgiveLimit"){
+                    klient.db(configuration.DBNames.Community.DB).collection(configuration.DBNames.Community.Collection).updateOne({nick_WT: result.nick_WT},{$set:{forgiveLimit: true}})
+                }
+            })
+            collector.on("end", ()=>{
+                EditBtn.setDisabled(true);
+
+                reply.edit({
+                    components:[buttonRow]
                 })
-            }catch(error){
-                console.error();
-            }
+            })
+        }catch(error){
+            console.error();
         }
     }
 })
 /**Searches for results of another squadron againts which was already played
  * 
  */
-client.on("interactionCreate", (interaction) =>{
+client.on("interactionCreate", async (interaction) =>{
     if(!interaction.isChatInputCommand())return;
     if(interaction.commandName === "squadron_search"){
-        const squadron = interaction.options.get("squadron").value;
-        async()=>{
+        const secure = await SecurityManager.checkDiscordSecurity(interaction);
+        if(!secure){
+            console.log(`${this.lang.BannedDscIntCon}${interaction.user.id}`);
+            return
+        }
+        const Input = {
+            squadron: interaction.options.get("squadron").value,
+            userId: interaction.user.id,
+            guildId: interaction.guild.id
+        }
+        const sanitizedInput = SecurityManager.sanitizeInput(Input, {interaction});
+        const squadron = sanitizedInput.squadron;
             try{
             let results = await klient.db(configuration.DBNames.CW.DB).collection(configuration.DBNames.CW.Collection).find({[language.Misc.Squadron]: squadron, br: actualbr});
             let finishedtable
@@ -886,8 +1046,32 @@ client.on("interactionCreate", (interaction) =>{
         } catch (error){
             console.error();
         }
-        }
     }
 })
+/**Manual unban of banned member trough this bot (security violations)
+ *  This command allows administrators to unban a user who has been banned for security reasons.
+ * 
+ * Note: logging and reply is hardcoded in english as total refactoring of code is planned in nearish future
+ */
+client.on("interactionCreate",async (interaction) => {
+    if (!interaction.isChatInputCommand()) return;
+    if (interaction.commandName === "unban") {
+        const secure = await SecurityManager.checkDiscordSecurity(interaction);
+        if(!secure){
+            console.log(`${this.lang.BannedDscIntCon}${interaction.user.id}`);
+            return
+        }
+        const userId = interaction.options.get("user").value;
+        
+        try {
+            await SecurityManager.unbanUser(userId, reason);
+            interaction.reply({content: `Successfully unbanned user <@${userId}>. Reason: ${reason}`, flags: 64});
+            console.log(`Unbanned user <@${userId}>. Reason: ${reason}`);
+        } catch (error) {
+            console.error(`Failed to unban user <@${userId}>:`, error);
+            interaction.reply({content: `Failed to unban user <@${userId}>. Error: ${error.message}`, flags: 64});
+        }
+    }
+});
 
 BotInicialization();

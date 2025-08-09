@@ -456,128 +456,131 @@ async function brRangeTable(season, configuration, lang) {
  */
 
 async function SeasonSummary (conf, lang){
-    let profiles = await klient.db(conf.DBNames.Community.DB).collection(conf.DBNames.Community.Collection).find({inClan: true}).toArray();
-    let acomplishedLim1, acomplishedLim2, acomplishedLim3, acomplishedLim4, failedLim1, failedLim2, failedLim3, failedLim4, forgivenLim1, forgivenLim2, forgivenLim3, forgivenLim4, newMember1, newMember2, newMember3, newMember4;
-    for (const profile of profiles){
-        try{
-            let prevSeason = {CWpoints: profile.records.at(-1).CWpoints, activity: profile.records.at(-1).activity, role: profile.records.at(-1).role, forgiveLimit: profile.forgiveLimit, acomplishedLimit: profile.acomplishedLimit};
-            await klient.db(conf.DBNames.Community.DB).collection(conf.DBNames.Community.Collection).updateOne({nick_WT: profile.nick_WT},{
-                $push:{prevSeason:prevSeason},
-                $set:{records: [], acomplishedLimit: false, forgiveLimit: false}
-            });
-            function SortByLimit(conf, profile, newMember, acomplishedLim, forgivenLim, failedLim){
-                if (conf == profile.clan && conf.used){
-                    if(typeOf(profile.prevSeason) == undefined){
-                        let thisSeason;
-                        if(profile.acomplishedLimit){
-                            thisSeason = "✓"
+    let todayDate = actualDate();
+    if (season.at(-1).interval[1] == todayDate){
+        let profiles = await klient.db(conf.DBNames.Community.DB).collection(conf.DBNames.Community.Collection).find({inClan: true}).toArray();
+        let acomplishedLim1, acomplishedLim2, acomplishedLim3, acomplishedLim4, failedLim1, failedLim2, failedLim3, failedLim4, forgivenLim1, forgivenLim2, forgivenLim3, forgivenLim4, newMember1, newMember2, newMember3, newMember4;
+        for (const profile of profiles){
+            try{
+                let prevSeason = {CWpoints: profile.records.at(-1).CWpoints, activity: profile.records.at(-1).activity, role: profile.records.at(-1).role, forgiveLimit: profile.forgiveLimit, acomplishedLimit: profile.acomplishedLimit};
+                await klient.db(conf.DBNames.Community.DB).collection(conf.DBNames.Community.Collection).updateOne({nick_WT: profile.nick_WT},{
+                    $push:{prevSeason:prevSeason},
+                    $set:{records: [], acomplishedLimit: false, forgiveLimit: false}
+                });
+                function SortByLimit(conf, profile, newMember, acomplishedLim, forgivenLim, failedLim){
+                    if (conf == profile.clan && conf.used){
+                        if(typeOf(profile.prevSeason) == undefined){
+                            let thisSeason;
+                            if(profile.acomplishedLimit){
+                                thisSeason = "✓"
+                            }else if(profile.forgiveLimit){
+                                thisSeason = "F"
+                            }else{
+                                thisSeason = "✘"
+                            }
+                            newMember.push({nick_WT:profile.nick_WT, CWpoints: profile.records.at(-1).CWpoints, activity: profile.records.at(-1).activity, thisSeason: thisSeason, previousSeason: "N"})
+                        }else if(profile.acomplishedLimit){
+                            let previousSeason;
+                            if(profile.prevSeason.at(-1).acomplishedLimit){
+                                previousSeason = "✓"
+                            }else if(profile.prevSeason.at(-1).forgiveLimit){
+                                previousSeason = "F"
+                            }else{
+                                previousSeason = "✘"
+                            }
+                            acomplishedLim.push({nick_WT:profile.nick_WT, CWpoints: profile.records.at(-1).CWpoints, activity: profile.records.at(-1).activity, thisSeason: "✓", previousSeason: previousSeason})
                         }else if(profile.forgiveLimit){
-                            thisSeason = "F"
+                            let previousSeason;
+                            if(profile.prevSeason.at(-1).acomplishedLimit){
+                                previousSeason = "✓"
+                            }else if(profile.prevSeason.at(-1).forgiveLimit){
+                                previousSeason = "F"
+                            }else{
+                                previousSeason = "✘"
+                            }
+                            forgivenLim.push({nick_WT:profile.nick_WT, CWpoints: profile.records.at(-1).CWpoints, activity: profile.records.at(-1).activity, thisSeason: "F", previousSeason: previousSeason})
                         }else{
-                            thisSeason = "✘"
+                            let previousSeason;
+                            if(profile.prevSeason.at(-1).acomplishedLimit){
+                                previousSeason = "✓"
+                            }else if(profile.prevSeason.at(-1).forgiveLimit){
+                                previousSeason = "F"
+                            }else{
+                                previousSeason = "✘"
+                            }
+                            failedLim.push({nick_WT:profile.nick_WT, CWpoints: profile.records.at(-1).CWpoints, activity: profile.records.at(-1).activity, thisSeason: "✘", previousSeason: previousSeason})
                         }
-                        newMember.push({nick_WT:profile.nick_WT, CWpoints: profile.records.at(-1).CWpoints, activity: profile.records.at(-1).activity, thisSeason: thisSeason, previousSeason: "N"})
-                    }else if(profile.acomplishedLimit){
-                        let previousSeason;
-                        if(profile.prevSeason.at(-1).acomplishedLimit){
-                            previousSeason = "✓"
-                        }else if(profile.prevSeason.at(-1).forgiveLimit){
-                            previousSeason = "F"
-                        }else{
-                            previousSeason = "✘"
-                        }
-                        acomplishedLim.push({nick_WT:profile.nick_WT, CWpoints: profile.records.at(-1).CWpoints, activity: profile.records.at(-1).activity, thisSeason: "✓", previousSeason: previousSeason})
-                    }else if(profile.forgiveLimit){
-                        let previousSeason;
-                        if(profile.prevSeason.at(-1).acomplishedLimit){
-                            previousSeason = "✓"
-                        }else if(profile.prevSeason.at(-1).forgiveLimit){
-                            previousSeason = "F"
-                        }else{
-                            previousSeason = "✘"
-                        }
-                        forgivenLim.push({nick_WT:profile.nick_WT, CWpoints: profile.records.at(-1).CWpoints, activity: profile.records.at(-1).activity, thisSeason: "F", previousSeason: previousSeason})
-                    }else{
-                        let previousSeason;
-                        if(profile.prevSeason.at(-1).acomplishedLimit){
-                            previousSeason = "✓"
-                        }else if(profile.prevSeason.at(-1).forgiveLimit){
-                            previousSeason = "F"
-                        }else{
-                            previousSeason = "✘"
-                        }
-                        failedLim.push({nick_WT:profile.nick_WT, CWpoints: profile.records.at(-1).CWpoints, activity: profile.records.at(-1).activity, thisSeason: "✘", previousSeason: previousSeason})
                     }
                 }
-            }
-            SortByLimit(configuration.firstClan, profile, newMember1, acomplishedLim1, forgivenLim1, failedLim1);
-            SortByLimit(configuration.secondClan, profile, newMember2, acomplishedLim2, forgivenLim2, failedLim2);
-            SortByLimit(configuration.thirdClan, profile, newMember3, acomplishedLim3, forgivenLim3, failedLim3);
-            SortByLimit(configuration.fourthClan, profile, newMember4, acomplishedLim4, forgivenLim4, failedLim4);
-            //mám setřízené pole, tady potřebuji dodělat logiku odesílání pro všechny čtyři svazy (skrze jednu univerzální skupinu jakož funkci a tu čtyřikrát aktivovat)
-        }catch(err){}
-    }
-    function SortSortedArrays(newMember, acomplishedLim, failedLim, forgivenLim) {
-        newMember.sort((a, b) => {
-            const param1 = a.nick_WT.toUpperCase()
-            const param2 = b.nick_WT.toUpperCase()
-            if(param1 < param2) return -1
-            if(param1 > param2) return 1
-            return 0
-        })
-        acomplishedLim.sort((a, b) => {
-            const param1 = a.nick_WT.toUpperCase()
-            const param2 = b.nick_WT.toUpperCase()
-            if(param1 < param2) return -1
-            if(param1 > param2) return 1
-            return 0
-        })
-        forgivenLim.sort((a, b) => {
-            const param1 = a.nick_WT.toUpperCase()
-            const param2 = b.nick_WT.toUpperCase()
-            if(param1 < param2) return -1
-            if(param1 > param2) return 1
-            return 0
-        })
-        failedLim.sort((a, b) => {
-            const param1 = a.nick_WT.toUpperCase()
-            const param2 = b.nick_WT.toUpperCase()
-            if(param1 < param2) return -1
-            if(param1 > param2) return 1
-            return 0
-        })
-        acomplishedLim.push(...forgivenLim, ...failedLim, ...newMember);
-    }
-    SortSortedArrays(newMember1, acomplishedLim1, failedLim1, forgivenLim1);
-    SortSortedArrays(newMember2, acomplishedLim2, failedLim2, forgivenLim2);
-    SortSortedArrays(newMember3, acomplishedLim3, failedLim3, forgivenLim3);
-    SortSortedArrays(newMember4, acomplishedLim4, failedLim4, forgivenLim4);
-    
-    async function sendTable(conf, lang, array) {
-        if(conf.used){
-            let finishedTable = "";
-            let table = new AsciiTable(lang.SeasonEndTable, conf.name);
-            table.setHeading(lang.Misc.Player, lang.Misc.CWPoints, lang.Misc.Activity, lang.Misc.ThisSeason, lang.Misc.PreviousSeason)
-            for (const member of array){
-                table.addRow(member.nick_WT, member.CWpoints, member.activity, member.thisSeason, member.previousSeason);
-                if(table.toString().length > 2000){
-                    finishedTable = '```\n' + table.toString() + '\n ```';
-                    table = new AsciiTable(lang.SeasonEndTable, conf.name);
-                    table.setHeading(lang.Misc.Player, lang.Misc.CWPoints, lang.Misc.Activity, lang.Misc.ThisSeason, lang.Misc.PreviousSeason);
-                    const channel = await client.channels.fetch(conf.seasonEndChannel);
-                    await channel.send(finishedTable);
-                    finishedTable ="";
-                }
-            }
-            finishedTable = '```\n' + table.toString() + '\n ```';
-            const channel = await client.channels.fetch(configuration.seasonEndChannel);
-            await channel.send(finishedTable);
+                SortByLimit(configuration.firstClan, profile, newMember1, acomplishedLim1, forgivenLim1, failedLim1);
+                SortByLimit(configuration.secondClan, profile, newMember2, acomplishedLim2, forgivenLim2, failedLim2);
+                SortByLimit(configuration.thirdClan, profile, newMember3, acomplishedLim3, forgivenLim3, failedLim3);
+                SortByLimit(configuration.fourthClan, profile, newMember4, acomplishedLim4, forgivenLim4, failedLim4);
+                //mám setřízené pole, tady potřebuji dodělat logiku odesílání pro všechny čtyři svazy (skrze jednu univerzální skupinu jakož funkci a tu čtyřikrát aktivovat)
+            }catch(err){}
         }
+        function SortSortedArrays(newMember, acomplishedLim, failedLim, forgivenLim) {
+            newMember.sort((a, b) => {
+                const param1 = a.nick_WT.toUpperCase()
+                const param2 = b.nick_WT.toUpperCase()
+                if(param1 < param2) return -1
+                if(param1 > param2) return 1
+                return 0
+            })
+            acomplishedLim.sort((a, b) => {
+                const param1 = a.nick_WT.toUpperCase()
+                const param2 = b.nick_WT.toUpperCase()
+                if(param1 < param2) return -1
+                if(param1 > param2) return 1
+                return 0
+            })
+            forgivenLim.sort((a, b) => {
+                const param1 = a.nick_WT.toUpperCase()
+                const param2 = b.nick_WT.toUpperCase()
+                if(param1 < param2) return -1
+                if(param1 > param2) return 1
+                return 0
+            })
+            failedLim.sort((a, b) => {
+                const param1 = a.nick_WT.toUpperCase()
+                const param2 = b.nick_WT.toUpperCase()
+                if(param1 < param2) return -1
+                if(param1 > param2) return 1
+                return 0
+            })
+            acomplishedLim.push(...forgivenLim, ...failedLim, ...newMember);
+        }
+        SortSortedArrays(newMember1, acomplishedLim1, failedLim1, forgivenLim1);
+        SortSortedArrays(newMember2, acomplishedLim2, failedLim2, forgivenLim2);
+        SortSortedArrays(newMember3, acomplishedLim3, failedLim3, forgivenLim3);
+        SortSortedArrays(newMember4, acomplishedLim4, failedLim4, forgivenLim4);
+        
+        async function sendTable(conf, lang, array) {
+            if(conf.used){
+                let finishedTable = "";
+                let table = new AsciiTable(lang.SeasonEndTable, conf.name);
+                table.setHeading(lang.Misc.Player, lang.Misc.CWPoints, lang.Misc.Activity, lang.Misc.ThisSeason, lang.Misc.PreviousSeason)
+                for (const member of array){
+                    table.addRow(member.nick_WT, member.CWpoints, member.activity, member.thisSeason, member.previousSeason);
+                    if(table.toString().length > 2000){
+                        finishedTable = '```\n' + table.toString() + '\n ```';
+                        table = new AsciiTable(lang.SeasonEndTable, conf.name);
+                        table.setHeading(lang.Misc.Player, lang.Misc.CWPoints, lang.Misc.Activity, lang.Misc.ThisSeason, lang.Misc.PreviousSeason);
+                        const channel = await client.channels.fetch(conf.seasonEndChannel);
+                        await channel.send(finishedTable);
+                        finishedTable ="";
+                    }
+                }
+                finishedTable = '```\n' + table.toString() + '\n ```';
+                const channel = await client.channels.fetch(configuration.seasonEndChannel);
+                await channel.send(finishedTable);
+            }
+        }
+        await sendTable(configuration.firstClan, lang, acomplishedLim1);
+        await sendTable(configuration.secondClan, lang, acomplishedLim2);
+        await sendTable(configuration.thirdClan, lang, acomplishedLim3);
+        await sendTable(configuration.fourthClan, lang, acomplishedLim4);
     }
-    await sendTable(configuration.firstClan, lang, acomplishedLim1);
-    await sendTable(configuration.secondClan, lang, acomplishedLim2);
-    await sendTable(configuration.thirdClan, lang, acomplishedLim3);
-    await sendTable(configuration.fourthClan, lang, acomplishedLim4);
 }
 /**Does check if members informations are up to date
  * 
