@@ -394,6 +394,10 @@ class SecurityManager {
             return this.sanitizeString(obj);
         }
 
+        if (typeof obj === 'bigint') {
+            return obj.toString();
+        }
+
         if (Array.isArray(obj)) {
             return obj.map(item => this.deepSanitize(item));
         }
