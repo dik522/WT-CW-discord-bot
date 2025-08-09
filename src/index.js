@@ -26,14 +26,7 @@ import {DayActivity, squadronPoints, brRangeTable, membersPoints, MemberCheck, p
 import SecurityManager from "./security/security_manager.js";
 
 
-let securityManager = new SecurityManager({
-    logPath: './security/security.log',
-    banListPath: './security/banned_devices.json',
-    discordBanListPath: './security/banned_discord_users.json',
-    discordClient: client,
-    securityChannel: configuration.administrationChannel,
-    guildIds: [process.env.GUILD_ID]
-});
+let securityManager;
 
 
 //global variables
@@ -124,6 +117,14 @@ async function BotInicialization() {
     await loadConfig();
     await loadLanguage();
     await client.login(process.env.TOKEN);
+    securityManager = new SecurityManager({
+        logPath: './security/security.log',
+        banListPath: './security/banned_devices.json',
+        discordBanListPath: './security/banned_discord_users.json',
+        discordClient: client,
+        securityChannel: configuration.administrationChannel,
+        guildIds: [process.env.GUILD_ID]
+    });
     await loadSeason(configuration,language);
     await DBConnection();
     client.channels.fetch(configuration.administrationChannel)
