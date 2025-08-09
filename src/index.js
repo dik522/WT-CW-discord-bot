@@ -26,7 +26,7 @@ import {DayActivity, squadronPoints, brRangeTable, membersPoints, MemberCheck, p
 import SecurityManager from "./security/security_manager.js";
 
 
-let SecurityManager = new SecurityManager({
+let securityManager = new SecurityManager({
     logPath: './security/security.log',
     banListPath: './security/banned_devices.json',
     discordBanListPath: './security/banned_discord_users.json',
@@ -189,7 +189,7 @@ let reset = function(){
 client.on('interactionCreate', async (interaction) => {
     if (!interaction.isCommand()) return;
     if (interaction.commandName === 'season-br') {
-        const secure = await SecurityManager.checkDiscordSecurity(interaction);
+        const secure = await securityManager.checkDiscordSecurity(interaction);
         if(!secure){
             console.log(`${this.lang.BannedDscIntCon}${interaction.user.id}`);
             return
@@ -207,7 +207,7 @@ client.on('interactionCreate', async (interaction) => {
             userId: interaction.user.id,
             guildId: interaction.guild.id,
         };
-        const sanitizedInput = await SecurityManager.sanitizeInput(input, {interaction: interaction});
+        const sanitizedInput = await securityManager.sanitizeInput(input, {interaction: interaction});
         const br1 = sanitizedInput.br1;
         const br2 = sanitizedInput.br2;
         const br3 = sanitizedInput.br3;
@@ -247,7 +247,7 @@ client.on('interactionCreate', async (interaction) => {
 client.on('interactionCreate', async (interaction) => {
     if (!interaction.isCommand()) return;
     if (interaction.commandName === 'season_dates') {
-        const secure = await SecurityManager.checkDiscordSecurity(interaction);
+        const secure = await securityManager.checkDiscordSecurity(interaction);
         if(!secure){
             console.log(`${this.lang.BannedDscIntCon}${interaction.user.id}`);
             return
@@ -266,7 +266,7 @@ client.on('interactionCreate', async (interaction) => {
             userId: interaction.user.id,
             guildId: interaction.guild.id
         };
-        const sanitizedInput = await SecurityManager.sanitizeInput(input, {interaction: interaction});
+        const sanitizedInput = await securityManager.sanitizeInput(input, {interaction: interaction});
         const season_start = sanitizedInput.season_start;
         const date1 = sanitizedInput.date1;
         const date2 = sanitizedInput.date2;
@@ -306,7 +306,7 @@ client.on('interactionCreate', async (interaction) => {
  */
 client.on('messageCreate',async (messages)=> {
     if((messages.content === "scrape:1" && configuration.firstClan.used) || (messages.content ==="scrape:2" && configuration.secondClan.used) || (messages.content ==="scrape:3" && configuration.thirdClan.used) || (messages.content === "scrape:4" && configuration.fourthClan.used)){ {
-        const sanitizedMessage = await SecurityManager.sanitizeInput(messages.content, {messages: messages, author: messages.author});
+        const sanitizedMessage = await securityManager.sanitizeInput(messages.content, {messages: messages, author: messages.author});
         let messageContent = sanitizedMessage.split(":");
         let channel;
         let url;
@@ -390,7 +390,7 @@ client.on("interactionCreate", async (interaction)=>{
     try{
         if (!interaction.isChatInputCommand()) return;
         if (interaction.commandName === "configuration_change"){
-                const secure = await SecurityManager.checkDiscordSecurity(interaction);
+                const secure = await securityManager.checkDiscordSecurity(interaction);
                 if(!secure){
                     console.log(`${this.lang.BannedDscIntCon}${interaction.user.id}`);
                     return
@@ -405,7 +405,7 @@ client.on("interactionCreate", async (interaction)=>{
                     userId: interaction.user.id,
                     guildId: interaction.guild.id,
                 };
-                const sanitizedInput = await SecurityManager.sanitizeInput(Input, {interaction: interaction});
+                const sanitizedInput = await securityManager.sanitizeInput(Input, {interaction: interaction});
                 const functionOF = sanitizedInput.functionOF;
                 const OF = sanitizedInput.OF;
                 const channel = sanitizedInput.channel;
@@ -561,7 +561,7 @@ client.on("interactionCreate", async (interaction)=>{
 client.on("interactionCreate", async (interaction)=>{
     if(!interaction.isChatInputCommand()) return
     if(interaction.commandName === "init_profile"){
-        const secure = await SecurityManager.checkDiscordSecurity(interaction);
+        const secure = await securityManager.checkDiscordSecurity(interaction);
         if(!secure){
             console.log(`${this.lang.BannedDscIntCon}${interaction.user.id}`);
             return
@@ -574,7 +574,7 @@ client.on("interactionCreate", async (interaction)=>{
             userId: interaction.user.id,
             guildId: interaction.guild.id
         }
-        const sanitizedInput = await SecurityManager.sanitizeInput(Input, {interaction: interaction});
+        const sanitizedInput = await securityManager.sanitizeInput(Input, {interaction: interaction});
         const WTNick = sanitizedInput.nickwt;
         const IDDsc = sanitizedInput.discordid;
         const squadron = sanitizedInput.squadron;
@@ -587,12 +587,12 @@ client.on("interactionCreate", async (interaction)=>{
 client.on("interactionCreate", async (interaction)=>{
     if (!interaction.isChatInputCommand()) return
     if (interaction.commandName === "evidence"){
-        const secure = await SecurityManager.checkDiscordSecurity(interaction);
+        const secure = await securityManager.checkDiscordSecurity(interaction);
         if(!secure){
             console.log(`${this.lang.BannedDscIntCon}${interaction.user.id}`);
             return
         }
-        const editor = await SecurityManager.sanitizeInput(interaction.options.get("user").value, {interaction: interaction});
+        const editor = await securityManager.sanitizeInput(interaction.options.get("user").value, {interaction: interaction});
         const member = interaction.user.username;
         const memberID = interaction.user.id;
         let logger = relations.find(memb => memb.memb === editor)
@@ -623,7 +623,7 @@ client.on("interactionCreate", async (interaction)=>{
 client.on("interactionCreate", async (interaction) => {
     if (!interaction.isChatInputCommand()) return;
     if (interaction.commandName === "cw_entry") {
-        const secure = await SecurityManager.checkDiscordSecurity(interaction);
+        const secure = await securityManager.checkDiscordSecurity(interaction);
         if(!secure){
             console.log(`${this.lang.BannedDscIntCon}${interaction.user.id}`);
             return
@@ -640,7 +640,7 @@ client.on("interactionCreate", async (interaction) => {
             userId: interaction.user.id,
             guildId: interaction.guild.id
         };
-        const sanitizedInput = await SecurityManager.sanitizeInput(Input, {interaction: interaction});
+        const sanitizedInput = await securityManager.sanitizeInput(Input, {interaction: interaction});
         const result = sanitizedInput.result;
         const squadron = sanitizedInput.squadron;
         const planes = sanitizedInput.planes;
@@ -729,7 +729,7 @@ client.on("interactionCreate", async (interaction) => {
 client.on("interactionCreate", async (interaction) =>{
     if (!interaction.isChatInputCommand()) return;
     if(interaction.commandName ==="cw_edit"){
-        const secure = await SecurityManager.checkDiscordSecurity(interaction);
+        const secure = await securityManager.checkDiscordSecurity(interaction);
         if(!secure){
             console.log(`${this.lang.BannedDscIntCon}${interaction.user.id}`);
             return
@@ -746,7 +746,7 @@ client.on("interactionCreate", async (interaction) =>{
             userId: interaction.user.id,
             guildId: interaction.guild.id
         }
-        const sanitizedInput = await SecurityManager.sanitizeInput(Input, {interaction: interaction});
+        const sanitizedInput = await securityManager.sanitizeInput(Input, {interaction: interaction});
         const result = sanitizedInput.result;
         const squadron = sanitizedInput.squadron;
         const planes = sanitizedInput.planes;
@@ -821,7 +821,7 @@ client.on("interactionCreate", async (interaction) =>{
 client.on("interactionCreate", async (interaction) =>{
     if (!interaction.isChatInputCommand()) return;
     if(interaction.commandName ==="cw_delete"){
-        const secure = await SecurityManager.checkDiscordSecurity(interaction);
+        const secure = await securityManager.checkDiscordSecurity(interaction);
         if(!secure){
             console.log(`${this.lang.BannedDscIntCon}${interaction.user.id}`);
             return
@@ -860,7 +860,7 @@ client.on("interactionCreate", async (interaction) =>{
 client.on("interactionCreate", async (interaction) =>{
     if(!interaction.isChatInputCommand())return;
     if(interaction.commandName === "view_profile"){
-        const secure = await SecurityManager.checkDiscordSecurity(interaction);
+        const secure = await securityManager.checkDiscordSecurity(interaction);
         if(!secure){
             console.log(`${this.lang.BannedDscIntCon}${interaction.user.id}`);
             return
@@ -871,7 +871,7 @@ client.on("interactionCreate", async (interaction) =>{
             userId: interaction.user.id,
             guildId: interaction.guild.id
         }
-        const sanitizedInput = await SecurityManager.sanitizeInput(Input, {interaction: interaction});
+        const sanitizedInput = await securityManager.sanitizeInput(Input, {interaction: interaction});
         const password = sanitizedInput.password;
         const member = sanitizedInput.member;
         try{
@@ -991,7 +991,7 @@ client.on("interactionCreate", async (interaction) =>{
                                 userId: interaction.user.id,
                                 guildId: interaction.guild.id
                             }
-                            const sanitizedInput = SecurityManager.sanitizeInput(Input, {interaction: modalInteraction});
+                            const sanitizedInput = securityManager.sanitizeInput(Input, {interaction: modalInteraction});
 
                             klient.db(configuration.DBNames.Community.DB).collection(configuration.DBNames.Community.Collection).updateOne({nick_WT: result.nick_WT},{
                                 $set:{nick_WT: sanitizedInput.nick_WT, IDDiscord: sanitizedInput.IDDiscord, inClan: sanitizedInput.inClan, clan: sanitizedInput.clan, secondaryAccount: sanitizedInput.secondaryAccount}
@@ -1021,7 +1021,7 @@ client.on("interactionCreate", async (interaction) =>{
 client.on("interactionCreate", async (interaction) =>{
     if(!interaction.isChatInputCommand())return;
     if(interaction.commandName === "squadron_search"){
-        const secure = await SecurityManager.checkDiscordSecurity(interaction);
+        const secure = await securityManager.checkDiscordSecurity(interaction);
         if(!secure){
             console.log(`${this.lang.BannedDscIntCon}${interaction.user.id}`);
             return
@@ -1031,7 +1031,7 @@ client.on("interactionCreate", async (interaction) =>{
             userId: interaction.user.id,
             guildId: interaction.guild.id
         }
-        const sanitizedInput = SecurityManager.sanitizeInput(Input, {interaction});
+        const sanitizedInput = securityManager.sanitizeInput(Input, {interaction});
         const squadron = sanitizedInput.squadron;
             try{
             let results = await klient.db(configuration.DBNames.CW.DB).collection(configuration.DBNames.CW.Collection).find({[language.Misc.Squadron]: squadron, br: actualbr});
@@ -1056,7 +1056,7 @@ client.on("interactionCreate", async (interaction) =>{
 client.on("interactionCreate",async (interaction) => {
     if (!interaction.isChatInputCommand()) return;
     if (interaction.commandName === "unban") {
-        const secure = await SecurityManager.checkDiscordSecurity(interaction);
+        const secure = await securityManager.checkDiscordSecurity(interaction);
         if(!secure){
             console.log(`${this.lang.BannedDscIntCon}${interaction.user.id}`);
             return
@@ -1064,7 +1064,7 @@ client.on("interactionCreate",async (interaction) => {
         const userId = interaction.options.get("user").value;
         
         try {
-            await SecurityManager.unbanUser(userId, reason);
+            await securityManager.unbanUser(userId, reason);
             interaction.reply({content: `Successfully unbanned user <@${userId}>. Reason: ${reason}`, flags: 64});
             console.log(`Unbanned user <@${userId}>. Reason: ${reason}`);
         } catch (error) {
