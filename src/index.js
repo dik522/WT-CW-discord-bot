@@ -20,6 +20,7 @@ const client = new Client ({
         IntentsBitField.Flags.GuildVoiceStates
     ],
 });
+client.setMaxListeners(15);
 export {client};
 import {tomorowsDate, actualDate, todaysbr} from "./moduly/obecne_fce.mjs";
 import {DayActivity, squadronPoints, brRangeTable, membersPoints, MemberCheck, passwordCheck, clearenceChech, ProfileIniciation, SeasonSummary} from "./moduly/svazove_fce.mjs";
@@ -37,7 +38,6 @@ let IDDb = [];
 let relations=[];
 let actualbr;
 let passwords = [];
-emitter.setMaxListeners(15);
 //functions to properly inicialise bot
 /**
  * Loads configuration
