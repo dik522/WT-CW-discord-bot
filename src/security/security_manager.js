@@ -46,7 +46,7 @@ class SecurityManager {
      * Main sanitization function with enhanced threat assessment
      */
     async sanitizeInput(input, context = {}) {
-        const originalInput = JSON.stringify(input);
+        const originalInput = this.safeStringify(input);
         let sanitizedInput = this.deepSanitize(input);
 
         // Get threat information
@@ -347,7 +347,7 @@ class SecurityManager {
     async saveBannedDiscordUsers() {
         try {
             const bannedArray = Array.from(this.bannedDiscordUsers);
-            await fs.writeFile(this.discordBanListPath, JSON.stringify(bannedArray, null, 2));
+            await fs.writeFile(this.discordBanListPath, this.safeStringify(bannedArray, null, 2));
         } catch (error) {
             console.error(this.lang.ErrorSavingDscBan, error);
         }
@@ -380,7 +380,7 @@ class SecurityManager {
     async saveBannedDevices() {
         try {
             const bannedArray = Array.from(this.bannedDevices);
-            await fs.writeFile(this.banListPath, JSON.stringify(bannedArray, null, 2));
+            await fs.writeFile(this.banListPath, this.safeStringify(bannedArray, null, 2));
         } catch (error) {
             console.error(this.lang.ErrorSavingDev, error);
         }
@@ -499,7 +499,7 @@ class SecurityManager {
      */
     async logIncident(logEntry) {
         try {
-            const logLine = JSON.stringify(logEntry) + '\n';
+            const logLine = this.safeStringify(logEntry) + '\n';
             await fs.appendFile(this.logPath, logLine);
         } catch (error) {
             console.error(this.lang.ErrorLogingInc, error);
@@ -557,6 +557,46 @@ class SecurityManager {
         console.log(`${this.lang.UnbanComplete}${unbannedGuilds}/${totalGuilds}`);
         return { unbannedGuilds, totalGuilds };
     }
+
+    safeStringify(data) {
+    const seen = new WeakSet();
+
+    return JSON.stringify(data, (key, value) => {
+        if (typeof value === 'object' && value !== null) {
+            if (seen.has(value)) {
+                return '[Circular]';
+            }
+            seen.add(value);
+        }
+
+        if (typeof value === 'bigint') {
+            return value.toString();
+        }
+
+        if (typeof value === 'symbol') {
+            return value.description || value.toString();
+        }
+
+        if (typeof value === 'function') {
+            return `[Function${value.name ? ': ' + value.name : ''}]`;
+        }
+
+        if (typeof value === 'undefined') {
+            return '[undefined]';
+        }
+
+        if (value instanceof Date) {
+            return value.toISOString();
+        }
+
+        if (value instanceof RegExp) {
+            return value.toString();
+        }
+
+        return value;
+        }, 2);
+    }
+
 }
 
 export default SecurityManager;
