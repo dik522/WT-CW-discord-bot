@@ -118,9 +118,9 @@ async function BotInicialization() {
     await loadLanguage();
     await client.login(process.env.TOKEN);
     securityManager = new SecurityManager({
-        logPath: './security/security.log',
-        banListPath: './security/banned_devices.json',
-        discordBanListPath: './security/banned_discord_users.json',
+        logPath: './src/security/security.log',
+        banListPath: './src/security/banned_devices.json',
+        discordBanListPath: './src/security/banned_discord_users.json',
         discordClient: client,
         securityChannel: configuration.administrationChannel,
         guildIds: [process.env.GUILD_ID],
