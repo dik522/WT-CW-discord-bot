@@ -983,15 +983,15 @@ client.on("interactionCreate", async (interaction) =>{
                     interaction
                         .awaitModalSubmit({filter, time: 30_000})
                         .then(async (modalInteraction)=> {
-                            const nick_WT_Response = modalInteraction.fields.getTextInputValue("nick_WT_Modal");
+                            let nick_WT_Response = modalInteraction.fields.getTextInputValue("nick_WT_Modal");
                             if(!nick_WT_Response) nick_WT_Response = result.nick_WT;
-                            const IDDiscord_Response = modalInteraction.fields.getTextInputValue("IDDiscord_Modal");
+                            let IDDiscord_Response = modalInteraction.fields.getTextInputValue("IDDiscord_Modal");
                             if(!IDDiscord_Response) IDDiscord_Response = result.IDDiscord;
-                            const inClan_Response = modalInteraction.fields.getTextInputValue("inClan_Modal");
+                            let inClan_Response = modalInteraction.fields.getTextInputValue("inClan_Modal");
                             if(!inClan_Response) inClan_Response = result.inClan;
-                            const clan_Response = modalInteraction.fields.getTextInputValue("clan_Modal");
+                            let clan_Response = modalInteraction.fields.getTextInputValue("clan_Modal");
                             if(!clan_Response) clan_Response = result.clan
-                            const secondaryAccount_Response = modalInteraction.fields.getTextInputValue("secondaryAccount_Modal");
+                            let secondaryAccount_Response = modalInteraction.fields.getTextInputValue("secondaryAccount_Modal");
                             if(!secondaryAccount_Response) secondaryAccount_Response = result.ignoreAbsence
 
                             const Input = {
