@@ -1,7 +1,7 @@
 import { EventEmitter } from 'node:events';
 import dotenv from "dotenv";
 dotenv.config();
-import { Client, IntentsBitField, Integration, MessageType, MessageManager, EmbedBuilder, MessageFlags, ModalBuilder, ButtonBuilder, ButtonStyle} from 'discord.js';
+import { Client, IntentsBitField, Integration, MessageType, MessageManager, EmbedBuilder, MessageFlags, ModalBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder, ModalBuilder, TextInputBuilder} from 'discord.js';
 import axios from 'axios';
 import cheerio from 'cheerio';
 import {MongoClient} from 'mongodb';
