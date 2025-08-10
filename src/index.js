@@ -862,31 +862,40 @@ client.on("interactionCreate", async (interaction) =>{
 client.on("interactionCreate", async (interaction) =>{
     if(!interaction.isChatInputCommand())return;
     if(interaction.commandName === "view_profile"){
+        await interaction.deferReply({ ephemeral: true });//        swrgsdhbsdndfhmnxfhnf
+        console.log(866)//                                          agbsgnhdrndfhnmzfdnfnz
         const secure = await securityManager.checkDiscordSecurity(interaction);
         if(!secure){
             console.log(`${language.security.BannedDscIntCon}${interaction.user.id}`);
             return
         }
+        console.log(872)//                                          sgrbvfsdbdebdgbdgbdgb
         const Input = {
             password: interaction.options.get("password").value,
             member: interaction.options.get("member").value,
             userId: interaction.user.id,
             guildId: interaction.guild.id
         }
+        console.log(879)//                                          dbdskbvfsljabvhslibvhzs
         const sanitizedInput = await securityManager.sanitizeInput(Input, {interaction: interaction});
         const password = sanitizedInput.password;
         const member = sanitizedInput.member;
         try{
+            console.log(884)//                                          agbsgnhdrndfhnmzfdnfnz
             let passwordRight = await passwordCheck(password, passwords);
             if(!passwordRight.success) return
+            console.log(887)//                                          agbsgnhdrndfhnmzfdnfnz
             let resultReceived = await klient.db(configuration.DBNames.Community.DB).collection(configuration.DBNames.Community.Collection).find({nick_WT: member}).toArray();
+            console.log(889)//                                          agbsgnhdrndfhnmzfdnfnz
             let result = resultReceived[0];
             if (!result) {
                 await interaction.reply({ content: "Uživatel nenalezen.", ephemeral: true });
                 return;
             }
+            console.log(895)//                                          agbsgnhdrndfhnmzfdnfnz
             let ForgivenLim;
             if(typeof(result.forgiveLimit) === "undefined"){ForgivenLim = "false"}else{ForgivenLim = result.forgiveLimit};
+            console.log(898)//                                          agbsgnhdrndfhnmzfdnfnz
             let zprava = new EmbedBuilder()
                 .setTitle(language.EmbedTitle)
                 .setDescription(language.EmbdedDescription)
@@ -905,6 +914,7 @@ client.on("interactionCreate", async (interaction) =>{
                     {name: language.Misc.Activity, value: result.records?.at(-1)?.activity ?? "N/A", inline: true},
                     {name: language.Misc.Date, value: result.records?.at(-1)?.date ?? "N/A", inline: true}
                 )
+            console.log(917)//                                          agbsgnhdrndfhnmzfdnfnz
             let EditBtn = new ButtonBuilder()
                 .setLabel(language.EditBtnLabel)
                 .setStyle(ButtonStyle.Primary)
@@ -913,8 +923,9 @@ client.on("interactionCreate", async (interaction) =>{
                 .setLabel(language.Profile.BtnForgiveLimit)
                 .setStyle(ButtonStyle.Secondary)
                 .setCustomId("ForgiveLimit")
+            console.log(925)//                                          agbsgnhdrndfhnmzfdnfnz
             const buttonRow = new ActionRowBuilder().addComponents([EditBtn, ForgivenLimitBtn]);
-
+            console.log(928)//                                          agbsgnhdrndfhnmzfdnfnz
             const reply = await interaction.reply({embeds: [zprava], components: [buttonRow], ephemeral: true});
             console.log(language.ProfileView)
 
@@ -922,13 +933,14 @@ client.on("interactionCreate", async (interaction) =>{
                 componentType: ComponentType.Button,
                 time: 120_000
             });
-
+            console.log(936)//                                          agbsgnhdrndfhnmzfdnfnz
             collector.on("collect", async (interaction) =>{
                 if(interaction.customId === "EditMembersProfile"){
                     const modal = new ModalBuilder({
                         customId: "EditProfileModal",
                         title: language.Profile.EditModalTitle,
                     })
+                    console.log(943)//                                  agbsgnhdrndfhnmzfdnfnz
                     const nick_WT_Modal = new TextInputBuilder({
                         customId: "nick_WT_Modal",
                         label: language.Profile.EditModalNickWT,
@@ -964,7 +976,7 @@ client.on("interactionCreate", async (interaction) =>{
                         required: false,
                         placeholder: result.ignoreAbsence
                     })
-
+                    console.log(979)//                                          agbsgnhdrndfhnmzfdnfnz
                     const nick_WT_Row = new ActionRowBuilder().addComponents(nick_WT_Modal);
                     const IDDiscord_Row = new ActionRowBuilder().addComponents(IDDiscord_Modal);
                     const inClan_Row = new ActionRowBuilder().addComponents(inClan_Modal);
@@ -972,6 +984,7 @@ client.on("interactionCreate", async (interaction) =>{
                     const secondaryAccount_Row = new ActionRowBuilder().addComponents(secondaryAccount_Modal);
 
                     modal.addComponents(nick_WT_Row, IDDiscord_Row, inClan_Row, clan_Row, secondaryAccount_Row);
+                    console.log(987)//                                          agbsgnhdrndfhnmzfdnfnz
                     await interaction.showModal(modal);
 
                     const filter = (interaction) => interaction.customId === "EditProfileModal"

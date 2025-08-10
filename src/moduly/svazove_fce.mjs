@@ -595,22 +595,17 @@ async function MemberCheck(guildID, configuration, lang) {
     for (const profile of profiles) {
         try {
             if (profile.IDDiscord != 404 && profile.ignoreAbsence != true) {
-                console.log("Člen: ", profile.nick_WT)
-                if(profile.clan ==configuration.firstClan.name){console.log("svaz sedí")}else{console.log("svaz nesedí")};
                 //404 for completelly shared accounts
                 //ignoreAbsence for secondary accounts
                 const member = await guild.members.fetch(profile.IDDiscord);
                 switch (profile.clan) {
                     case configuration.firstClan.name:
                         console.log("------------------");
-                        if(!member.roles.cache.has(configuration.firstClan.RoleID)){console.log("nemá roli")}else{console.log("má roli")};
                         if(!member.roles.cache.has(configuration.firstClan.RoleID)){
                             console.log("Role missing")
                             const channel = await client.channels.fetch(configuration.administrationChannel);
                             await channel.send(`:warning:\n<@${profile.IDDiscord}>${lang.memberCheck.Owner}${profile.nick_WT}${lang.memberCheck.Squadron}${profile.clan}${lang.memberCheck.RoleMissing}<@&${configuration.firstClan.RoleID}>`);
                         }
-                        console.log("datum záznamu: ", profile.records.at(-1).date);
-                        if(!profile.records.at(-1).date == actualDate()){console.log("datum není aktuální")}else{console.log("datum je aktuální")};
                         if(!profile.records.at(-1).date == actualDate()){
                             console.log("Člověk chybí ve svazu")
                             const channel = await client.channels.fetch(configuration.administrationChannel);
