@@ -917,10 +917,8 @@ client.on("interactionCreate", async (interaction) =>{
                 .setLabel(language.Profile.BtnForgiveLimit)
                 .setStyle(ButtonStyle.Secondary)
                 .setCustomId("ForgiveLimit")
-            console.log(925)//                                          agbsgnhdrndfhnmzfdnfnz
             const buttonRow = new ActionRowBuilder().addComponents([EditBtn, ForgivenLimitBtn]);
-            console.log(928)//                                          agbsgnhdrndfhnmzfdnfnz
-            const reply = await interaction.reply({embeds: [zprava], components: [buttonRow], ephemeral: true});
+            const reply = await interaction.editReply({embeds: [zprava], components: [buttonRow], ephemeral: true});
             console.log(language.ProfileView)
 
             const collector = reply.createMessageComponentCollector({
