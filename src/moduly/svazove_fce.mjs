@@ -455,7 +455,7 @@ async function brRangeTable(season, configuration, lang) {
  * 
  */
 
-async function SeasonSummary (conf, lang){
+async function SeasonSummary (conf, lang, season){
     let todayDate = actualDate();
     if (season.at(-1).interval[1] == todayDate){
         let profiles = await klient.db(conf.DBNames.Community.DB).collection(conf.DBNames.Community.Collection).find({inClan: true}).toArray();

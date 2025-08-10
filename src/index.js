@@ -144,7 +144,7 @@ async function BotInicialization() {
         async () => squadronPoints(configuration.fourthClan, language),
         async () => brRangeTable(season, configuration, language),
         async () => MemberCheck(process.env.GUILD_ID, configuration, language),
-        async () => SeasonSummary (configuration, language),
+        async () => SeasonSummary (configuration, language, season),
         () => reset(),
         () => console.log("---------------------------------------", actualDate())
     ]);
