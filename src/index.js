@@ -1,7 +1,7 @@
 import { EventEmitter } from 'node:events';
 import dotenv from "dotenv";
 dotenv.config();
-import { Client, IntentsBitField, Integration, MessageType, MessageManager, EmbedBuilder, MessageFlags, ModalBuilder, ButtonBuilder} from 'discord.js';
+import { Client, IntentsBitField, Integration, MessageType, MessageManager, EmbedBuilder, MessageFlags, ModalBuilder, ButtonBuilder, ButtonStyle} from 'discord.js';
 import axios from 'axios';
 import cheerio from 'cheerio';
 import {MongoClient} from 'mongodb';
@@ -884,16 +884,13 @@ client.on("interactionCreate", async (interaction) =>{
                 return
             }
             let resultReceived = await klient.db(configuration.DBNames.Community.DB).collection(configuration.DBNames.Community.Collection).find({nick_WT: member}).toArray();
-            console.log(889)//                                          agbsgnhdrndfhnmzfdnfnz
             let result = resultReceived[0];
             if (!result) {
                 await interaction.reply({ content: "Uživatel nenalezen.", ephemeral: true });
                 return;
             }
-            console.log(895)//                                          agbsgnhdrndfhnmzfdnfnz
             let ForgivenLim;
             if(typeof(result.forgiveLimit) === "undefined"){ForgivenLim = "false"}else{ForgivenLim = result.forgiveLimit};
-            console.log(898)//                                          agbsgnhdrndfhnmzfdnfnz
             let zprava = new EmbedBuilder()
                 .setTitle(language.EmbedTitle)
                 .setDescription(language.EmbdedDescription)
@@ -912,7 +909,6 @@ client.on("interactionCreate", async (interaction) =>{
                     {name: language.Misc.Activity, value: result.records?.at(-1)?.activity ?? "N/A", inline: true},
                     {name: language.Misc.Date, value: result.records?.at(-1)?.date ?? "N/A", inline: true}
                 )
-            console.log(917)//                                          agbsgnhdrndfhnmzfdnfnz
             let EditBtn = new ButtonBuilder()
                 .setLabel(language.EditBtnLabel)
                 .setStyle(ButtonStyle.Primary)
