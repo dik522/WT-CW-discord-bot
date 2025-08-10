@@ -915,7 +915,7 @@ client.on("interactionCreate", async (interaction) =>{
                 .setCustomId("ForgiveLimit")
             const buttonRow = new ActionRowBuilder().addComponents([EditBtn, ForgivenLimitBtn]);
 
-            const reply = await interaction.reply({embeds: [zprava], components: [buttonRow], flags: MessageFlags.Ephemeral})
+            const reply = await interaction.reply({embeds: [zprava], components: [buttonRow], ephemeral: true});
             console.log(language.ProfileView)
 
             const collector = reply.createMessageComponentCollector({
@@ -1003,7 +1003,7 @@ client.on("interactionCreate", async (interaction) =>{
                             klient.db(configuration.DBNames.Community.DB).collection(configuration.DBNames.Community.Collection).updateOne({nick_WT: result.nick_WT},{
                                 $set:{nick_WT: sanitizedInput.nick_WT, IDDiscord: sanitizedInput.IDDiscord, inClan: sanitizedInput.inClan, clan: sanitizedInput.clan, secondaryAccount: sanitizedInput.secondaryAccount}
                             })
-                            modalInteraction.reply({content: language.Profile.EditModalSuccess, flags: MessageFlags.Ephemeral})
+                            modalInteraction.reply({content: language.Profile.EditModalSuccess, ephemeral: true})
                         })
                 }
                 if(interaction.customId === "ForgiveLimit"){
