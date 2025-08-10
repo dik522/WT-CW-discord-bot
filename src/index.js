@@ -193,7 +193,7 @@ client.on('interactionCreate', async (interaction) => {
     if (interaction.commandName === 'season-br') {
         const secure = await securityManager.checkDiscordSecurity(interaction);
         if(!secure){
-            console.log(`${this.lang.BannedDscIntCon}${interaction.user.id}`);
+            console.log(`${language.security.BannedDscIntCon}${interaction.user.id}`);
             return
         }
         const input = {
@@ -251,7 +251,7 @@ client.on('interactionCreate', async (interaction) => {
     if (interaction.commandName === 'season_dates') {
         const secure = await securityManager.checkDiscordSecurity(interaction);
         if(!secure){
-            console.log(`${this.lang.BannedDscIntCon}${interaction.user.id}`);
+            console.log(`${language.security.BannedDscIntCon}${interaction.user.id}`);
             return
         }
         const input = {
@@ -394,7 +394,7 @@ client.on("interactionCreate", async (interaction)=>{
         if (interaction.commandName === "configuration_change"){
                 const secure = await securityManager.checkDiscordSecurity(interaction);
                 if(!secure){
-                    console.log(`${this.lang.BannedDscIntCon}${interaction.user.id}`);
+                    console.log(`${language.security.BannedDscIntCon}${interaction.user.id}`);
                     return
                 }
                 const Input = {
@@ -565,7 +565,7 @@ client.on("interactionCreate", async (interaction)=>{
     if(interaction.commandName === "init_profile"){
         const secure = await securityManager.checkDiscordSecurity(interaction);
         if(!secure){
-            console.log(`${this.lang.BannedDscIntCon}${interaction.user.id}`);
+            console.log(`${language.security.BannedDscIntCon}${interaction.user.id}`);
             return
         }
         const Input = {
@@ -591,7 +591,7 @@ client.on("interactionCreate", async (interaction)=>{
     if (interaction.commandName === "evidence"){
         const secure = await securityManager.checkDiscordSecurity(interaction);
         if(!secure){
-            console.log(`${this.lang.BannedDscIntCon}${interaction.user.id}`);
+            console.log(`${language.security.BannedDscIntCon}${interaction.user.id}`);
             return
         }
         const editor = await securityManager.sanitizeInput(interaction.options.get("user").value, {interaction: interaction});
@@ -627,7 +627,7 @@ client.on("interactionCreate", async (interaction) => {
     if (interaction.commandName === "cw_entry") {
         const secure = await securityManager.checkDiscordSecurity(interaction);
         if(!secure){
-            console.log(`${this.lang.BannedDscIntCon}${interaction.user.id}`);
+            console.log(`${language.security.BannedDscIntCon}${interaction.user.id}`);
             return
         }
         const Input = {
@@ -733,7 +733,7 @@ client.on("interactionCreate", async (interaction) =>{
     if(interaction.commandName ==="cw_edit"){
         const secure = await securityManager.checkDiscordSecurity(interaction);
         if(!secure){
-            console.log(`${this.lang.BannedDscIntCon}${interaction.user.id}`);
+            console.log(`${language.security.BannedDscIntCon}${interaction.user.id}`);
             return
         }
         const Input = {
@@ -825,7 +825,7 @@ client.on("interactionCreate", async (interaction) =>{
     if(interaction.commandName ==="cw_delete"){
         const secure = await securityManager.checkDiscordSecurity(interaction);
         if(!secure){
-            console.log(`${this.lang.BannedDscIntCon}${interaction.user.id}`);
+            console.log(`${language.security.BannedDscIntCon}${interaction.user.id}`);
             return
         }
         let editor = relations.find(editor => editor.editor === interaction.user.username)
@@ -864,7 +864,7 @@ client.on("interactionCreate", async (interaction) =>{
     if(interaction.commandName === "view_profile"){
         const secure = await securityManager.checkDiscordSecurity(interaction);
         if(!secure){
-            console.log(`${this.lang.BannedDscIntCon}${interaction.user.id}`);
+            console.log(`${language.security.BannedDscIntCon}${interaction.user.id}`);
             return
         }
         const Input = {
@@ -879,9 +879,14 @@ client.on("interactionCreate", async (interaction) =>{
         try{
             let passwordRight = await passwordCheck(password, passwords);
             if(!passwordRight.success) return
-            let result = await klient.db(configuration.DBNames.Community.DB).collection(configuration.DBNames.Community.Collection).find({nick_WT: member}).toArray();
+            let resultReceived = await klient.db(configuration.DBNames.Community.DB).collection(configuration.DBNames.Community.Collection).find({nick_WT: member}).toArray();
+            let result = resultReceived[0];
+            if (!result) {
+                await interaction.reply({ content: "Uživatel nenalezen.", ephemeral: true });
+                return;
+            }
             let ForgivenLim;
-            if(typeof(result.forgiveLimit) == undefined){ForgivenLim = "false"}else{ForgiveLimit = result.forgiveLimit};
+            if(typeof(result.forgiveLimit) === "undefined"){ForgivenLim = "false"}else{ForgivenLim = result.forgiveLimit};
             let zprava = new EmbedBuilder()
                 .setTitle(language.EmbedTitle)
                 .setDescription(language.EmbdedDescription)
@@ -896,30 +901,30 @@ client.on("interactionCreate", async (interaction) =>{
                     {name: language.Misc.Comments, value: result.comments},
                     {name: language.Misc.ForgivenLim, value: ForgivenLim},
                     {name: language.Misc.secondaryAccount, value: result.ignoreAbsence},
-                    {name: language.Misc.CWPoints, value: result.records.at(-1).CWpoints, inline: true},
-                    {name: language.Misc.Activity, value: result.records.at(-1).activity, inline: true},
-                    {name: language.Misc.Date, value: result.records.at(-1).date, inline: true}
+                    {name: language.Misc.CWPoints, value: result.records?.at(-1)?.CWpoints ?? "N/A", inline: true},
+                    {name: language.Misc.Activity, value: result.records?.at(-1)?.activity ?? "N/A", inline: true},
+                    {name: language.Misc.Date, value: result.records?.at(-1)?.date ?? "N/A", inline: true}
                 )
             let EditBtn = new ButtonBuilder()
                 .setLabel(language.EditBtnLabel)
                 .setStyle(ButtonStyle.Primary)
                 .setCustomId("EditMembersProfile")
-            let ForgiveLimit = new ButtonBuilder()
+            let ForgivenLimitBtn = new ButtonBuilder()
                 .setLabel(language.Profile.BtnForgiveLimit)
                 .setStyle(ButtonStyle.Secondary)
                 .setCustomId("ForgiveLimit")
-            const buttonRow = new ActionRowBuilder().addComponents([EditBtn, ForgiveLimit]);
-        
+            const buttonRow = new ActionRowBuilder().addComponents([EditBtn, ForgivenLimitBtn]);
+
             const reply = await interaction.reply({embeds: [zprava], components: [buttonRow], flags: MessageFlags.Ephemeral})
             console.log(language.ProfileView)
 
-            const collector = reply.createMessageCommponentCollector({
+            const collector = reply.createMessageComponentCollector({
                 componentType: ComponentType.Button,
                 time: 120_000
             });
 
             collector.on("collect", async (interaction) =>{
-                if(interaction.customId === "EditMemberProfile"){
+                if(interaction.customId === "EditMembersProfile"){
                     const modal = new ModalBuilder({
                         customId: "EditProfileModal",
                         title: language.Profile.EditModalTitle,
@@ -928,36 +933,36 @@ client.on("interactionCreate", async (interaction) =>{
                         customId: "nick_WT_Modal",
                         label: language.Profile.EditModalNickWT,
                         style:TextInputStyle.Short,
-                        require: false,
-                        placeHolder: result.nick_WT
+                        required: false,
+                        placeholder: result.nick_WT
                     })
                     const IDDiscord_Modal = new TextInputBuilder({
                         customId: "IDDiscord_Modal",
                         label: language.Profile.EditModalIDDsc,
                         style: TextInputStyle.Short,
-                        require: false,
-                        placeHolder: result.IDDiscord
+                        required: false,
+                        placeholder: result.IDDiscord
                     })
                     const inClan_Modal = new TextInputBuilder({
                         customId: "inClan_Modal",
                         label: language.Profile.EditModalInClan,
                         style: TextInputStyle.Short,
-                        require: false,
-                        placeHolder: result.inClan
+                        required: false,
+                        placeholder: result.inClan
                     })
                     const clan_Modal = new TextInputBuilder({
                         customId: "clan_Modal",
                         label: language.Profile.EditModalClan,
                         style: TextInputStyle.Short,
-                        require: false,
-                        placeHolder: result.clan
+                        required: false,
+                        placeholder: result.clan
                     })
                     const secondaryAccount_Modal = new TextInputBuilder({
                         customId: "secondaryAccount_Modal",
                         label: language.Profile.EditModalSecondary,
                         style: TextInputStyle.Short, //Paragraph
-                        require: false,
-                        placeHolder: result.ignoreAbsence
+                        required: false,
+                        placeholder: result.ignoreAbsence
                     })
 
                     const nick_WT_Row = new ActionRowBuilder().addComponents(nick_WT_Modal);
@@ -972,14 +977,14 @@ client.on("interactionCreate", async (interaction) =>{
                     const filter = (interaction) => interaction.customId === "EditProfileModal"
                     interaction
                         .awaitModalSubmit({filter, time: 30_000})
-                        .then((modalInteraction)=> {
+                        .then(async (modalInteraction)=> {
                             const nick_WT_Response = modalInteraction.fields.getTextInputValue("nick_WT_Modal");
                             if(!nick_WT_Response) nick_WT_Response = result.nick_WT;
                             const IDDiscord_Response = modalInteraction.fields.getTextInputValue("IDDiscord_Modal");
                             if(!IDDiscord_Response) IDDiscord_Response = result.IDDiscord;
                             const inClan_Response = modalInteraction.fields.getTextInputValue("inClan_Modal");
                             if(!inClan_Response) inClan_Response = result.inClan;
-                            const clan_Response = modalInteraction.fields.getTextInputValue("clan_Response");
+                            const clan_Response = modalInteraction.fields.getTextInputValue("clan_Modal");
                             if(!clan_Response) clan_Response = result.clan
                             const secondaryAccount_Response = modalInteraction.fields.getTextInputValue("secondaryAccount_Modal");
                             if(!secondaryAccount_Response) secondaryAccount_Response = result.ignoreAbsence
@@ -993,7 +998,7 @@ client.on("interactionCreate", async (interaction) =>{
                                 userId: interaction.user.id,
                                 guildId: interaction.guild.id
                             }
-                            const sanitizedInput = securityManager.sanitizeInput(Input, {interaction: modalInteraction});
+                            const sanitizedInput = await securityManager.sanitizeInput(Input, {interaction: modalInteraction});
 
                             klient.db(configuration.DBNames.Community.DB).collection(configuration.DBNames.Community.Collection).updateOne({nick_WT: result.nick_WT},{
                                 $set:{nick_WT: sanitizedInput.nick_WT, IDDiscord: sanitizedInput.IDDiscord, inClan: sanitizedInput.inClan, clan: sanitizedInput.clan, secondaryAccount: sanitizedInput.secondaryAccount}
@@ -1007,13 +1012,14 @@ client.on("interactionCreate", async (interaction) =>{
             })
             collector.on("end", ()=>{
                 EditBtn.setDisabled(true);
+                ForgivenLimitBtn.setDisabled(true);
 
                 reply.edit({
                     components:[buttonRow]
                 })
             })
         }catch(error){
-            console.error();
+            console.error(error);
         }
     }
 })
@@ -1025,7 +1031,7 @@ client.on("interactionCreate", async (interaction) =>{
     if(interaction.commandName === "squadron_search"){
         const secure = await securityManager.checkDiscordSecurity(interaction);
         if(!secure){
-            console.log(`${this.lang.BannedDscIntCon}${interaction.user.id}`);
+            console.log(`${language.security.BannedDscIntCon}${interaction.user.id}`);
             return
         }
         const Input = {
@@ -1060,7 +1066,7 @@ client.on("interactionCreate",async (interaction) => {
     if (interaction.commandName === "unban") {
         const secure = await securityManager.checkDiscordSecurity(interaction);
         if(!secure){
-            console.log(`${this.lang.BannedDscIntCon}${interaction.user.id}`);
+            console.log(`${language.security.BannedDscIntCon}${interaction.user.id}`);
             return
         }
         const userId = interaction.options.get("user").value;
