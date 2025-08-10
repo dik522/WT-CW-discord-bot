@@ -863,29 +863,26 @@ client.on("interactionCreate", async (interaction) =>{
     if(!interaction.isChatInputCommand())return;
     if(interaction.commandName === "view_profile"){
         await interaction.deferReply({ ephemeral: true });//        swrgsdhbsdndfhmnxfhnf
-        console.log(866)//                                          agbsgnhdrndfhnmzfdnfnz
-        console.log(passwords)//                                    sgbdbgsxbgfsxbgfsdgbngb
         const secure = await securityManager.checkDiscordSecurity(interaction);
         if(!secure){
             console.log(`${language.security.BannedDscIntCon}${interaction.user.id}`);
             return
         }
-        console.log(872)//                                          sgrbvfsdbdebdgbdgbdgb
         const Input = {
             password: interaction.options.get("password").value,
             member: interaction.options.get("member").value,
             userId: interaction.user.id,
             guildId: interaction.guild.id
         }
-        console.log(879)//                                          dbdskbvfsljabvhslibvhzs
         const sanitizedInput = await securityManager.sanitizeInput(Input, {interaction: interaction});
         const password = sanitizedInput.password;
         const member = sanitizedInput.member;
         try{
-            console.log(884)//                                          agbsgnhdrndfhnmzfdnfnz
             let passwordRight = await passwordCheck(password, passwords);
-            if(!passwordRight.success) return
-            console.log(887)//                                          agbsgnhdrndfhnmzfdnfnz
+            if(!passwordRight.success) {
+                interaction.reply({ content: language.Configuration.WrongPassword, ephemeral: true });
+                return
+            }
             let resultReceived = await klient.db(configuration.DBNames.Community.DB).collection(configuration.DBNames.Community.Collection).find({nick_WT: member}).toArray();
             console.log(889)//                                          agbsgnhdrndfhnmzfdnfnz
             let result = resultReceived[0];
