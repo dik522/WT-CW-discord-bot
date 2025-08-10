@@ -904,7 +904,7 @@ client.on("interactionCreate", async (interaction) =>{
                     {name: language.Misc.Arrival, value: result.joinDate},
                     {name: language.Misc.Squadron, value: result.clan},
                     {name: language.Misc.InClan, value: result.inClan ? "true" : "false"},
-                    {name: language.Misc.PointsLimit, value: result.acomplishedLimit},
+                    {name: language.Misc.PointsLimit, value: result.acomplishedLimit ? "true" : "false"},
                     {name: language.Misc.Comments, value: result.comments},
                     {name: language.Misc.ForgivenLim, value: ForgivenLim ? "true" : "false"},
                     {name: language.Misc.secondaryAccount, value: result.ignoreAbsence ? "true" : "false"},
