@@ -62,7 +62,8 @@
         "EditModalClan": "Svaz, v němž je člen",
         "EditModalSecondary": "Je toto něčí druhotný účet?",
         "EditModalSuccess": "Údaje byly úspěšně změněny",
-        "BtnForgiveLimit": "Nesplnění limitu omluveno"
+        "BtnForgiveLimit": "Nesplnění limitu omluveno",
+        "ForgivenLimitSuccess": "Úspěšně odpuštěna povinost splnit limit CW bodů pro tuto sezónu"
     },
     "Misc":{
         "Results": "Výsledky",

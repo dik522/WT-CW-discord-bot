@@ -63,7 +63,8 @@
         "EditModalSecondary": "Is this WT account secondary account of someone?",
         "EditModalSuccess": "Profile edited successfully",
         "BtnForgiveLimit": "Forgive points limit",
-        "ForgivenLim": "Forgiven CW points limit"
+        "ForgivenLim": "Forgiven CW points limit",
+        "ForgivenLimitSuccess": "Successfully forgiven CW points limit for this CW season"
     },
     "Misc":{
         "Results": "results",

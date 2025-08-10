@@ -1009,6 +1009,7 @@ client.on("interactionCreate", async (interaction) =>{
                 }
                 if(interaction.customId === "ForgiveLimit"){
                     klient.db(configuration.DBNames.Community.DB).collection(configuration.DBNames.Community.Collection).updateOne({nick_WT: result.nick_WT},{$set:{forgiveLimit: true}})
+                    interaction.reply({content: language.Profile.ForgivenLimitSuccess, ephemeral: true})
                 }
             })
             collector.on("end", ()=>{
