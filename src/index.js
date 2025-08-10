@@ -864,6 +864,7 @@ client.on("interactionCreate", async (interaction) =>{
     if(interaction.commandName === "view_profile"){
         await interaction.deferReply({ ephemeral: true });//        swrgsdhbsdndfhmnxfhnf
         console.log(866)//                                          agbsgnhdrndfhnmzfdnfnz
+        console.log(passwords)//                                    sgbdbgsxbgfsxbgfsdgbngb
         const secure = await securityManager.checkDiscordSecurity(interaction);
         if(!secure){
             console.log(`${language.security.BannedDscIntCon}${interaction.user.id}`);
