@@ -880,13 +880,13 @@ client.on("interactionCreate", async (interaction) =>{
         try{
             let passwordRight = await passwordCheck(password, passwords);
             if(!passwordRight.success) {
-                interaction.reply({ content: language.Configuration.WrongPassword, ephemeral: true });
+                interaction.editReply({ content: language.Configuration.WrongPassword, ephemeral: true });
                 return
             }
             let resultReceived = await klient.db(configuration.DBNames.Community.DB).collection(configuration.DBNames.Community.Collection).find({nick_WT: member}).toArray();
             let result = resultReceived[0];
             if (!result) {
-                await interaction.reply({ content: "Uživatel nenalezen.", ephemeral: true });
+                await interaction.editReply({ content: "Uživatel nenalezen.", ephemeral: true });
                 return;
             }
             let ForgivenLim;
@@ -925,14 +925,12 @@ client.on("interactionCreate", async (interaction) =>{
                 componentType: ComponentType.Button,
                 time: 120_000
             });
-            console.log(936)//                                          agbsgnhdrndfhnmzfdnfnz
             collector.on("collect", async (interaction) =>{
                 if(interaction.customId === "EditMembersProfile"){
                     const modal = new ModalBuilder({
                         customId: "EditProfileModal",
                         title: language.Profile.EditModalTitle,
                     })
-                    console.log(943)//                                  agbsgnhdrndfhnmzfdnfnz
                     const nick_WT_Modal = new TextInputBuilder({
                         customId: "nick_WT_Modal",
                         label: language.Profile.EditModalNickWT,
@@ -968,7 +966,6 @@ client.on("interactionCreate", async (interaction) =>{
                         required: false,
                         placeholder: result.ignoreAbsence
                     })
-                    console.log(979)//                                          agbsgnhdrndfhnmzfdnfnz
                     const nick_WT_Row = new ActionRowBuilder().addComponents(nick_WT_Modal);
                     const IDDiscord_Row = new ActionRowBuilder().addComponents(IDDiscord_Modal);
                     const inClan_Row = new ActionRowBuilder().addComponents(inClan_Modal);
@@ -976,7 +973,6 @@ client.on("interactionCreate", async (interaction) =>{
                     const secondaryAccount_Row = new ActionRowBuilder().addComponents(secondaryAccount_Modal);
 
                     modal.addComponents(nick_WT_Row, IDDiscord_Row, inClan_Row, clan_Row, secondaryAccount_Row);
-                    console.log(987)//                                          agbsgnhdrndfhnmzfdnfnz
                     await interaction.showModal(modal);
 
                     const filter = (interaction) => interaction.customId === "EditProfileModal"
