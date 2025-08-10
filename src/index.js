@@ -890,7 +890,7 @@ client.on("interactionCreate", async (interaction) =>{
                 return;
             }
             let ForgivenLim;
-            if(typeof(result.forgiveLimit) === "undefined"){ForgivenLim = "false"}else{ForgivenLim = result.forgiveLimit};
+            if(typeof(result.forgiveLimit) === "undefined"){ForgivenLim = false}else{ForgivenLim = result.forgiveLimit};
             let zprava = new EmbedBuilder()
                 .setTitle(language.EmbedTitle)
                 .setDescription(language.EmbdedDescription)
