@@ -88,7 +88,8 @@
         "Date": "Datum výsledků",
         "ForgivenLim": "Prominuto splnění limitu CW bodů",
         "ThisSeason": "Tato sezóna",
-        "PreviousSeason": "Předchozí sezóna"
+        "PreviousSeason": "Předchozí sezóna",
+        "NoRecords": "nemá žádné záznamy"
     },
     "memberCheck":{
         "Owner": " vlastnící účet ",
@@ -153,5 +154,9 @@
     "EmbdedDescription": "Zde je výpis profilu člena",
     "ProfileView": "Zobrazen profil člena",
     "EditBtnLabel": "Uprav profil člena",
-    "SeasonEndTable": "Tabulka členů a jejich splnění limitu ve svazu  "
+    "SeasonEndTable": "Tabulka členů a jejich splnění limitu ve svazu  ",
+    "SeasonSummaryError": "Vyskytla se chyba ve funkci SeasonSummary: ",
+    "SeasonTableError": "Vyskytla se chyba při odesílání tabulku svazu",
+    "MissingMemberDB": "Ve svazu jsou členi, kteří nemají vytvořený profil:",
+    "MissingMemberError": "Vyskytla se chyba při kontrole členů, kteří nemají vytvořený profil: "
 }

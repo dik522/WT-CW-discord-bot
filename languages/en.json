@@ -88,7 +88,8 @@
         "secondaryAccount": "secondary account",
         "Date": "Date of records",
         "ThisSeason": "This season",
-        "PreviousSeason": "Previous season"
+        "PreviousSeason": "Previous season",
+        "NoRecords": "don't have any records"
     },
     "MemberCheck":{
         "Owner": " who owns WT account ",
@@ -153,5 +154,9 @@
     "EmbdedDescription": "Here is content of members profile",
     "ProfileView": "Member's profile viewed",
     "EditBtnLabel": "Edit member's profile",
-    "SeasonEndTable": "Table of members and their acomplishment of limit in clan "
+    "SeasonEndTable": "Table of members and their acomplishment of limit in clan ",
+    "SeasonSummaryError": "Error had occured in SeasonSummary function: ",
+    "SeasonTableError": "Error had occured while sending season table of squadron",
+    "MissingMemberDB": "There are members in clan who don't have created profile:",
+    "MissingMemberError": "Error had eccured while checking for members without profile in DB: "
 }

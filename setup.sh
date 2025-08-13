@@ -4,7 +4,7 @@
 npm init -y
 npm install ascii-table@0.0.9 axios@1.11.0 cheerio@1.1.2 discord.js@14.21.0 diagnostics_channel@1.1.0 dotenv@17.2.1 express@4.19.2 mongodb@6.18.0
 jq \
-  --arg ver "1.0.1" \
+  --arg ver "1.1.0" \
   --arg type "module" \
   --arg main "src/index.js" \
   --arg description "WT-CW Discord Bot" \

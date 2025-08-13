@@ -36,8 +36,8 @@ async function membersPoints(br, clan_config, date, configuration, lang) {
             while (i <= numberOfMembers) {
                 structuredArray.push({
                     member: members[i],
-                    CWpoints: members[i + 1],
-                    activity: members[i + 2],
+                    CWpoints: Number(members[i + 1]),
+                    activity: Number(members[i + 2]),
                     role: members[i + 3]
                 });
                 i += 6;
@@ -60,9 +60,48 @@ async function membersPoints(br, clan_config, date, configuration, lang) {
                 }
             }
             console.log(lang.statisticDone)
+
+            await checkMissingMembers(structuredArray, clan_config, configuration, lang);
         } catch (error) {
             console.error(lang.statisticError, error);
         }
+    }
+}
+
+/**Checks for members in clan who are not put into DB
+ * 
+ */
+async function checkMissingMembers(webMembers, clan_config, configuration, lang) {
+    try {
+        // Získání všech členů klanu z databáze
+        const dbMembers = await klient.db(configuration.DBNames.Community.DB)
+            .collection(configuration.DBNames.Community.Collection)
+            .find({
+                inClan: true,
+                clan: clan_config.name
+            })
+            .toArray();
+        
+        const dbMemberNames = dbMembers.map(member => member.nick_WT);
+        
+        const missingMembers = webMembers.filter(webMember => 
+            !dbMemberNames.includes(webMember.member)
+        );
+        
+        // Pokud jsou chybějící členové, poslat notifikaci na Discord
+        if (missingMembers.length > 0) {
+            let message = lang.MissingMemberDB
+            for (const member of missingMembers){
+                message += `${member} \n`
+            }
+            client.channels.fetch(configuration.administrationChannel)
+                .then(channel => {
+                    channel.send(message)
+                })
+        }
+        
+    } catch (error) {
+        console.error(lang.MissingMemberError, error);
     }
 }
 
@@ -294,12 +333,12 @@ async function ProfileIniciation(interactionWTNick, interactionDscID, interactio
 async function brRangeTable(season, configuration, lang) {
     let profiles = await klient.db(configuration.DBNames.Community.DB).collection(configuration.DBNames.Community.Collection).find({ inClan: true }).toArray();
     let structuredArray = [];
-    let achieved
     let todayDate =actualDate();
     for(const range of season){
         if(range.interval[1] == todayDate){
             for (const profile of profiles) {
                 try {
+                    let achieved;
                     if(profile.records.length < 7){
                         throw new Error("Profile has less than 7 zaznamy in 'zaznamy'");
                     }
@@ -308,16 +347,17 @@ async function brRangeTable(season, configuration, lang) {
                         i+=1;
                     }
                     let pointsChange
-                    if(profile.records.at(-1).CWbody < profile.records.at(i).CWbody){
+                    if(profile.records.at(-1).CWpoints < profile.records.at(i).CWpoints){
                         pointsChange = "↓"
                     }else{
                         pointsChange = "↑"
                     }
                     if(profile.acomplishedLimit){achieved = "✓"}else{achieved = "✘"}
-                    structuredArray.push([pointsChange, profile.nick_WT, profile.records.at(-1).CWbody - profile.records.at(i).CWbody, profile.records.at(-1).CWbody, achieved, profile.svaz])
+                    structuredArray.push([pointsChange, profile.nick_WT, profile.records.at(-1).CWpoints - profile.records.at(i).CWpoints, profile.records.at(-1).CWpoints, achieved, profile.svaz])
                 } catch (error) {
-                    if(Error == "Profile has less than 7 zaznamy in 'zaznamy'"){
-                        structuredArray.push(["↑", profile.nick_WT, profile.records.at(-1).CWbody, profile.records.at(-1).CWbody, achieved, profile.svaz])
+                    if(error.message === "Profile has less than 7 zaznamy in 'zaznamy'"){
+                        let achieved = profile.acomplishedLimit ? "✓" : "✘";
+                        structuredArray.push(["↑", profile.nick_WT, profile.records.at(-1).CWpoints, profile.records.at(-1).CWpoints, achieved, profile.svaz])
                     }else{
                         console.error(lang.brRangeError, error);
                     }
@@ -459,95 +499,121 @@ async function SeasonSummary (conf, lang, season){
     let todayDate = actualDate();
     if (season.at(-1).interval[1] == todayDate){
         let profiles = await klient.db(conf.DBNames.Community.DB).collection(conf.DBNames.Community.Collection).find({inClan: true}).toArray();
-        let acomplishedLim1, acomplishedLim2, acomplishedLim3, acomplishedLim4, failedLim1, failedLim2, failedLim3, failedLim4, forgivenLim1, forgivenLim2, forgivenLim3, forgivenLim4, newMember1, newMember2, newMember3, newMember4;
+        let acomplishedLim1 = [], acomplishedLim2 = [], acomplishedLim3 = [], acomplishedLim4 = [];
+        let failedLim1 = [], failedLim2 = [], failedLim3 = [], failedLim4 = [];
+        let forgivenLim1 = [], forgivenLim2 = [], forgivenLim3 = [], forgivenLim4 = [];
+        let newMember1 = [], newMember2 = [], newMember3 = [], newMember4 = [];
         for (const profile of profiles){
             try{
-                let prevSeason = {CWpoints: profile.records.at(-1).CWpoints, activity: profile.records.at(-1).activity, role: profile.records.at(-1).role, forgiveLimit: profile.forgiveLimit, acomplishedLimit: profile.acomplishedLimit};
+                if(!profile.records) {
+                    console.warn(`${lang.Misc.Player} ${profile.nick_WT} ${lang.Misc.NoRecords}`);
+                    continue;
+                }
+                let prevSeason = {
+                        CWpoints: profile.records.at(-1).CWpoints, 
+                        activity: profile.records.at(-1).activity, 
+                        role: profile.records.at(-1).role, 
+                        forgiveLimit: profile.forgiveLimit, 
+                        acomplishedLimit: profile.acomplishedLimit
+                };
                 await klient.db(conf.DBNames.Community.DB).collection(conf.DBNames.Community.Collection).updateOne({nick_WT: profile.nick_WT},{
                     $push:{prevSeason:prevSeason},
                     $set:{records: [], acomplishedLimit: false, forgiveLimit: false}
                 });
-                function SortByLimit(conf, profile, newMember, acomplishedLim, forgivenLim, failedLim){
-                    if (conf == profile.clan && conf.used){
-                        if(typeOf(profile.prevSeason) == undefined){
+                function SortByLimit(clanConf, profile, newMember, acomplishedLim, forgivenLim, failedLim){
+                    if (clanConf.used && clanConf.name === profile.clan) {
+                        if (typeof profile.prevSeason === "undefined") {
                             let thisSeason;
-                            if(profile.acomplishedLimit){
-                                thisSeason = "✓"
-                            }else if(profile.forgiveLimit){
-                                thisSeason = "F"
-                            }else{
-                                thisSeason = "✘"
+                            if (profile.acomplishedLimit) {
+                                thisSeason = "✓";
+                            } else if (profile.forgiveLimit) {
+                                thisSeason = "F";
+                            } else {
+                                thisSeason = "✘";
                             }
-                            newMember.push({nick_WT:profile.nick_WT, CWpoints: profile.records.at(-1).CWpoints, activity: profile.records.at(-1).activity, thisSeason: thisSeason, previousSeason: "N"})
-                        }else if(profile.acomplishedLimit){
+                            newMember.push({
+                                nick_WT: profile.nick_WT, 
+                                CWpoints: profile.records.at(-1).CWpoints, 
+                                activity: profile.records.at(-1).activity, 
+                                thisSeason: thisSeason, 
+                                previousSeason: "N"
+                            });
+                        } else if (profile.acomplishedLimit) {
                             let previousSeason;
-                            if(profile.prevSeason.at(-1).acomplishedLimit){
-                                previousSeason = "✓"
-                            }else if(profile.prevSeason.at(-1).forgiveLimit){
-                                previousSeason = "F"
-                            }else{
-                                previousSeason = "✘"
+                            let lastPrevSeason = profile.prevSeason.at(-1);
+                            if (lastPrevSeason.acomplishedLimit) {
+                                previousSeason = "✓";
+                            } else if (lastPrevSeason.forgiveLimit) {
+                                previousSeason = "F";
+                            } else {
+                                previousSeason = "✘";
                             }
-                            acomplishedLim.push({nick_WT:profile.nick_WT, CWpoints: profile.records.at(-1).CWpoints, activity: profile.records.at(-1).activity, thisSeason: "✓", previousSeason: previousSeason})
-                        }else if(profile.forgiveLimit){
+                            acomplishedLim.push({
+                                nick_WT: profile.nick_WT, 
+                                CWpoints: profile.records.at(-1).CWpoints, 
+                                activity: profile.records.at(-1).activity, 
+                                thisSeason: "✓", 
+                                previousSeason: previousSeason
+                            });
+                        } else if (profile.forgiveLimit) {
                             let previousSeason;
-                            if(profile.prevSeason.at(-1).acomplishedLimit){
-                                previousSeason = "✓"
-                            }else if(profile.prevSeason.at(-1).forgiveLimit){
-                                previousSeason = "F"
-                            }else{
-                                previousSeason = "✘"
+                            let lastPrevSeason = profile.prevSeason.at(-1);
+                            if (lastPrevSeason.acomplishedLimit) {
+                                previousSeason = "✓";
+                            } else if (lastPrevSeason.forgiveLimit) {
+                                previousSeason = "F";
+                            } else {
+                                previousSeason = "✘";
                             }
-                            forgivenLim.push({nick_WT:profile.nick_WT, CWpoints: profile.records.at(-1).CWpoints, activity: profile.records.at(-1).activity, thisSeason: "F", previousSeason: previousSeason})
-                        }else{
+                            forgivenLim.push({
+                                nick_WT: profile.nick_WT, 
+                                CWpoints: profile.records.at(-1).CWpoints, 
+                                activity: profile.records.at(-1).activity, 
+                                thisSeason: "F", 
+                                previousSeason: previousSeason
+                            });
+                        } else {
                             let previousSeason;
-                            if(profile.prevSeason.at(-1).acomplishedLimit){
-                                previousSeason = "✓"
-                            }else if(profile.prevSeason.at(-1).forgiveLimit){
-                                previousSeason = "F"
-                            }else{
-                                previousSeason = "✘"
+                            let lastPrevSeason = profile.prevSeason.at(-1);
+                            if (lastPrevSeason.acomplishedLimit) {
+                                previousSeason = "✓";
+                            } else if (lastPrevSeason.forgiveLimit) {
+                                previousSeason = "F";
+                            } else {
+                                previousSeason = "✘";
                             }
-                            failedLim.push({nick_WT:profile.nick_WT, CWpoints: profile.records.at(-1).CWpoints, activity: profile.records.at(-1).activity, thisSeason: "✘", previousSeason: previousSeason})
+                            failedLim.push({
+                                nick_WT: profile.nick_WT, 
+                                CWpoints: profile.records.at(-1).CWpoints, 
+                                activity: profile.records.at(-1).activity, 
+                                thisSeason: "✘", 
+                                previousSeason: previousSeason
+                            });
                         }
                     }
                 }
-                SortByLimit(configuration.firstClan, profile, newMember1, acomplishedLim1, forgivenLim1, failedLim1);
-                SortByLimit(configuration.secondClan, profile, newMember2, acomplishedLim2, forgivenLim2, failedLim2);
-                SortByLimit(configuration.thirdClan, profile, newMember3, acomplishedLim3, forgivenLim3, failedLim3);
-                SortByLimit(configuration.fourthClan, profile, newMember4, acomplishedLim4, forgivenLim4, failedLim4);
-                //mám setřízené pole, tady potřebuji dodělat logiku odesílání pro všechny čtyři svazy (skrze jednu univerzální skupinu jakož funkci a tu čtyřikrát aktivovat)
-            }catch(err){}
+                SortByLimit(conf.firstClan, profile, newMember1, acomplishedLim1, forgivenLim1, failedLim1);
+                SortByLimit(conf.secondClan, profile, newMember2, acomplishedLim2, forgivenLim2, failedLim2);
+                SortByLimit(conf.thirdClan, profile, newMember3, acomplishedLim3, forgivenLim3, failedLim3);
+                SortByLimit(conf.fourthClan, profile, newMember4, acomplishedLim4, forgivenLim4, failedLim4);
+            }catch(err){
+                console.error(lang.SeasonSummaryError, err)
+            }
         }
         function SortSortedArrays(newMember, acomplishedLim, failedLim, forgivenLim) {
-            newMember.sort((a, b) => {
-                const param1 = a.nick_WT.toUpperCase()
-                const param2 = b.nick_WT.toUpperCase()
-                if(param1 < param2) return -1
-                if(param1 > param2) return 1
-                return 0
-            })
-            acomplishedLim.sort((a, b) => {
-                const param1 = a.nick_WT.toUpperCase()
-                const param2 = b.nick_WT.toUpperCase()
-                if(param1 < param2) return -1
-                if(param1 > param2) return 1
-                return 0
-            })
-            forgivenLim.sort((a, b) => {
-                const param1 = a.nick_WT.toUpperCase()
-                const param2 = b.nick_WT.toUpperCase()
-                if(param1 < param2) return -1
-                if(param1 > param2) return 1
-                return 0
-            })
-            failedLim.sort((a, b) => {
-                const param1 = a.nick_WT.toUpperCase()
-                const param2 = b.nick_WT.toUpperCase()
-                if(param1 < param2) return -1
-                if(param1 > param2) return 1
-                return 0
-            })
+            const sortFunction = (a, b) => {
+                const param1 = a.nick_WT.toUpperCase();
+                const param2 = b.nick_WT.toUpperCase();
+                if (param1 < param2) return -1;
+                if (param1 > param2) return 1;
+                return 0;
+            };
+            
+            newMember.sort(sortFunction);
+            acomplishedLim.sort(sortFunction);
+            forgivenLim.sort(sortFunction);
+            failedLim.sort(sortFunction);
+            
             acomplishedLim.push(...forgivenLim, ...failedLim, ...newMember);
         }
         SortSortedArrays(newMember1, acomplishedLim1, failedLim1, forgivenLim1);
@@ -555,31 +621,41 @@ async function SeasonSummary (conf, lang, season){
         SortSortedArrays(newMember3, acomplishedLim3, failedLim3, forgivenLim3);
         SortSortedArrays(newMember4, acomplishedLim4, failedLim4, forgivenLim4);
         
-        async function sendTable(conf, lang, array) {
-            if(conf.used){
-                let finishedTable = "";
-                let table = new AsciiTable(lang.SeasonEndTable, conf.name);
-                table.setHeading(lang.Misc.Player, lang.Misc.CWPoints, lang.Misc.Activity, lang.Misc.ThisSeason, lang.Misc.PreviousSeason)
-                for (const member of array){
-                    table.addRow(member.nick_WT, member.CWpoints, member.activity, member.thisSeason, member.previousSeason);
-                    if(table.toString().length > 2000){
-                        finishedTable = '```\n' + table.toString() + '\n ```';
-                        table = new AsciiTable(lang.SeasonEndTable, conf.name);
+        async function sendTable(clanConf, lang, array) {
+                if (clanConf.used && array.length > 0) {
+                    try {
+                        let finishedTable = "";
+                        let table = new AsciiTable(lang.SeasonEndTable, clanConf.name);
                         table.setHeading(lang.Misc.Player, lang.Misc.CWPoints, lang.Misc.Activity, lang.Misc.ThisSeason, lang.Misc.PreviousSeason);
-                        const channel = await client.channels.fetch(conf.seasonEndChannel);
-                        await channel.send(finishedTable);
-                        finishedTable ="";
+                        
+                        for (const member of array) {
+                            table.addRow(member.nick_WT, member.CWpoints, member.activity, member.thisSeason, member.previousSeason);
+                            
+                            if (table.toString().length > 2000) {
+                                finishedTable = '```\n' + table.toString() + '\n```';
+                                const channel = await client.channels.fetch(clanConf.seasonEndChannel);
+                                await channel.send(finishedTable);
+                                
+                                table = new AsciiTable(lang.SeasonEndTable, clanConf.name);
+                                table.setHeading(lang.Misc.Player, lang.Misc.CWPoints, lang.Misc.Activity, lang.Misc.ThisSeason, lang.Misc.PreviousSeason);
+                                finishedTable = "";
+                            }
+                        }
+                        
+                        if (table.rows.length > 0) {
+                            finishedTable = '```\n' + table.toString() + '\n```';
+                            const channel = await client.channels.fetch(clanConf.seasonEndChannel);
+                            await channel.send(finishedTable);
+                        }
+                    } catch (err) {
+                        console.error(`${lang.SeasonTableError} ${clanConf.name}:`, err);
                     }
                 }
-                finishedTable = '```\n' + table.toString() + '\n ```';
-                const channel = await client.channels.fetch(configuration.seasonEndChannel);
-                await channel.send(finishedTable);
             }
-        }
-        await sendTable(configuration.firstClan, lang, acomplishedLim1);
-        await sendTable(configuration.secondClan, lang, acomplishedLim2);
-        await sendTable(configuration.thirdClan, lang, acomplishedLim3);
-        await sendTable(configuration.fourthClan, lang, acomplishedLim4);
+        await sendTable(conf.firstClan, lang, acomplishedLim1);
+        await sendTable(conf.secondClan, lang, acomplishedLim2);
+        await sendTable(conf.thirdClan, lang, acomplishedLim3);
+        await sendTable(conf.fourthClan, lang, acomplishedLim4);
     }
 }
 /**Does check if members informations are up to date
@@ -600,44 +676,49 @@ async function MemberCheck(guildID, configuration, lang) {
                 const member = await guild.members.fetch(profile.IDDiscord);
                 switch (profile.clan) {
                     case configuration.firstClan.name:
-                        console.log("------------------");
                         if(!member.roles.cache.has(configuration.firstClan.RoleID)){
-                            console.log("Role missing")
+                            console.log("Role missing: ", profile.nick_WT, " ", profile.IDDiscord)
                             const channel = await client.channels.fetch(configuration.administrationChannel);
                             await channel.send(`:warning:\n<@${profile.IDDiscord}>${lang.memberCheck.Owner}${profile.nick_WT}${lang.memberCheck.Squadron}${profile.clan}${lang.memberCheck.RoleMissing}<@&${configuration.firstClan.RoleID}>`);
                         }
                         if(!profile.records.at(-1).date == actualDate()){
-                            console.log("Člověk chybí ve svazu")
+                            console.log("Member missing", profile.nick_WT, " ", profile.IDDiscord)
                             const channel = await client.channels.fetch(configuration.administrationChannel);
                             await channel.send(`:warning: \n<@${profile.IDDiscord}>${lang.memberCheck.Owner}${profile.nick_WT}${lang.memberCheck.Squadron}${profile.clan}${lang.memberCheck.NotFound}`);
                         }
                         break;
                     case configuration.secondClan.name:
                         if(!member.roles.cache.has(configuration.secondClan.RoleID)){
+                            console.log("Role missing: ", profile.nick_WT, " ", profile.IDDiscord)
                             const channel = await client.channels.fetch(configuration.administrationChannel);
                             await channel.send(`:warning:\n<@${profile.IDDiscord}>${lang.memberCheck.Owner}${profile.nick_WT}${lang.memberCheck.Squadron}${profile.clan}${lang.memberCheck.RoleMissing}<@&${configuration.secondClan.RoleID}>`);
                         }
                         if(!profile.records.at(-1).date == actualDate()){
+                            console.log("Member missing", profile.nick_WT, " ", profile.IDDiscord)
                             const channel = await client.channels.fetch(configuration.administrationChannel);
                             await channel.send(`:warning: \n<@${profile.IDDiscord}>${lang.memberCheck.Owner}${profile.nick_WT}${lang.memberCheck.Squadron}${profile.clan}${lang.memberCheck.NotFound}`);
                         }
                         break;
                     case configuration.thirdClan.name:
                         if(!member.roles.cache.has(configuration.thirdClan.RoleID)){
+                            console.log("Role missing: ", profile.nick_WT, " ", profile.IDDiscord)
                             const channel = await client.channels.fetch(configuration.administrationChannel);
                             await channel.send(`:warning:\n<@${profile.IDDiscord}>${lang.memberCheck.Owner}${profile.nick_WT}${lang.memberCheck.Squadron}${profile.clan}${lang.memberCheck.RoleMissing}<@&${configuration.thirdClan.RoleID}>`);
                         }
                         if(!profile.records.at(-1).date == actualDate()){
+                            console.log("Member missing", profile.nick_WT, " ", profile.IDDiscord)
                             const channel = await client.channels.fetch(configuration.administrationChannel);
                             await channel.send(`:warning: \n<@${profile.IDDiscord}>${lang.memberCheck.Owner}${profile.nick_WT}${lang.memberCheck.Squadron}${profile.clan}${lang.memberCheck.NotFound}`);
                         }
                         break;
                     case configuration.fourthClan.name:
                         if(!member.roles.cache.has(configuration.fourthClan.RoleID)){
+                            console.log("Role missing: ", profile.nick_WT, " ", profile.IDDiscord)
                             const channel = await client.channels.fetch(configuration.administrationChannel);
                             await channel.send(`:warning:\n<@${profile.IDDiscord}>${lang.memberCheck.Owner}${profile.nick_WT}${lang.memberCheck.Squadron}${profile.clan}${lang.memberCheck.RoleMissing}<@&${configuration.fourthClan.RoleID}>`);
                         }
                         if(!profile.records.at(-1).date == actualDate()){
+                            console.log("Member missing", profile.nick_WT, " ", profile.IDDiscord)
                             const channel = await client.channels.fetch(configuration.administrationChannel);
                             await channel.send(`:warning: \n<@${profile.IDDiscord}>${lang.memberCheck.Owner}${profile.nick_WT}${lang.memberCheck.Squadron}${profile.clan}${lang.memberCheck.NotFound}`);
                         }
