@@ -158,5 +158,6 @@
     "SeasonSummaryError": "Error had occured in SeasonSummary function: ",
     "SeasonTableError": "Error had occured while sending season table of squadron",
     "MissingMemberDB": "There are members in clan who don't have created profile:",
-    "MissingMemberError": "Error had eccured while checking for members without profile in DB: "
+    "MissingMemberError": "Error had eccured while checking for members without profile in DB: ",
+    "MissingRecords": " has no records in profile, please check the correctness of the WT nick!"
 }

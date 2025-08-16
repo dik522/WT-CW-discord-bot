@@ -92,7 +92,7 @@ async function checkMissingMembers(webMembers, clan_config, configuration, lang)
         if (missingMembers.length > 0) {
             let message = lang.MissingMemberDB
             for (const member of missingMembers){
-                message += `${member} \n`
+                message += `${member.member} \n`
             }
             client.channels.fetch(configuration.administrationChannel)
                 .then(channel => {
@@ -117,6 +117,9 @@ async function DayActivity(configuration, lang) {
 
     for (const profile of profiles) {
         try {
+            if(typeof(profile.records) === "undefined"){
+                console.log(profile.nick_WT, " ", profile.IDDiscord, lang.MissingRecords);
+                continue}
             if(profile.records.length === 1){
                 let achieved = profile.acomplishedLimit ? "✓" : "✘"
                 structuredArray.push(["↑", profile.nick_WT, profile.records[0].CWpoints, profile.records[0].CWpoints, achieved, profile.clan])}
