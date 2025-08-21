@@ -4,3 +4,6 @@ season.json
 /node_modules
 package.json
 package-lock.json
+/src/security/secure_discord_bot.js
+/src/security/INSTALACE_A_POUZITI.md
+/src/security/app.js
