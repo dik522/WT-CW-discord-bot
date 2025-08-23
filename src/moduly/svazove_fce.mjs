@@ -488,7 +488,7 @@ async function brRangeTable(season, configuration, lang) {
                     }
                 }
             }
-            console.log(brRangeDone)
+            console.log(lang.brRangeDone)
             break
         }
     }
