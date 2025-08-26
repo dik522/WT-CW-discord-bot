@@ -63,7 +63,8 @@
         "EditModalSecondary": "Je toto něčí druhotný účet?",
         "EditModalSuccess": "Údaje byly úspěšně změněny",
         "BtnForgiveLimit": "Nesplnění limitu omluveno",
-        "ForgivenLimitSuccess": "Úspěšně odpuštěna povinost splnit limit CW bodů pro tuto sezónu"
+        "ForgivenLimitSuccess": "Úspěšně odpuštěna povinost splnit limit CW bodů pro tuto sezónu",
+        "AlreadyExist": "Profil s tímto WT nickem již existuje."
     },
     "Misc":{
         "Results": "Výsledky",

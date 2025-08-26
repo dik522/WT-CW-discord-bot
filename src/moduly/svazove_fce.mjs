@@ -306,7 +306,12 @@ async function squadronPoints(configuration, lang) {
  * @param {object} lang - language dataset
  * @param {object} configuration - configuration object
  */
-async function ProfileIniciation(interactionWTNick, interactionDscID, interactionClan, interactioncomments, dnesniDatum, lang, configuration) {
+async function ProfileIniciation(interactionWTNick, interactionDscID, interactionClan, interactioncomments, dnesniDatum, lang, configuration, interaction) {
+    let existingProfile = await klient.db(configuration.DBNames.Community.DB).collection(configuration.DBNames.Community.Collection).find({nick_WT: interactionWTNick}).toArray();
+    if(!existingProfile[0]){
+        interaction.reply({content: lang.Profile.AlreadyExist, ephemeral: true});
+        return;
+    }
     try {
         let profile = {
             nick_WT: interactionWTNick,
@@ -321,6 +326,7 @@ async function ProfileIniciation(interactionWTNick, interactionDscID, interactio
 
         await klient.db(configuration.DBNames.Community.DB).collection(configuration.DBNames.Community.Collection).insertOne(profile);
         console.log(lang.Profile.Created);
+        interaction.reply({content:lang.Profile.Created, ephemeral: true});
     } catch (error) {
         console.error(lang.Profile.Error, error);
     }
@@ -522,7 +528,7 @@ async function SeasonSummary (conf, lang, season){
                 await klient.db(conf.DBNames.Community.DB).collection(conf.DBNames.Community.Collection).updateOne({nick_WT: profile.nick_WT},{
                     $push:{prevSeason:prevSeason},
                     $set:{records: [], acomplishedLimit: false, forgiveLimit: false}
-                });
+                },{upsert: true});
                 function SortByLimit(clanConf, profile, newMember, acomplishedLim, forgivenLim, failedLim){
                     if (clanConf.used && clanConf.name === profile.clan) {
                         if (typeof profile.prevSeason === "undefined") {

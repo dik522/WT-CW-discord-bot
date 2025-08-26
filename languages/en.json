@@ -64,7 +64,8 @@
         "EditModalSuccess": "Profile edited successfully",
         "BtnForgiveLimit": "Forgive points limit",
         "ForgivenLim": "Forgiven CW points limit",
-        "ForgivenLimitSuccess": "Successfully forgiven CW points limit for this CW season"
+        "ForgivenLimitSuccess": "Successfully forgiven CW points limit for this CW season",
+        "AlreadyExist": "Profile with given WT nickname already exists"
     },
     "Misc":{
         "Results": "results",

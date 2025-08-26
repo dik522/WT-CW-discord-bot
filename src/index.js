@@ -581,8 +581,7 @@ client.on("interactionCreate", async (interaction)=>{
         const IDDsc = sanitizedInput.discordid;
         const squadron = sanitizedInput.squadron;
         const comments = sanitizedInput.comments;
-        ProfileIniciation(WTNick, IDDsc, squadron, comments, actualDate(), language, configuration)
-        interaction.reply({content:language.Profile.Created, ephemeral: true})
+        ProfileIniciation(WTNick, IDDsc, squadron, comments, actualDate(), language, configuration, interaction)
     }
 })
 //adding yourself as a logger
