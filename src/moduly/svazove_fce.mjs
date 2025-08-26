@@ -308,7 +308,7 @@ async function squadronPoints(configuration, lang) {
  */
 async function ProfileIniciation(interactionWTNick, interactionDscID, interactionClan, interactioncomments, dnesniDatum, lang, configuration, interaction) {
     let existingProfile = await klient.db(configuration.DBNames.Community.DB).collection(configuration.DBNames.Community.Collection).find({nick_WT: interactionWTNick}).toArray();
-    if(!existingProfile[0]){
+    if(existingProfile[0]){
         interaction.reply({content: lang.Profile.AlreadyExist, ephemeral: true});
         return;
     }
