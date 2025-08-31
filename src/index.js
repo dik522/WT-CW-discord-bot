@@ -904,9 +904,9 @@ client.on("interactionCreate", async (interaction) =>{
                     {name: language.Misc.Comments, value: result.comments},
                     {name: language.Misc.ForgivenLim, value: ForgivenLim ? "true" : "false"},
                     {name: language.Misc.secondaryAccount, value: result.ignoreAbsence ? "true" : "false"},
-                    {name: language.Misc.CWPoints, value: result.records?.at(-1)?.CWpoints ?? "N/A", inline: true},
-                    {name: language.Misc.Activity, value: result.records?.at(-1)?.activity ?? "N/A", inline: true},
-                    {name: language.Misc.Date, value: result.records?.at(-1)?.date ?? "N/A", inline: true}
+                    {name: language.Misc.CWPoints, value: result.records?.at(-1)?.CWpoints !== undefined ? result.records.at(-1).CWpoints.toString() : "N/A", inline: true},
+                    {name: language.Misc.Activity, value: result.records?.at(-1)?.activity !== undefined ? result.records.at(-1).activity.toString() : "N/A", inline: true},
+                    {name: language.Misc.Date, value: result.records?.at(-1)?.date !== undefined ? result.records.at(-1).date.toString() : "N/A", inline: true}
                 )
             let EditBtn = new ButtonBuilder()
                 .setLabel(language.EditBtnLabel)

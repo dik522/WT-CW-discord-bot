@@ -160,5 +160,5 @@
     "SeasonTableError": "Vyskytla se chyba při odesílání tabulku svazu",
     "MissingMemberDB": "Ve svazu jsou členi, kteří nemají vytvořený profil:",
     "MissingMemberError": "Vyskytla se chyba při kontrole členů, kteří nemají vytvořený profil: ",
-    "MissingMemberSuccess": " nemá v profilu žádné záznamy, proveďte kontrolu správnosti jména!"
+    "MissingRecords": " nemá v profilu žádné záznamy, proveďte kontrolu správnosti jména!"
 }

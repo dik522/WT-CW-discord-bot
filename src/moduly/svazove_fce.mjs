@@ -372,130 +372,135 @@ async function brRangeTable(season, configuration, lang) {
                     }
                 }
             }
-            let members1 = [];
-            members1 = structuredArray.filter(profile => profile[5] === configuration.firstClan.name)
-            let members2 = [];
-            members2 = structuredArray.filter(profile => profile[5] === configuration.secondClan.name)
-            let members3 = [];
-            members3 = structuredArray.filter(profile => profile[5] === configuration.thirdClan.name)
-            let members4 = [];
-            members4 = structuredArray.filter(profile => profile[5] === configuration.fourthClan.name)
-            
-            //Table for first clan
-            if(configuration.firstClan.used){
-                if(configuration.firstClan.brInfoOF){
-                    let q = 0;
-                    let finishedTable
-                    let table = new AsciiTable(lang.brRangeTable, configuration.firstClan.name);
-                    table.setHeading(lang.Misc.PointsChange,lang.Misc.Player, lang.Misc.PointsDifference, lang.Misc.PointsActual, lang.Misc.PointsLimit);
-                    while(q<members1.length){
-                        table.addRow(members1[q][0], members1[q][1], members1[q][2], members1[q][3], members1[q][4]);
-                        if(table.toString().length > 2000){
-                            finishedTable = '```\n' + table.toString() + '\n ```';
-                            table = new AsciiTable(lang.brRangeTable, configuration.firstClan.name);
-                            table.setHeading(lang.Misc.PointsChange,lang.Misc.Player, lang.Misc.PointsDifference, lang.Misc.PointsActual, lang.Misc.PointsLimit);
+            try{
+                let members1 = [];
+                members1 = structuredArray.filter(profile => profile[5] === configuration.firstClan.name)
+                let members2 = [];
+                members2 = structuredArray.filter(profile => profile[5] === configuration.secondClan.name)
+                let members3 = [];
+                members3 = structuredArray.filter(profile => profile[5] === configuration.thirdClan.name)
+                let members4 = [];
+                members4 = structuredArray.filter(profile => profile[5] === configuration.fourthClan.name)
+                
+                //Table for first clan
+                if(configuration.firstClan.used){
+                    if(configuration.firstClan.brInfoOF){
+                        let q = 0;
+                        let finishedTable
+                        let table = new AsciiTable(lang.brRangeTable, configuration.firstClan.name);
+                        table.setHeading(lang.Misc.PointsChange,lang.Misc.Player, lang.Misc.PointsDifference, lang.Misc.PointsActual, lang.Misc.PointsLimit);
+                        while(q<members1.length){
+                            table.addRow(members1[q][0], members1[q][1], members1[q][2], members1[q][3], members1[q][4]);
+                            if(table.toString().length > 2000){
+                                finishedTable = '```\n' + table.toString() + '\n ```';
+                                table = new AsciiTable(lang.brRangeTable, configuration.firstClan.name);
+                                table.setHeading(lang.Misc.PointsChange,lang.Misc.Player, lang.Misc.PointsDifference, lang.Misc.PointsActual, lang.Misc.PointsLimit);
+                                const channel = await client.channels.fetch(configuration.firstClan.brInfoChannel);
+                                await channel.send(finishedTable);
+                                finishedTable ="";
+                            }
+                            q = q+1;
+                        }
+                        finishedTable = '```\n' + table.toString() + '\n ```';            
+                        if(q > 0){
                             const channel = await client.channels.fetch(configuration.firstClan.brInfoChannel);
                             await channel.send(finishedTable);
-                            finishedTable ="";
+                        }else{
+                            console.log(lang.brRangeEmpty, configuration.firstClan.name);
                         }
-                        q = q+1;
-                    }
-                    finishedTable = '```\n' + table.toString() + '\n ```';            
-                    if(q > 0){
-                        const channel = await client.channels.fetch(configuration.firstClan.brInfoChannel);
-                        await channel.send(finishedTable);
-                    }else{
-                        console.log(lang.brRangeEmpty, configuration.firstClan.name);
                     }
                 }
-            }
-            //Table for second clan
-            if(configuration.secondClan.used){
-                if(configuration.secondClan.brInfoOF){
-                    let q = 0;
-                    let finishedTable = ""
-                    let table = new AsciiTable(lang.brRangeTable, configuration.secondClan.name);
-                    table.setHeading(lang.Misc.PointsChange,lang.Misc.Player, lang.Misc.PointsDifference, lang.Misc.PointsActual, lang.Misc.PointsLimit);
-                    while(q<members2.length){
-                        table.addRow(members2[q][0], members2[q][1], members2[q][2], members2[q][3], members2[q][4]);
-                        console.log(members2[q][0], members2[q][1], members2[q][2], members2[q][3], members2[q][4])
-                        if(table.toString().length > 2000){
-                            finishedTable = '```\n' + table.toString() + '\n ```';
-                            table = new AsciiTable(lang.brRangeTable, configuration.secondClan.name);
-                            table.setHeading(lang.Misc.PointsChange,lang.Misc.Player, lang.Misc.PointsDifference, lang.Misc.PointsActual, lang.Misc.PointsLimit);
+                //Table for second clan
+                if(configuration.secondClan.used){
+                    if(configuration.secondClan.brInfoOF){
+                        let q = 0;
+                        let finishedTable = ""
+                        let table = new AsciiTable(lang.brRangeTable, configuration.secondClan.name);
+                        table.setHeading(lang.Misc.PointsChange,lang.Misc.Player, lang.Misc.PointsDifference, lang.Misc.PointsActual, lang.Misc.PointsLimit);
+                        while(q<members2.length){
+                            table.addRow(members2[q][0], members2[q][1], members2[q][2], members2[q][3], members2[q][4]);
+                            console.log(members2[q][0], members2[q][1], members2[q][2], members2[q][3], members2[q][4])
+                            if(table.toString().length > 2000){
+                                finishedTable = '```\n' + table.toString() + '\n ```';
+                                table = new AsciiTable(lang.brRangeTable, configuration.secondClan.name);
+                                table.setHeading(lang.Misc.PointsChange,lang.Misc.Player, lang.Misc.PointsDifference, lang.Misc.PointsActual, lang.Misc.PointsLimit);
+                                const channel = await client.channels.fetch(configuration.secondClan.brInfoChannel);
+                                await channel.send(finishedTable);
+                                finishedTable ="";
+                            }
+                            q = q+1;
+                        }
+                        finishedTable = '```\n' + table.toString() + '\n ```';            
+                        if(q > 0){
                             const channel = await client.channels.fetch(configuration.secondClan.brInfoChannel);
                             await channel.send(finishedTable);
-                            finishedTable ="";
+                        }else{
+                            console.log(lang.brRangeEmpty, configuration.secondClan.name);
                         }
-                        q = q+1;
-                    }
-                    finishedTable = '```\n' + table.toString() + '\n ```';            
-                    if(q > 0){
-                        const channel = await client.channels.fetch(configuration.secondClan.brInfoChannel);
-                        await channel.send(finishedTable);
-                    }else{
-                        console.log(lang.brRangeEmpty, configuration.secondClan.name);
                     }
                 }
-            }
-            //Table for third clan
-            if(configuration.thirdClan.used){
-                if(configuration.thirdClan.brInfoOF){
-                    let q = 0;
-                    let finishedTable = ""
-                    let table = new AsciiTable(lang.brRangeTable, configuration.thirdClan.name);
-                    table.setHeading(lang.Misc.PointsChange,lang.Misc.Player, lang.Misc.PointsDifference, lang.Misc.PointsActual, lang.Misc.PointsLimit);
-                    while(q<members3.length){
-                        table.addRow(members3[q][0], members3[q][1], members3[q][2], members3[q][3], members3[q][4]);
-                        if(table.toString().length > 2000){
-                            finishedTable = '```\n' + table.toString() + '\n ```';
-                            table = new AsciiTable(lang.brRangeTable, configuration.thirdClan.name);
-                            table.setHeading(lang.Misc.PointsChange,lang.Misc.Player, lang.Misc.PointsDifference, lang.Misc.PointsActual, lang.Misc.PointsLimit);
+                //Table for third clan
+                if(configuration.thirdClan.used){
+                    if(configuration.thirdClan.brInfoOF){
+                        let q = 0;
+                        let finishedTable = ""
+                        let table = new AsciiTable(lang.brRangeTable, configuration.thirdClan.name);
+                        table.setHeading(lang.Misc.PointsChange,lang.Misc.Player, lang.Misc.PointsDifference, lang.Misc.PointsActual, lang.Misc.PointsLimit);
+                        while(q<members3.length){
+                            table.addRow(members3[q][0], members3[q][1], members3[q][2], members3[q][3], members3[q][4]);
+                            if(table.toString().length > 2000){
+                                finishedTable = '```\n' + table.toString() + '\n ```';
+                                table = new AsciiTable(lang.brRangeTable, configuration.thirdClan.name);
+                                table.setHeading(lang.Misc.PointsChange,lang.Misc.Player, lang.Misc.PointsDifference, lang.Misc.PointsActual, lang.Misc.PointsLimit);
+                                const channel = await client.channels.fetch(configuration.thirdClan.brInfoChannel);
+                                await channel.send(finishedTable);
+                                finishedTable ="";
+                            }
+                            q = q+1;
+                        }
+                        finishedTable = '```\n' + table.toString() + '\n ```';
+                        if(q > 0){
                             const channel = await client.channels.fetch(configuration.thirdClan.brInfoChannel);
                             await channel.send(finishedTable);
-                            finishedTable ="";
+                        }else{
+                            console.log(lang.brRangeEmpty, configuration.thirdClan.name);
                         }
-                        q = q+1;
-                    }
-                    finishedTable = '```\n' + table.toString() + '\n ```';
-                    if(q > 0){
-                        const channel = await client.channels.fetch(configuration.thirdClan.brInfoChannel);
-                        await channel.send(finishedTable);
-                    }else{
-                        console.log(lang.brRangeEmpty, configuration.thirdClan.name);
                     }
                 }
-            }
-            //Table for fourth clan
-            if(configuration.fourthClan.used){
-                if(configuration.fourthClan.brInfoOF){
-                    let q = 0;
-                    let finishedTable = ""
-                    let table = new AsciiTable(lang.brRangeTable, configuration.fourthClan.name);
-                    table.setHeading(lang.Misc.PointsChange,lang.Misc.Player, lang.Misc.PointsDifference, lang.Misc.PointsActual, lang.Misc.PointsLimit);
-                    while(q<members4.length){
-                        table.addRow(members4[q][0], members4[q][1], members4[q][2], members4[q][3], members4[q][4]);
-                        if(table.toString().length > 2000){
-                            finishedTable = '```\n' + table.toString() + '\n ```';
-                            table = new AsciiTable(lang.brRangeTable, configuration.fourthClan.name);
-                            table.setHeading(lang.Misc.PointsChange,lang.Misc.Player, lang.Misc.PointsDifference, lang.Misc.PointsActual, lang.Misc.PointsLimit);
+                //Table for fourth clan
+                if(configuration.fourthClan.used){
+                    if(configuration.fourthClan.brInfoOF){
+                        let q = 0;
+                        let finishedTable = ""
+                        let table = new AsciiTable(lang.brRangeTable, configuration.fourthClan.name);
+                        table.setHeading(lang.Misc.PointsChange,lang.Misc.Player, lang.Misc.PointsDifference, lang.Misc.PointsActual, lang.Misc.PointsLimit);
+                        while(q<members4.length){
+                            table.addRow(members4[q][0], members4[q][1], members4[q][2], members4[q][3], members4[q][4]);
+                            if(table.toString().length > 2000){
+                                finishedTable = '```\n' + table.toString() + '\n ```';
+                                table = new AsciiTable(lang.brRangeTable, configuration.fourthClan.name);
+                                table.setHeading(lang.Misc.PointsChange,lang.Misc.Player, lang.Misc.PointsDifference, lang.Misc.PointsActual, lang.Misc.PointsLimit);
+                                const channel = await client.channels.fetch(configuration.fourthClan.brInfoChannel);
+                                await channel.send(finishedTable);
+                                finishedTable ="";
+                            }
+                            q = q+1;
+                        }
+                        finishedTable = '```\n' + table.toString() + '\n ```';
+                        if(q > 0){
                             const channel = await client.channels.fetch(configuration.fourthClan.brInfoChannel);
-                            await channel.send(finishedTable);
-                            finishedTable ="";
+                                await channel.send(finishedTable);
+                        }else{
+                            console.log(lang.brRangeEmpty, configuration.fourthClan.name);
                         }
-                        q = q+1;
-                    }
-                    finishedTable = '```\n' + table.toString() + '\n ```';
-                    if(q > 0){
-                        const channel = await client.channels.fetch(configuration.fourthClan.brInfoChannel);
-                            await channel.send(finishedTable);
-                    }else{
-                        console.log(lang.brRangeEmpty, configuration.fourthClan.name);
                     }
                 }
+                console.log(lang.brRangeDone)
+                break
             }
-            console.log(lang.brRangeDone)
-            break
+            catch (error) {
+                console.error(error);
+            }
         }
     }
 }
@@ -742,6 +747,8 @@ async function MemberCheck(guildID, configuration, lang) {
             if (error.code === 10007 || error.code === 10013) {
                 const channel = await client.channels.fetch(configuration.administrationChannel);
                 await channel.send(`:bangbang: \n${profile.nick_WT}${lang.memberCheck.Squadron}${profile.clan}${lang.memberCheck.DscNotFound}`);
+            }else{
+                console.log(error);
             }
         }
     }
